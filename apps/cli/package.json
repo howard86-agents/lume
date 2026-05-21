@@ -1,5 +1,5 @@
 {
-  "name": "@workspace-template/cli",
+  "name": "@lume/cli",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,10 +7,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@workspace-template/data": "*"
+    "@lume/data": "*"
   },
   "devDependencies": {
-    "@workspace-template/typescript-config": "*",
+    "@lume/typescript-config": "*",
     "@types/bun": "latest",
     "typescript": "5.5.4"
   }
