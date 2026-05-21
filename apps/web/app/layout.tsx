@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { fontVariables } from "./fonts";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -20,7 +21,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html className={fontVariables} lang="en">
       <body>
         <Providers>{children}</Providers>
       </body>
