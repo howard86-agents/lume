@@ -4,6 +4,9 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
+    "./glyphs": "./src/glyphs.ts",
+    "./locales": "./src/locales.ts",
+    "./specimens": "./src/specimens.ts",
     "./tokens": "./src/tokens.ts"
   },
   "scripts": {
