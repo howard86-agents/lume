@@ -1,5 +1,6 @@
 "use client";
 
+import type { LumeSpecimen } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,6 +14,11 @@ import {
   useState,
 } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
+import {
+  DuplicateToast,
+  InvalidToast,
+  SuccessSheet,
+} from "../../components/scan/scan-overlays";
 import { useQrScanner } from "../../lib/use-qr-scanner";
 
 /**
@@ -225,31 +231,6 @@ function getInitialStatus(): ScanStatus {
   return "starting";
 }
 
-function lastResultColor(kind: "new" | "dupe" | "invalid"): string {
-  if (kind === "new") {
-    return LU.accent.mint;
-  }
-  if (kind === "dupe") {
-    return LU.accent.amber;
-  }
-  return LU.accent.rose;
-}
-
-function lastResultText(
-  result: { kind: "new" | "dupe" | "invalid"; name?: string },
-  t: ReturnType<typeof useLocale>["t"]
-): string {
-  if (result.kind === "new") {
-    return result.name
-      ? `${t.scan_result_added} — ${result.name}`
-      : t.scan_result_added;
-  }
-  if (result.kind === "dupe") {
-    return t.scan_result_dupe;
-  }
-  return t.scan_result_invalid;
-}
-
 export default function ScanPage(): ReactElement {
   return (
     <Suspense
@@ -270,33 +251,51 @@ function ScanPageInner(): ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLocale();
-  const { collectWithSpecimen } = useLume();
+  const { collectWithSpecimen, collectedCount } = useLume();
   const [status, setStatus] = useState<ScanStatus>("initial");
-  const [lastResult, setLastResult] = useState<{
-    kind: "new" | "dupe" | "invalid";
-    name?: string;
-  } | null>(null);
+  const [activeOverlay, setActiveOverlay] = useState<
+    | { kind: "success"; specimen: LumeSpecimen }
+    | { kind: "dupe" }
+    | { kind: "invalid" }
+    | null
+  >(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
   const handleDecode = useCallback(
     (payload: string) => {
       const { result, specimen } = collectWithSpecimen(payload);
-      setLastResult({
-        kind: result,
-        name: specimen?.name.en,
-      });
+      if (result === "new" && specimen) {
+        setActiveOverlay({ kind: "success", specimen });
+        return;
+      }
+      if (result === "dupe") {
+        setActiveOverlay({ kind: "dupe" });
+        return;
+      }
+      setActiveOverlay({ kind: "invalid" });
     },
     [collectWithSpecimen]
   );
 
-  // The decoder runs whenever the camera is ready; the hook owns its own
-  // throttle + cooldown so we don't have to schedule frames here.
+  // The decoder runs whenever the camera is ready AND no overlay is open
+  // (so visitors are not bombarded by the same scan repeatedly while
+  // they read the success sheet).
   useQrScanner({
     video: videoRef.current,
-    enabled: status === "ready",
+    enabled: status === "ready" && activeOverlay === null,
     onDecode: handleDecode,
   });
+
+  // Auto-dismiss the dupe + invalid toasts after a short window so the
+  // visitor never has to chase a stale toast off the screen.
+  useEffect(() => {
+    if (activeOverlay?.kind !== "dupe" && activeOverlay?.kind !== "invalid") {
+      return;
+    }
+    const id = setTimeout(() => setActiveOverlay(null), 2400);
+    return () => clearTimeout(id);
+  }, [activeOverlay]);
 
   const stopStream = useCallback(() => {
     if (streamRef.current) {
@@ -349,14 +348,22 @@ function ScanPageInner(): ReactElement {
     const c = searchParams?.get("c");
     if (c) {
       const { result, specimen } = collectWithSpecimen(c);
-      setLastResult({ kind: result, name: specimen?.name.en });
-      // For new + dupe outcomes, send the visitor to the index so they
-      // can see the updated count. Invalid stays on /scan so the visitor
-      // can try again with the in-app camera.
-      if (result !== "invalid") {
-        router.replace("/index");
+      if (result === "new" && specimen) {
+        setActiveOverlay({ kind: "success", specimen });
+      } else if (result === "dupe") {
+        // Show the toast briefly then route to /index so the visitor
+        // sees their existing entry counted.
+        setActiveOverlay({ kind: "dupe" });
+        setTimeout(() => router.replace("/index"), 1200);
         return;
+      } else {
+        setActiveOverlay({ kind: "invalid" });
       }
+      // For 'new', stay on /scan so the success sheet renders; the
+      // visitor can tap View specimen or Continue scanning from there.
+      // The success-sheet handles its own routing.
+      // For 'invalid' deep-links, fall through to the usual camera flow
+      // so the visitor can retry with the in-app camera.
     }
     const initial = getInitialStatus();
     if (initial === "starting") {
@@ -447,17 +454,6 @@ function ScanPageInner(): ReactElement {
         {showVideo ? t.scan_helper : helperForStatus(status, t)}
       </p>
 
-      {lastResult ? (
-        <p
-          style={{
-            ...HELPER_STYLE,
-            color: lastResultColor(lastResult.kind),
-          }}
-        >
-          {lastResultText(lastResult, t)}
-        </p>
-      ) : null}
-
       <button
         onClick={() => router.push("/index")}
         style={MANUAL_LINK_STYLE}
@@ -465,6 +461,20 @@ function ScanPageInner(): ReactElement {
       >
         {t.scan_manual_open}
       </button>
+
+      {activeOverlay?.kind === "success" ? (
+        <SuccessSheet
+          collectedCount={collectedCount}
+          onContinue={() => setActiveOverlay(null)}
+          specimen={activeOverlay.specimen}
+        />
+      ) : null}
+      {activeOverlay?.kind === "dupe" ? (
+        <DuplicateToast onDismiss={() => setActiveOverlay(null)} />
+      ) : null}
+      {activeOverlay?.kind === "invalid" ? (
+        <InvalidToast onDismiss={() => setActiveOverlay(null)} />
+      ) : null}
     </main>
   );
 }
