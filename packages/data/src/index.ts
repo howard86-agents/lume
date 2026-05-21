@@ -1,4 +1,5 @@
 export const appConfig = {
-  name: "Workspace Template",
-  description: "Maison-style full-stack starter for Howard agent projects.",
+  name: "Lume",
+  description:
+    "A 23-specimen QR-scan light-form field guide across four floors.",
 } as const;
