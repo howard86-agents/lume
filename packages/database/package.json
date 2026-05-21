@@ -1,0 +1,31 @@
+{
+  "name": "@workspace-template/database",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/client.ts"
+  },
+  "scripts": {
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "tsx src/seed.ts",
+    "generate": "prisma generate",
+    "studio": "prisma studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "latest",
+    "@prisma/client-runtime-utils": "latest",
+    "dotenv": "^17.2.3",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@workspace-template/typescript-config": "*",
+    "@types/pg": "^8.16.0",
+    "prisma": "latest",
+    "tsx": "4.21.0",
+    "typescript": "5.5.4"
+  }
+}
