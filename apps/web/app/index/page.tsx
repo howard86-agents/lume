@@ -219,12 +219,14 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
 
 export default function IndexPage() {
   const router = useRouter();
-  const { collectedNumbers, collectedCount, completion } = useLume();
+  const { collectedNumbers, collectedCount, completion, state } = useLume();
   const { t, format } = useLocale();
 
   const dockOnClick = () => {
     if (completion) {
-      router.push("/card");
+      // Loop visitors through the reveal once before the card; on
+      // subsequent taps go straight to the card.
+      router.push(state.finalSeen ? "/card" : "/complete");
       return;
     }
     router.push("/scan");
