@@ -602,3 +602,92 @@ export function getLumeLocale(locale: LumeLocale): LumeLocaleBundle {
 
 /** Default locale used when no preference is persisted yet. */
 export const LUME_DEFAULT_LOCALE: LumeLocale = "en";
+
+/**
+ * Map a single BCP-47-ish browser locale tag to one of the supported Lume
+ * locales. Returns `undefined` when the tag does not match any rule, so
+ * callers can keep walking an ordered list of preferences.
+ *
+ * Rules (case-insensitive, accepts `_` as a separator):
+ *   - `zh-Hant*` / `zh-TW` / `zh-HK`           -> `zh-tw`
+ *   - `zh-Hans*` / `zh-CN` / `zh-SG`           -> `zh-cn`
+ *   - `ja*`                                    -> `ja`
+ *   - `ko*`                                    -> `ko`
+ *   - `en*`                                    -> `en`
+ *   - anything else (including bare `zh`)      -> `undefined`
+ */
+function matchBrowserLocale(tag: string): LumeLocale | undefined {
+  if (typeof tag !== "string") {
+    return;
+  }
+  const normalized = tag.trim().toLowerCase().replace(/_/g, "-");
+  if (!normalized) {
+    return;
+  }
+  if (normalized.startsWith("zh")) {
+    if (
+      normalized === "zh-tw" ||
+      normalized === "zh-hk" ||
+      normalized.startsWith("zh-hant")
+    ) {
+      return "zh-tw";
+    }
+    if (
+      normalized === "zh-cn" ||
+      normalized === "zh-sg" ||
+      normalized.startsWith("zh-hans")
+    ) {
+      return "zh-cn";
+    }
+    // Bare `zh` or an unrecognized region — let the caller fall back.
+    return;
+  }
+  if (normalized === "ja" || normalized.startsWith("ja-")) {
+    return "ja";
+  }
+  if (normalized === "ko" || normalized.startsWith("ko-")) {
+    return "ko";
+  }
+  if (normalized === "en" || normalized.startsWith("en-")) {
+    return "en";
+  }
+  return;
+}
+
+/**
+ * Resolve the closest supported Lume locale from a browser language hint.
+ *
+ * Accepts a single tag (e.g. `navigator.language`) or an ordered list
+ * (e.g. `navigator.languages`). Walks the list and returns the first tag
+ * that maps to a supported locale. Falls back to `LUME_DEFAULT_LOCALE`
+ * (English) when nothing matches, the input is missing, or the input is
+ * empty.
+ *
+ * Pure and side-effect-free so it can be unit-tested without a DOM and
+ * called safely from both client and server (a server caller would only
+ * pass in a parsed `Accept-Language` header).
+ */
+export function resolveBrowserLocale(
+  input: string | readonly string[] | undefined | null
+): LumeLocale {
+  const candidates: readonly string[] = toCandidateList(input);
+  for (const tag of candidates) {
+    const matched = matchBrowserLocale(tag);
+    if (matched) {
+      return matched;
+    }
+  }
+  return LUME_DEFAULT_LOCALE;
+}
+
+function toCandidateList(
+  input: string | readonly string[] | undefined | null
+): readonly string[] {
+  if (typeof input === "string") {
+    return [input];
+  }
+  if (Array.isArray(input)) {
+    return input;
+  }
+  return [];
+}
