@@ -6,6 +6,7 @@ import {
   LUME_LOCALE_BUNDLES,
   type LumeLocale,
   type LumeLocaleBundle,
+  resolveBrowserLocale,
 } from "@lume/data/locales";
 import type { LumeSpecimen, LumeSpecimenNumber } from "@lume/data/specimens";
 import {
@@ -22,6 +23,7 @@ import {
 import {
   collectedCount,
   collectedNumbers,
+  hasPersistedLumeState,
   INITIAL_LUME_STATE,
   isComplete,
   type LumeAction,
@@ -82,6 +84,24 @@ export interface LumeContextValue {
 const LumeContext = createContext<LumeContextValue | null>(null);
 
 /**
+ * Read the visitor's language preferences from the browser. Prefers the
+ * full ordered list (`navigator.languages`) and falls back to the single
+ * `navigator.language`. Returns an empty array in non-browser contexts so
+ * `resolveBrowserLocale` falls back to its default.
+ */
+function getNavigatorLocales(): readonly string[] {
+  if (typeof navigator === "undefined") {
+    return [];
+  }
+  const list = navigator.languages;
+  if (Array.isArray(list) && list.length > 0) {
+    return list;
+  }
+  const single = navigator.language;
+  return single ? [single] : [];
+}
+
+/**
  * What `useLocale()` returns — the active locale code, the fully-resolved
  * string bundle, the language setter, and a small `t(key, vars)` helper
  * for the few strings that interpolate.
@@ -126,7 +146,10 @@ export function LumeProvider({
   );
 
   // Hydrate from localStorage exactly once, after mount, to avoid an
-  // SSR/CSR mismatch on the first paint.
+  // SSR/CSR mismatch on the first paint. On a brand-new visit (no
+  // persisted payload) seed `lang` from the closest supported browser
+  // locale so the cover/picker render in the visitor's language; a
+  // returning visitor's persisted preference always wins.
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (initialState) {
@@ -136,8 +159,12 @@ export function LumeProvider({
     if (typeof window === "undefined") {
       return;
     }
-    const persisted = loadLumeState(window.localStorage);
-    dispatch({ type: "hydrate", payload: persisted });
+    const storage = window.localStorage;
+    const persisted = loadLumeState(storage);
+    const next = hasPersistedLumeState(storage)
+      ? persisted
+      : { ...persisted, lang: resolveBrowserLocale(getNavigatorLocales()) };
+    dispatch({ type: "hydrate", payload: next });
     setHydrated(true);
   }, [initialState]);
 
