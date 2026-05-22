@@ -22,9 +22,9 @@ import { saveAchievementCard } from "../../lib/save-card";
  * Achievement card screen — `/card`.
  *
  * Renders a fixed-pixel `AchievementCard` (3 : 4 portrait) over the deep
- * aurora canvas. A "Save card" button snapshots the card to PNG via
- * `modern-screenshot` after fonts are ready, then shares via Web Share
- * (file payload) when supported or falls back to a download anchor.
+ * aurora canvas. Explicit Share and Save buttons snapshot the card to PNG
+ * via `modern-screenshot` after fonts are ready, then either open Web Share
+ * (file payload, with download fallback) or download directly.
  *
  * Visitors who land here without 23/23 are redirected to `/index` so
  * the card cannot be saved prematurely.
@@ -87,6 +87,13 @@ const FOOTER_STYLE: CSSProperties = {
   gap: 12,
 };
 
+const ACTIONS_STYLE: CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  gap: 12,
+  width: "min(360px, 100%)",
+};
+
 const PRIMARY_BUTTON_STYLE: CSSProperties = {
   appearance: "none",
   border: `1px solid ${LU.accent.mint}`,
@@ -98,7 +105,8 @@ const PRIMARY_BUTTON_STYLE: CSSProperties = {
   fontWeight: 600,
   letterSpacing: 0.4,
   cursor: "pointer",
-  width: "min(320px, 100%)",
+  flex: 1,
+  minWidth: 0,
   boxShadow: "0 0 0 1px rgba(126, 240, 196, 0.35)",
 };
 
@@ -208,26 +216,29 @@ export default function CardPage() {
     [setNickname]
   );
 
-  const onSave = useCallback(async () => {
-    const node = cardRef.current;
-    if (!node || isSaving) {
-      return;
-    }
-    setIsSaving(true);
-    setErrorMessage(undefined);
-    const outcome = await saveAchievementCard(node);
-    setIsSaving(false);
-    if (outcome.kind === "share-cancelled") {
-      // Visitor backed out of the share sheet — leave them on the card.
-      return;
-    }
-    if (outcome.kind === "error") {
-      setErrorMessage(outcome.reason);
-      return;
-    }
-    markCardSaved();
-    router.push("/saved");
-  }, [isSaving, markCardSaved, router]);
+  const handleCardAction = useCallback(
+    async (action: "share" | "download") => {
+      const node = cardRef.current;
+      if (!node || isSaving) {
+        return;
+      }
+      setIsSaving(true);
+      setErrorMessage(undefined);
+      const outcome = await saveAchievementCard(node, { action });
+      setIsSaving(false);
+      if (outcome.kind === "share-cancelled") {
+        // Visitor backed out of the share sheet — leave them on the card.
+        return;
+      }
+      if (outcome.kind === "error") {
+        setErrorMessage(outcome.reason);
+        return;
+      }
+      markCardSaved();
+      router.push("/saved");
+    },
+    [isSaving, markCardSaved, router]
+  );
 
   // Defer rendering the card until provider hydration so the visitor
   // does not flash the localised "Visitor" fallback over their persisted
@@ -255,7 +266,7 @@ export default function CardPage() {
             badgeLabel={t.complete_eyebrow}
             cardTitle={t.card_title}
             dateLabel={dateLabel}
-            footerLabel={t.app_tagline}
+            fieldGuideLabel={t.card_field_guide}
             nickname={nickname}
             ref={cardRef}
           />
@@ -281,17 +292,30 @@ export default function CardPage() {
       </div>
 
       <footer style={FOOTER_STYLE}>
-        <button
-          aria-busy={isSaving}
-          disabled={isSaving}
-          onClick={onSave}
-          style={
-            isSaving ? PRIMARY_BUTTON_DISABLED_STYLE : PRIMARY_BUTTON_STYLE
-          }
-          type="button"
-        >
-          {isSaving ? t.card_saving : t.card_save}
-        </button>
+        <div style={ACTIONS_STYLE}>
+          <button
+            aria-busy={isSaving}
+            disabled={isSaving}
+            onClick={() => handleCardAction("share")}
+            style={
+              isSaving ? PRIMARY_BUTTON_DISABLED_STYLE : PRIMARY_BUTTON_STYLE
+            }
+            type="button"
+          >
+            {isSaving ? t.card_saving : t.card_share}
+          </button>
+          <button
+            aria-busy={isSaving}
+            disabled={isSaving}
+            onClick={() => handleCardAction("download")}
+            style={
+              isSaving ? PRIMARY_BUTTON_DISABLED_STYLE : PRIMARY_BUTTON_STYLE
+            }
+            type="button"
+          >
+            {isSaving ? t.card_saving : t.card_save}
+          </button>
+        </div>
         <span
           aria-live="polite"
           role="status"

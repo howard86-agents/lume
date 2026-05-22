@@ -9,9 +9,9 @@
  *      family has resolved and capture fallback Latin shapes.
  *   2. Snapshot the node with `modern-screenshot/domToPng` at 2x scale,
  *      so the resulting image is sharp on retina displays.
- *   3. Try `navigator.canShare({ files })` + `navigator.share` first
- *      (the iOS / Android system share-sheet experience the brief asks
- *      for); otherwise fall back to a synthesised `<a download>` click.
+ *   3. Either open `navigator.share` (with a download fallback) or trigger
+ *      a synthesised `<a download>` directly, depending on the explicit
+ *      action requested by the caller.
  *
  * Returns an outcome enum so the caller can branch on share vs download
  * and decide whether to navigate to `/saved`.
@@ -29,6 +29,8 @@ export type SaveCardOutcome =
 
 /** Inputs to the save helper. */
 export interface SaveCardOptions {
+  /** Explicit delivery path: Share opens Web Share first; Save downloads. */
+  action?: "share" | "download";
   /** Filename used for the share file + download fallback. */
   fileName?: string;
   /**
@@ -111,15 +113,19 @@ function canShareFile(file: File): boolean {
 }
 
 /**
- * Snapshot `node` and either share or download the resulting PNG. The
- * function never throws — every failure mode returns a `SaveCardOutcome`
+ * Snapshot `node` and deliver the resulting PNG through the requested path.
+ * The function never throws — every failure mode returns a `SaveCardOutcome`
  * so the UI can render an inline message instead of an unhandled error.
  */
 export async function saveAchievementCard(
   node: HTMLElement,
   options: SaveCardOptions = {}
 ): Promise<SaveCardOutcome> {
-  const { scale = 2, fileName = DEFAULT_CARD_FILE_NAME } = options;
+  const {
+    action = "share",
+    scale = 2,
+    fileName = DEFAULT_CARD_FILE_NAME,
+  } = options;
   try {
     await waitForFonts();
     const dataUrl = await domToPng(node, {
@@ -128,18 +134,20 @@ export async function saveAchievementCard(
       // to a transparent background otherwise.
       backgroundColor: "#08080d",
     });
-    const file = await dataUrlToFile(dataUrl, fileName);
-    if (canShareFile(file) && typeof navigator.share === "function") {
-      try {
-        await navigator.share({ files: [file] });
-        return { kind: "shared" };
-      } catch (error) {
-        // The user dismissing the share-sheet is not an error worth
-        // surfacing — they may want to try the download path next.
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return { kind: "share-cancelled" };
+    if (action === "share") {
+      const file = await dataUrlToFile(dataUrl, fileName);
+      if (canShareFile(file) && typeof navigator.share === "function") {
+        try {
+          await navigator.share({ files: [file] });
+          return { kind: "shared" };
+        } catch (error) {
+          // The user dismissing the share-sheet is not an error worth
+          // surfacing — they may want to try the download path next.
+          if (error instanceof DOMException && error.name === "AbortError") {
+            return { kind: "share-cancelled" };
+          }
+          // Fall through to the download path on any other share error.
         }
-        // Fall through to the download path on any other share error.
       }
     }
     triggerDownload(dataUrl, fileName);
