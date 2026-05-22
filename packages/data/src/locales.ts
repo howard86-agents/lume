@@ -102,6 +102,7 @@ const EN = {
   scan_continue: "Continue scanning",
   scan_view_specimen: "View specimen",
   scan_back_to_index: "Back to index",
+  scan_new_specimen: "New specimen",
 
   // Scan-result feedback
   scan_result_added: "Added to your index",
@@ -220,6 +221,7 @@ const ZH_TW: LumeLocaleBundle = {
   scan_continue: "繼續掃描",
   scan_view_specimen: "查看光體",
   scan_back_to_index: "返回圖鑑",
+  scan_new_specimen: "新發現",
 
   scan_result_added: "已加入圖鑑",
   scan_result_dupe: "已收藏過了",
@@ -322,6 +324,7 @@ const ZH_CN: LumeLocaleBundle = {
   scan_continue: "继续扫描",
   scan_view_specimen: "查看光体",
   scan_back_to_index: "返回图鉴",
+  scan_new_specimen: "新发现",
 
   scan_result_added: "已加入图鉴",
   scan_result_dupe: "已经收藏过了",
@@ -427,6 +430,7 @@ const JA: LumeLocaleBundle = {
   scan_continue: "スキャンを続ける",
   scan_view_specimen: "光体を見る",
   scan_back_to_index: "図鑑へ戻る",
+  scan_new_specimen: "新しい標本",
 
   scan_result_added: "図鑑に追加しました",
   scan_result_dupe: "すでに図鑑にあります",
@@ -535,6 +539,7 @@ const KO: LumeLocaleBundle = {
   scan_continue: "계속 스캔",
   scan_view_specimen: "빛 보기",
   scan_back_to_index: "도감으로",
+  scan_new_specimen: "새 표본",
 
   scan_result_added: "도감에 추가됨",
   scan_result_dupe: "이미 도감에 있어요",
