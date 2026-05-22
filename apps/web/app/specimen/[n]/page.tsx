@@ -1,6 +1,10 @@
 "use client";
 
-import { getSpecimenByNumber, type LumeSpecimen } from "@lume/data/specimens";
+import {
+  getSpecimenByNumber,
+  getSpecimenVisual,
+  type LumeSpecimen,
+} from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
@@ -199,6 +203,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
   const localizedName = specimen.name[lang];
   const localizedNotes = specimen.notes[lang];
   const showEnglishSubtitle = lang !== "en";
+  const visual = getSpecimenVisual(specimen, lang);
 
   const collectedAtText = formatCollectedAt(
     state.collectedAt[specimen.number],
@@ -235,6 +240,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
             form={specimen.form}
             glow={0.7}
             hue={specimen.hue}
+            image={visual.kind === "image" ? visual : undefined}
             size={224}
           />
         </div>

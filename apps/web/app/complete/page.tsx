@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  getSpecimenVisual,
   LUME_SPECIMENS,
   LUME_TOTAL_SPECIMENS,
   type LumeSpecimen,
@@ -127,7 +128,7 @@ function specimenClusterPosition(specimen: LumeSpecimen, index: number) {
 export default function CompletePage() {
   const router = useRouter();
   const { hydrated, completion, markFinalSeen } = useLume();
-  const { t } = useLocale();
+  const { lang, t } = useLocale();
 
   // Redirect visitors who landed here without reaching 23/23.
   useEffect(() => {
@@ -182,6 +183,7 @@ export default function CompletePage() {
         </span>
         {LUME_SPECIMENS.map((s, i) => {
           const pos = specimenClusterPosition(s, i);
+          const visual = getSpecimenVisual(s, lang);
           return (
             <span
               aria-hidden="true"
@@ -202,6 +204,7 @@ export default function CompletePage() {
                 form={s.form}
                 glow={0.6}
                 hue={s.hue}
+                image={visual.kind === "image" ? visual : undefined}
                 size={28}
               />
             </span>

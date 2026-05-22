@@ -1,12 +1,17 @@
 import type { LumeFormName } from "@lume/data/glyphs";
 import { LU, type LumeAccent } from "@lume/data/tokens";
+import Image from "next/image";
 import type { CSSProperties, ReactElement } from "react";
 import { GlyphSvg } from "./glyph-svg";
 
 /**
  * The visual treatment for a single Lume specimen — the abstract glyph on
  * top of a coloured glow halo, in either its `found` (full colour) or
- * `locked` (dimmed silhouette) state.
+ * `locked` (dimmed silhouette) state. When a specimen has bespoke
+ * artwork the catalogue can pass an `image`, in which case the image
+ * replaces the glyph on the found state; the locked state still renders
+ * the glyph silhouette so we never spoil the artwork before the visitor
+ * has scanned the QR code for it.
  *
  * Use this anywhere the specimen needs to be presented in its full Lume
  * aesthetic: the gallery tile, the success-sheet hero, the detail-plate
@@ -20,7 +25,7 @@ import { GlyphSvg } from "./glyph-svg";
 export interface LumeSpecimenProps {
   /** Forwarded to the wrapper for layout/positioning tweaks. */
   className?: string;
-  /** Glyph form to render. */
+  /** Glyph form to render (and the locked-state silhouette). */
   form: LumeFormName;
   /** Whether the specimen has been collected. Defaults to `true` (found). */
   found?: boolean;
@@ -32,6 +37,13 @@ export interface LumeSpecimenProps {
   glow?: number;
   /** Accent hue used for the glow halo and (when `found`) the glyph fill. */
   hue: LumeAccent;
+  /**
+   * Optional artwork to render in place of the abstract glyph. Only
+   * consulted on the `found` state — the locked silhouette always uses
+   * the glyph so visitors don't see the artwork before they've scanned
+   * the specimen.
+   */
+  image?: { alt: string; src: string };
   /**
    * Size of the square render area in CSS pixels. Defaults to `120` which
    * matches the gallery tile inner box. Pass a smaller number for chrome
@@ -58,6 +70,7 @@ export function LumeSpecimen({
   size = 120,
   glow = 0.55,
   className,
+  image,
   style,
 }: LumeSpecimenProps): ReactElement {
   const rgb = ACCENT_TO_RGB[hue];
@@ -70,14 +83,16 @@ export function LumeSpecimen({
   const haloFill = found
     ? `radial-gradient(circle at 50% 50%, rgba(${rgb}, ${haloOpacity * 0.9}) 0%, rgba(${rgb}, ${haloOpacity * 0.45}) 35%, rgba(${rgb}, 0) 70%)`
     : `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.10) 0%, rgba(${rgb}, 0.04) 50%, rgba(${rgb}, 0) 75%)`;
+  const showImage = Boolean(image && found);
 
   return (
     <div
-      aria-hidden="true"
+      aria-hidden={showImage ? undefined : "true"}
       className={className}
       data-form={form}
       data-found={found ? "true" : "false"}
       data-hue={hue}
+      data-image={showImage ? "true" : undefined}
       style={{
         position: "relative",
         width: size,
@@ -108,17 +123,42 @@ export function LumeSpecimen({
           justifyContent: "center",
         }}
       >
-        <GlyphSvg
-          color={glyphColor}
-          form={form}
-          size="100%"
-          style={{
-            opacity: found ? 1 : 0.65,
-            // A subtle drop-shadow on the glyph stroke itself keeps the
-            // edge readable on top of the halo.
-            filter: found ? `drop-shadow(0 0 6px rgba(${rgb}, 0.55))` : "none",
-          }}
-        />
+        {showImage && image ? (
+          <Image
+            alt={image.alt}
+            decoding="async"
+            // The artwork (when stylised SVG/PNG) frequently leans on
+            // transparent edges + a glow. Disable next/image optimisation so
+            // SVGs render verbatim and PNGs keep their alpha at 2x export.
+            height={Math.round(size * 0.78)}
+            loading="lazy"
+            src={image.src}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              // Preserve the luminous-edge feel that the glyph drop-shadow
+              // gives, so an image specimen still reads as a 'light-form'.
+              filter: `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`,
+            }}
+            unoptimized
+            width={Math.round(size * 0.78)}
+          />
+        ) : (
+          <GlyphSvg
+            color={glyphColor}
+            form={form}
+            size="100%"
+            style={{
+              opacity: found ? 1 : 0.65,
+              // A subtle drop-shadow on the glyph stroke itself keeps the
+              // edge readable on top of the halo.
+              filter: found
+                ? `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`
+                : "none",
+            }}
+          />
+        )}
       </span>
     </div>
   );
