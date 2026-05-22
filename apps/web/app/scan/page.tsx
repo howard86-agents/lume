@@ -1,6 +1,6 @@
 "use client";
 
-import type { LumeSpecimen } from "@lume/data/specimens";
+import { LUME_TOTAL_SPECIMENS, type LumeSpecimen } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -81,6 +81,20 @@ const TITLE_STYLE: CSSProperties = {
   letterSpacing: 3,
   textTransform: "uppercase",
   color: LU.base.ink2,
+};
+
+const PROGRESS_CHIP_STYLE: CSSProperties = {
+  minWidth: 64,
+  padding: "7px 10px",
+  borderRadius: 999,
+  border: "1px solid rgba(255, 183, 85, 0.45)",
+  background: "rgba(255, 183, 85, 0.10)",
+  boxShadow: "0 0 22px rgba(255, 183, 85, 0.22)",
+  color: LU.accent.amber,
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 11,
+  letterSpacing: 1.3,
+  textAlign: "center",
 };
 
 const FRAME_WRAPPER_STYLE: CSSProperties = {
@@ -251,12 +265,12 @@ export default function ScanPage(): ReactElement {
 function ScanPageInner(): ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useLocale();
+  const { format, t } = useLocale();
   const { collectWithSpecimen, collectedCount } = useLume();
   const [status, setStatus] = useState<ScanStatus>("initial");
   const [activeOverlay, setActiveOverlay] = useState<
     | { kind: "success"; specimen: LumeSpecimen }
-    | { kind: "dupe" }
+    | { kind: "dupe"; specimen?: LumeSpecimen }
     | { kind: "invalid" }
     | null
   >(null);
@@ -273,7 +287,7 @@ function ScanPageInner(): ReactElement {
         return;
       }
       if (result === "dupe") {
-        setActiveOverlay({ kind: "dupe" });
+        setActiveOverlay({ kind: "dupe", specimen });
         return;
       }
       setActiveOverlay({ kind: "invalid" });
@@ -356,7 +370,7 @@ function ScanPageInner(): ReactElement {
       } else if (result === "dupe") {
         // Show the toast briefly then route to /index so the visitor
         // sees their existing entry counted.
-        setActiveOverlay({ kind: "dupe" });
+        setActiveOverlay({ kind: "dupe", specimen });
         setTimeout(() => router.replace("/index"), 1200);
         return;
       } else {
@@ -397,8 +411,13 @@ function ScanPageInner(): ReactElement {
         <Link href="/index" style={BACK_LINK_STYLE}>
           ← {t.scan_back_to_index}
         </Link>
-        <span style={TITLE_STYLE}>{t.scan_helper}</span>
-        <span aria-hidden="true" style={{ width: 56 }} />
+        <span style={TITLE_STYLE}>{t.scan_scanning}</span>
+        <span style={PROGRESS_CHIP_STYLE}>
+          {format("index_progress", {
+            found: collectedCount,
+            total: LUME_TOTAL_SPECIMENS,
+          })}
+        </span>
       </header>
 
       <section style={FRAME_WRAPPER_STYLE}>
@@ -480,7 +499,7 @@ function ScanPageInner(): ReactElement {
             if (result === "new" && specimen) {
               setActiveOverlay({ kind: "success", specimen });
             } else if (result === "dupe") {
-              setActiveOverlay({ kind: "dupe" });
+              setActiveOverlay({ kind: "dupe", specimen });
             } else {
               setActiveOverlay({ kind: "invalid" });
             }
@@ -496,7 +515,10 @@ function ScanPageInner(): ReactElement {
         />
       ) : null}
       {activeOverlay?.kind === "dupe" ? (
-        <DuplicateToast onDismiss={() => setActiveOverlay(null)} />
+        <DuplicateToast
+          onDismiss={() => setActiveOverlay(null)}
+          specimen={activeOverlay.specimen}
+        />
       ) : null}
       {activeOverlay?.kind === "invalid" ? (
         <InvalidToast onDismiss={() => setActiveOverlay(null)} />

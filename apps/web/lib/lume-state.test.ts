@@ -53,7 +53,7 @@ describe("reduceLumeState", () => {
     );
   });
 
-  test("collect on an already-collected slug returns 'dupe'", () => {
+  test("collect on an already-collected slug returns 'dupe' with the specimen", () => {
     const slug = LUME_SPECIMENS[0].qr;
     const once = reduceLumeState(INITIAL_LUME_STATE, {
       type: "collect",
@@ -66,6 +66,7 @@ describe("reduceLumeState", () => {
       nowIso: "2026-05-22T00:30:00.000Z",
     });
     expect(twice.collectResult).toBe("dupe");
+    expect(twice.collectedSpecimen?.qr).toBe(slug);
     expect(twice.state).toBe(once.state);
   });
 
