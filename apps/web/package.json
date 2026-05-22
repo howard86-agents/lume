@@ -13,7 +13,8 @@
     "@lume/database": "*",
     "better-auth": "^1.3.4",
     "jsqr": "1.4.0",
-    "next": "16.2.6",
+    "modern-screenshot": "4.7.0",
+    "next": "16.2.0",
     "qrcode": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -26,6 +27,6 @@
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "tailwindcss": "^4",
-    "typescript": "6.0.3"
+    "typescript": "5.5.4"
   }
 }
