@@ -19,6 +19,7 @@
     "lint": "ultracite check",
     "prepare": "husky",
     "sync-content": "bun run apps/cli/src/index.ts sync-content",
+    "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck"
   },
   "lint-staged": {
@@ -32,9 +33,11 @@
     "@biomejs/biome": "2.4.15",
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
+    "@playwright/test": "1.57.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.4",
     "prisma": "latest",
+    "qrcode": "^1.5.4",
     "tsx": "4.22.3",
     "turbo": "^2.9.12",
     "ultracite": "7.7.0"

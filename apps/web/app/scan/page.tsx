@@ -266,7 +266,7 @@ function ScanPageInner(): ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { format, t } = useLocale();
-  const { collectWithSpecimen, collectedCount } = useLume();
+  const { collectWithSpecimen, collectedCount, hydrated } = useLume();
   const [status, setStatus] = useState<ScanStatus>("initial");
   const [activeOverlay, setActiveOverlay] = useState<
     | { kind: "success"; specimen: LumeSpecimen }
@@ -276,6 +276,7 @@ function ScanPageInner(): ReactElement {
   >(null);
   const [manualOpen, setManualOpen] = useState(false);
   const [manualInput, setManualInput] = useState("");
+  const processedDeepLinkRef = useRef<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -362,8 +363,12 @@ function ScanPageInner(): ReactElement {
   // doesn't have to load the in-app camera just to confirm the same
   // payload they already aimed their phone at.
   useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
     const c = searchParams?.get("c");
-    if (c) {
+    if (c && processedDeepLinkRef.current !== c) {
+      processedDeepLinkRef.current = c;
       const { result, specimen } = collectWithSpecimen(c);
       if (result === "new" && specimen) {
         setActiveOverlay({ kind: "success", specimen });
@@ -394,7 +399,14 @@ function ScanPageInner(): ReactElement {
     return () => {
       stopStream();
     };
-  }, [collectWithSpecimen, router, searchParams, startCamera, stopStream]);
+  }, [
+    collectWithSpecimen,
+    hydrated,
+    router,
+    searchParams,
+    startCamera,
+    stopStream,
+  ]);
 
   const onRetry = () => {
     startCamera().catch(() => {

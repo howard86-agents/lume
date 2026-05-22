@@ -181,20 +181,36 @@ export function LumeProvider({
     saveLumeState(window.localStorage, state);
   }, [hydrated, state]);
 
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
   const collect = useCallback((payload: string): LumeCollectResult => {
-    dispatch({ type: "collect", payload });
-    return lastResultRef.current?.collectResult ?? "invalid";
+    const nowIso = new Date().toISOString();
+    const result = reduceLumeState(stateRef.current, {
+      type: "collect",
+      payload,
+      nowIso,
+    });
+    lastResultRef.current = result;
+    dispatch({ type: "collect", payload, nowIso });
+    return result.collectResult ?? "invalid";
   }, []);
 
   const collectWithSpecimen = useCallback(
     (
       payload: string
     ): { result: LumeCollectResult; specimen?: LumeSpecimen } => {
-      dispatch({ type: "collect", payload });
-      const last = lastResultRef.current;
+      const nowIso = new Date().toISOString();
+      const result = reduceLumeState(stateRef.current, {
+        type: "collect",
+        payload,
+        nowIso,
+      });
+      lastResultRef.current = result;
+      dispatch({ type: "collect", payload, nowIso });
       return {
-        result: last?.collectResult ?? "invalid",
-        specimen: last?.collectedSpecimen,
+        result: result.collectResult ?? "invalid",
+        specimen: result.collectedSpecimen,
       };
     },
     []
