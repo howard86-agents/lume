@@ -46,11 +46,31 @@ const HEADER_STYLE: CSSProperties = {
   gap: 8,
 };
 
+const HEADER_TOP_ROW_STYLE: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+};
+
 const TITLE_STYLE: CSSProperties = {
   fontSize: 24,
   fontWeight: 600,
   letterSpacing: -0.3,
   margin: 0,
+};
+
+const SETTINGS_LINK_STYLE: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 36,
+  height: 36,
+  borderRadius: 999,
+  border: `1px solid ${LU.rule.hair}`,
+  background: LU.glass.surface1,
+  color: LU.base.ink2,
+  textDecoration: "none",
 };
 
 const PROGRESS_LABEL_STYLE: CSSProperties = {
@@ -240,7 +260,31 @@ export default function IndexPage() {
   return (
     <main style={PAGE_STYLE}>
       <header style={HEADER_STYLE}>
-        <h1 style={TITLE_STYLE}>{t.index_title}</h1>
+        <div style={HEADER_TOP_ROW_STYLE}>
+          <h1 style={TITLE_STYLE}>{t.index_title}</h1>
+          <Link
+            aria-label={t.settings_title}
+            href="/settings"
+            style={SETTINGS_LINK_STYLE}
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="18"
+              role="img"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.6"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <title>{t.settings_title}</title>
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </Link>
+        </div>
         <div style={PROGRESS_LABEL_STYLE}>
           <span>
             {format("index_progress", {
