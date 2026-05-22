@@ -1,10 +1,110 @@
 @import "tailwindcss";
 
+/*
+ * Lume design tokens (mirror of packages/data/src/tokens.ts).
+ *
+ * Any color/gradient referenced by component CSS or Tailwind arbitrary
+ * values should resolve to one of the variables below. Keeping these in
+ * sync with the LU map gives us a single place to retune the theme.
+ */
 :root {
-  color-scheme: light dark;
+  --lu-base-deep: #08080d;
+  --lu-base-night: #0e0d18;
+  --lu-base-ink: #f6f6fb;
+  --lu-base-ink-2: rgb(246 246 251 / 0.72);
+  --lu-base-ink-3: rgb(246 246 251 / 0.48);
+
+  /* Glass surface tiers */
+  --lu-glass-1: rgb(255 255 255 / 0.04);
+  --lu-glass-2: rgb(255 255 255 / 0.07);
+  --lu-glass-3: rgb(255 255 255 / 0.1);
+
+  /* Accents */
+  --lu-accent-amber: #ffb755;
+  --lu-accent-cyan: #69e0ff;
+  --lu-accent-magenta: #ff7adf;
+  --lu-accent-mint: #7ef0c4;
+  --lu-accent-violet: #b390ff;
+  --lu-accent-rose: #ff8da1;
+
+  /* Rules / hairlines */
+  --lu-rule-hair: rgb(255 255 255 / 0.06);
+  --lu-rule-strong: rgb(255 255 255 / 0.12);
+
+  /* Aurora gradients */
+  --lu-aurora-cover:
+    radial-gradient(
+      60% 40% at 50% 35%,
+      rgb(179 144 255 / 0.35),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 35% at 70% 70%,
+      rgb(105 224 255 / 0.18),
+      transparent 70%
+    ),
+    linear-gradient(180deg, #08080d 0%, #0e0d18 100%);
+  --lu-aurora-page:
+    radial-gradient(
+      80% 60% at 50% -10%,
+      rgb(179 144 255 / 0.18),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #08080d 0%, #08080d 100%);
+  --lu-aurora-halo: conic-gradient(
+    from 90deg at 50% 50%,
+    rgb(255 183 85 / 0.4),
+    rgb(105 224 255 / 0.4),
+    rgb(179 144 255 / 0.4),
+    rgb(255 122 223 / 0.4),
+    rgb(255 183 85 / 0.4)
+  );
+
+  /* Default font-family chain: display + CJK fallbacks (loaded only when
+   * their locale activates the corresponding variable on a parent). */
+  --lu-font-display:
+    var(--font-display), "Space Grotesk", var(--font-noto-tc),
+    var(--font-noto-sc), var(--font-noto-jp), var(--font-noto-kr), system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --lu-font-mono:
+    var(--font-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  color-scheme: dark;
 }
 
+html,
 body {
+  padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+  font-family: var(--lu-font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--lu-base-ink);
+  background: var(--lu-base-deep);
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Mobile-first full-bleed shell:
+ *   - viewport-fit=cover already lets the body bleed under the notch (set
+ *     in layout.tsx). Use 100dvh so the canvas always fills the live
+ *     viewport, including when the iOS chrome collapses on scroll.
+ *   - overscroll-behavior: none keeps the scanner UI from rubber-banding
+ *     into the host page background on iOS Safari.
+ */
+body {
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  color: var(--lu-base-ink);
+  background: var(--lu-base-deep);
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--lu-font-mono);
 }
