@@ -49,6 +49,12 @@ bun run dev         # Run persistent dev tasks
 
 Build is intentionally not in CI by default. Vercel previews are useful for smoke-testing and visual review, but they are not a hard merge gate when the failure is attributable to Vercel/platform behavior and GitHub CI is green. Treat Vercel failures as blocking only when they reproduce locally, coincide with CI failures, or the PR changes deployment/build/runtime configuration.
 
+## Deployment
+
+See [`docs/deployment-guide.md`](./docs/deployment-guide.md) for the
+Vercel release flow, domain options, environment-variable expectations,
+and rollback procedure.
+
 ## Agent workflow
 
 Read `AGENTS.md` before editing. Keep work issue-scoped, inspect code first, make atomic conventional commits, run checks, and document stack/base notes for dependent PRs.
