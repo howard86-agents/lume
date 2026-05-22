@@ -21,14 +21,15 @@ import {
  * The card is intentionally laid out at a fixed pixel size (3 / 4 portrait)
  * so the snapshot is deterministic across viewports — callers wrap it in
  * a CSS-`transform: scale()` to fit smaller screens. All visual depth is
- * baked into solid gradients so modern-screenshot does not need to inline
- * any `backdrop-filter` rule (which it cannot rasterise reliably).
+ * baked into solid gradients so modern-screenshot does not need to rasterise
+ * unsupported CSS blur layers.
  *
  * Identity is conveyed by:
  *   - the `23 / 23` numeral over a conic halo,
  *   - a grid of 23 colored glow-dots (one per specimen hue),
- *   - the visitor name (`nickname`, falling back to a localised default),
- *   - the formatted save date.
+ *   - the field-guide eyebrow,
+ *   - the visitor name (`nickname`, falling back to a localised default)
+ *     paired with the formatted save date in the footer.
  */
 
 /** Fixed export dimensions — 3 : 4 portrait, ample mobile margins. */
@@ -43,8 +44,8 @@ export interface AchievementCardProps {
   cardTitle: string;
   /** Pre-formatted date string (e.g. "22 May 2026"). */
   dateLabel: string;
-  /** Localised app tagline rendered as the card footer. */
-  footerLabel: string;
+  /** Localised field-guide eyebrow rendered inside the card. */
+  fieldGuideLabel: string;
   /**
    * Optional set of collected specimen numbers — every specimen lights up
    * by default (the card is shown at 23/23). Allowed for future re-use
@@ -61,7 +62,7 @@ const CARD_STYLE: CSSProperties = {
   width: ACHIEVEMENT_CARD_WIDTH,
   height: ACHIEVEMENT_CARD_HEIGHT,
   borderRadius: 28,
-  // Solid (non-translucent) aurora — no backdrop-filter dependency.
+  // Solid (non-translucent) aurora — no unsupported CSS blur dependency.
   background:
     "radial-gradient(120% 60% at 50% 0%, rgba(179, 144, 255, 0.55) 0%, rgba(179, 144, 255, 0) 60%)," +
     "radial-gradient(80% 50% at 50% 100%, rgba(105, 224, 255, 0.32) 0%, rgba(105, 224, 255, 0) 60%)," +
@@ -160,7 +161,7 @@ const HERO_TOTAL_STYLE: CSSProperties = {
   textShadow: "none",
 };
 
-const VISITOR_STYLE: CSSProperties = {
+const TITLE_BLOCK_STYLE: CSSProperties = {
   margin: "20px 24px 0",
   display: "flex",
   flexDirection: "column",
@@ -168,7 +169,7 @@ const VISITOR_STYLE: CSSProperties = {
   textAlign: "center",
 };
 
-const VISITOR_LABEL_STYLE: CSSProperties = {
+const TITLE_EYEBROW_STYLE: CSSProperties = {
   fontFamily: "var(--lu-font-mono)",
   fontSize: 10,
   letterSpacing: 3,
@@ -176,7 +177,7 @@ const VISITOR_LABEL_STYLE: CSSProperties = {
   color: LU.base.ink3,
 };
 
-const VISITOR_NAME_STYLE: CSSProperties = {
+const CARD_TITLE_STYLE: CSSProperties = {
   fontSize: 22,
   fontWeight: 600,
   letterSpacing: -0.3,
@@ -208,18 +209,23 @@ const FOOTER_STYLE: CSSProperties = {
   borderTop: `1px solid ${LU.rule.hair}`,
 };
 
-const FOOTER_DATE_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 2,
-  color: LU.base.ink2,
+const FOOTER_VISITOR_STYLE: CSSProperties = {
+  minWidth: 0,
+  maxWidth: "60%",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  fontSize: 15,
+  fontWeight: 600,
+  letterSpacing: -0.2,
+  color: LU.base.ink,
 };
 
-const FOOTER_TAG_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 2,
-  color: LU.base.ink3,
+const FOOTER_DATE_STYLE: CSSProperties = {
+  fontFamily: "var(--lu-font-display)",
+  fontSize: 13,
+  fontWeight: 500,
+  color: LU.base.ink2,
 };
 
 /**
@@ -328,14 +334,14 @@ function AchievementCardImpl(
     badgeLabel,
     cardTitle,
     dateLabel,
-    footerLabel,
+    fieldGuideLabel,
     highlightedNumbers,
     nickname,
   } = props;
   return (
     <div data-export-card="lume-achievement" ref={ref} style={CARD_STYLE}>
       <header style={HEADER_STYLE}>
-        <span style={EYEBROW_STYLE}>{badgeLabel}</span>
+        <span style={EYEBROW_STYLE}>{fieldGuideLabel}</span>
         <span style={BRAND_STYLE}>LUME</span>
       </header>
 
@@ -347,9 +353,9 @@ function AchievementCardImpl(
         <span style={HERO_TOTAL_STYLE}>{LUME_TOTAL_SPECIMENS}</span>
       </section>
 
-      <section style={VISITOR_STYLE}>
-        <span style={VISITOR_LABEL_STYLE}>{cardTitle}</span>
-        <span style={VISITOR_NAME_STYLE}>{nickname}</span>
+      <section style={TITLE_BLOCK_STYLE}>
+        <span style={TITLE_EYEBROW_STYLE}>{badgeLabel}</span>
+        <span style={CARD_TITLE_STYLE}>{cardTitle}</span>
       </section>
 
       <section style={GRID_WRAPPER_STYLE}>
@@ -365,8 +371,8 @@ function AchievementCardImpl(
       </section>
 
       <footer style={FOOTER_STYLE}>
+        <span style={FOOTER_VISITOR_STYLE}>{nickname}</span>
         <span style={FOOTER_DATE_STYLE}>{dateLabel}</span>
-        <span style={FOOTER_TAG_STYLE}>{footerLabel}</span>
       </footer>
     </div>
   );
