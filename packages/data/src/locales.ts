@@ -47,8 +47,9 @@ export const LUME_LOCALE_LABELS: Readonly<
  */
 const EN = {
   // Cover — `/`
+  cover_special_exhibition: "A SPECIAL EXHIBITION",
   cover_eyebrow_specimens: "23 light-forms",
-  cover_eyebrow_floors: "Four floors",
+  cover_eyebrow_floors: "4 floors",
   cover_title: "Lume.",
   cover_intro:
     "A walking field guide of light. Scan the codes you find and bring home all twenty-three.",
@@ -178,6 +179,7 @@ export type LocaleKey = keyof typeof EN;
 export type LumeLocaleBundle = Readonly<Record<LocaleKey, string>>;
 
 const ZH_TW: LumeLocaleBundle = {
+  cover_special_exhibition: "特別展覽",
   cover_eyebrow_specimens: "23 種光體",
   cover_eyebrow_floors: "四個樓層",
   cover_title: "Lume.",
@@ -286,6 +288,7 @@ const ZH_TW: LumeLocaleBundle = {
 };
 
 const ZH_CN: LumeLocaleBundle = {
+  cover_special_exhibition: "特别展览",
   cover_eyebrow_specimens: "23 种光体",
   cover_eyebrow_floors: "四个楼层",
   cover_title: "Lume.",
@@ -394,6 +397,7 @@ const ZH_CN: LumeLocaleBundle = {
 };
 
 const JA: LumeLocaleBundle = {
+  cover_special_exhibition: "特別展",
   cover_eyebrow_specimens: "23 の光体",
   cover_eyebrow_floors: "4 つのフロア",
   cover_title: "Lume.",
@@ -508,6 +512,7 @@ const JA: LumeLocaleBundle = {
 };
 
 const KO: LumeLocaleBundle = {
+  cover_special_exhibition: "특별 전시",
   cover_eyebrow_specimens: "23종의 빛",
   cover_eyebrow_floors: "네 개의 층",
   cover_title: "Lume.",

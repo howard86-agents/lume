@@ -6,6 +6,24 @@ import {
   resolveBrowserLocale,
 } from "./locales";
 
+describe("cover locale copy", () => {
+  test("includes the special exhibition eyebrow in every supported locale", () => {
+    const expected = {
+      en: "A SPECIAL EXHIBITION",
+      "zh-tw": "特別展覽",
+      "zh-cn": "特别展览",
+      ja: "特別展",
+      ko: "특별 전시",
+    } as const;
+
+    for (const locale of LUME_LOCALES) {
+      expect(LUME_LOCALE_BUNDLES[locale].cover_special_exhibition).toBe(
+        expected[locale]
+      );
+    }
+  });
+});
+
 describe("locale bundles", () => {
   test("includes the permission pre-prompt eyebrow in every supported locale", () => {
     expect(

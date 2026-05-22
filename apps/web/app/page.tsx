@@ -9,8 +9,8 @@ import { useLocale } from "../components/lume-provider";
  * Cover screen — the landing surface at `/`.
  *
  * Renders the Lume aesthetic foundation: a central luminous glow over a
- * slowly-rotating conic halo, anchored by the "Lume." display and the
- * eyebrow metadata ("23 light-forms / 4 floors"). The primary "Enter"
+ * slowly-rotating conic halo, anchored by the exhibition eyebrow, the
+ * "Lume." display, and the dot-row metadata ("23 light-forms / 4 floors"). The primary "Enter"
  * action takes the visitor into the language picker. Animation is a
  * single CSS transform/opacity rotation that respects
  * `prefers-reduced-motion`.
@@ -33,16 +33,42 @@ const HEADER_STYLE: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: 8,
+  gap: 12,
   textAlign: "center",
 };
 
-const EYEBROW_STYLE: CSSProperties = {
+const SPECIAL_EXHIBITION_STYLE: CSSProperties = {
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 11,
+  letterSpacing: 3,
+  textTransform: "uppercase",
+  color: LU.accent.amber,
+  textShadow: `0 0 18px ${LU.accent.amber}`,
+};
+
+const EYEBROW_ROW_STYLE: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 10,
+  flexWrap: "wrap",
   fontFamily: "var(--lu-font-mono)",
   fontSize: 11,
   letterSpacing: 3,
   textTransform: "uppercase",
   color: LU.base.ink2,
+};
+
+const AMBER_DOT_STYLE: CSSProperties = {
+  width: 5,
+  height: 5,
+  borderRadius: "50%",
+  background: LU.accent.amber,
+  boxShadow: `0 0 12px ${LU.accent.amber}`,
+};
+
+const EYEBROW_SEPARATOR_STYLE: CSSProperties = {
+  color: LU.base.ink3,
 };
 
 const HALO_SIZE = 320;
@@ -104,8 +130,17 @@ export default function CoverPage() {
   return (
     <main style={PAGE_STYLE}>
       <header style={HEADER_STYLE}>
-        <span style={EYEBROW_STYLE}>{t.cover_eyebrow_specimens}</span>
-        <span style={EYEBROW_STYLE}>{t.cover_eyebrow_floors}</span>
+        <span style={SPECIAL_EXHIBITION_STYLE}>
+          {t.cover_special_exhibition}
+        </span>
+        <div style={EYEBROW_ROW_STYLE}>
+          <span aria-hidden="true" style={AMBER_DOT_STYLE} />
+          <span>{t.cover_eyebrow_specimens}</span>
+          <span aria-hidden="true" style={EYEBROW_SEPARATOR_STYLE}>
+            ·
+          </span>
+          <span>{t.cover_eyebrow_floors}</span>
+        </div>
       </header>
 
       <section
