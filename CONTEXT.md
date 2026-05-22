@@ -26,4 +26,4 @@ Maison-style full-stack TypeScript monorepo:
 ## Non-goals
 
 - Server-side specimen state or accounts; progress is on-device only by design.
-- Mandatory CI builds; Vercel previews can own build validation unless this repo opts in.
+- Mandatory CI builds; Vercel previews are advisory unless failures reproduce locally, coincide with GitHub CI failures, or the PR changes deployment/build/runtime configuration.

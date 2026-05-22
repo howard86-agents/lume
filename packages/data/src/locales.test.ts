@@ -24,6 +24,25 @@ describe("cover locale copy", () => {
   });
 });
 
+describe("locale bundles", () => {
+  test("includes the permission pre-prompt eyebrow in every supported locale", () => {
+    expect(
+      Object.fromEntries(
+        LUME_LOCALES.map((locale) => [
+          locale,
+          LUME_LOCALE_BUNDLES[locale].permission_before_we_begin,
+        ])
+      )
+    ).toEqual({
+      en: "BEFORE WE BEGIN",
+      "zh-tw": "開始之前",
+      "zh-cn": "开始之前",
+      ja: "はじめる前に",
+      ko: "시작하기 전에",
+    });
+  });
+});
+
 describe("resolveBrowserLocale", () => {
   test("maps Japanese browser tags to ja", () => {
     expect(resolveBrowserLocale("ja")).toBe("ja");
@@ -79,5 +98,26 @@ describe("resolveBrowserLocale", () => {
     expect(resolveBrowserLocale("ZH-TW")).toBe("zh-tw");
     expect(resolveBrowserLocale("zh_hant_HK")).toBe("zh-tw");
     expect(resolveBrowserLocale("JA-jp")).toBe("ja");
+  });
+});
+
+describe("scanner copy", () => {
+  test("defines the scanning eyebrow and named duplicate toast in every locale", () => {
+    expect(LUME_LOCALE_BUNDLES.en.scan_scanning).toBe("SCANNING");
+    expect(
+      LUME_LOCALE_BUNDLES.en.scan_result_dupe_named
+        .replace("{name}", "Ferra")
+        .replace("{n}", "007")
+    ).toBe("Ferra (no. 007) — already in your index");
+
+    expect(LUME_LOCALE_BUNDLES["zh-tw"].scan_scanning).toBe("掃描中");
+    expect(LUME_LOCALE_BUNDLES["zh-cn"].scan_scanning).toBe("扫描中");
+    expect(LUME_LOCALE_BUNDLES.ja.scan_scanning).toBe("スキャン中");
+    expect(LUME_LOCALE_BUNDLES.ko.scan_scanning).toBe("스캔 중");
+
+    for (const bundle of Object.values(LUME_LOCALE_BUNDLES)) {
+      expect(bundle.scan_result_dupe_named).toContain("{name}");
+      expect(bundle.scan_result_dupe_named).toContain("{n}");
+    }
   });
 });

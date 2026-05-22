@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run src/index.ts",
+    "sync-content": "bun run src/index.ts sync-content",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

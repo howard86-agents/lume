@@ -192,16 +192,32 @@ export default function LanguagePage() {
               <span
                 aria-hidden="true"
                 style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: "50%",
+                  alignItems: "center",
+                  background: "transparent",
                   border: `1px solid ${selected ? LU.accent.amber : LU.rule.strong}`,
-                  background: selected ? LU.accent.amber : "transparent",
+                  borderRadius: "50%",
                   boxShadow: selected
                     ? "0 0 12px rgba(255, 183, 85, 0.65)"
                     : "none",
+                  display: "flex",
+                  height: 18,
+                  justifyContent: "center",
+                  width: 18,
                 }}
-              />
+              >
+                <span
+                  style={{
+                    background: LU.accent.amber,
+                    borderRadius: "50%",
+                    boxShadow: selected
+                      ? "0 0 8px rgba(255, 183, 85, 0.75)"
+                      : "none",
+                    height: 6,
+                    opacity: selected ? 1 : 0,
+                    width: 6,
+                  }}
+                />
+              </span>
             </label>
           );
         })}

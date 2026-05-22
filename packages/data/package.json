@@ -6,6 +6,7 @@
     ".": "./src/index.ts",
     "./glyphs": "./src/glyphs.ts",
     "./locales": "./src/locales.ts",
+    "./specimen-identities": "./src/specimen-identities.ts",
     "./specimens": "./src/specimens.ts",
     "./tokens": "./src/tokens.ts"
   },

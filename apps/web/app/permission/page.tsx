@@ -29,24 +29,24 @@ const PAGE_STYLE: CSSProperties = {
   gap: 24,
 };
 
-const HEADER_STYLE: CSSProperties = {
+const CONTENT_STYLE: CSSProperties = {
   display: "flex",
+  flexDirection: "column",
   alignItems: "center",
-  justifyContent: "flex-end",
+  gap: 14,
+  marginTop: "auto",
+  marginBottom: "auto",
 };
 
-const SKIP_STYLE: CSSProperties = {
-  appearance: "none",
-  background: "transparent",
+const EYEBROW_STYLE: CSSProperties = {
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 11,
+  letterSpacing: 3,
+  textTransform: "uppercase",
   color: LU.base.ink2,
-  border: "none",
-  fontSize: 14,
-  cursor: "pointer",
 };
 
 const CARD_STYLE: CSSProperties = {
-  marginTop: "auto",
-  marginBottom: "auto",
   alignSelf: "stretch",
   display: "flex",
   flexDirection: "column",
@@ -160,23 +160,16 @@ export default function PermissionPage() {
   const { t } = useLocale();
   return (
     <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <button
-          onClick={() => router.push("/index")}
-          style={SKIP_STYLE}
-          type="button"
-        >
-          {t.permission_not_now}
-        </button>
-      </header>
-
-      <section style={CARD_STYLE}>
-        <span style={ICON_STYLE}>
-          <CameraIcon />
-        </span>
-        <h1 style={TITLE_STYLE}>{t.permission_title}</h1>
-        <p style={BODY_STYLE}>{t.permission_body}</p>
-      </section>
+      <div style={CONTENT_STYLE}>
+        <div style={EYEBROW_STYLE}>{t.permission_before_we_begin}</div>
+        <section style={CARD_STYLE}>
+          <span style={ICON_STYLE}>
+            <CameraIcon />
+          </span>
+          <h1 style={TITLE_STYLE}>{t.permission_title}</h1>
+          <p style={BODY_STYLE}>{t.permission_body}</p>
+        </section>
+      </div>
 
       <footer style={FOOTER_STYLE}>
         <button

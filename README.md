@@ -45,8 +45,9 @@ bun run dev         # Run persistent dev tasks
 | `commit-msg` | Commitlint Conventional Commits | `git commit --no-verify` |
 | `pre-push` | Ultracite check, Turbo typecheck, Typos, Gitleaks history scan | `git push --no-verify` |
 | CI | Ultracite check, typecheck, Typos, Gitleaks, actionlint | Required for merge |
+| Vercel preview | Hosted preview build/deploy | Advisory unless GitHub CI also fails or the PR changes deployment/build config |
 
-Build is intentionally not in CI by default; Vercel previews own app build validation unless this repo decides otherwise.
+Build is intentionally not in CI by default. Vercel previews are useful for smoke-testing and visual review, but they are not a hard merge gate when the failure is attributable to Vercel/platform behavior and GitHub CI is green. Treat Vercel failures as blocking only when they reproduce locally, coincide with CI failures, or the PR changes deployment/build/runtime configuration.
 
 ## Agent workflow
 
