@@ -3,9 +3,11 @@ import {
   extractQrSlug,
   getSpecimenByNumber,
   getSpecimenByQrPayload,
+  getSpecimenVisual,
   LUME_SPECIMENS,
   LUME_SPECIMENS_BY_FLOOR,
   LUME_TOTAL_SPECIMENS,
+  type LumeSpecimen,
   SAMPLE_FOUND,
 } from "./specimens";
 
@@ -50,6 +52,17 @@ describe("LUME_SPECIMENS catalogue", () => {
   test("SAMPLE_FOUND references real specimen numbers", () => {
     for (const n of SAMPLE_FOUND) {
       expect(getSpecimenByNumber(n)).toBeDefined();
+    }
+  });
+
+  test("specimen #1 ships a placeholder image; the other 22 fall back to the glyph", () => {
+    const aurum = getSpecimenByNumber(1);
+    expect(aurum?.image?.src).toBe("/images/specimens/lu-01-aurum.svg");
+    expect(aurum?.image?.alt.en.length).toBeGreaterThan(0);
+    expect(aurum?.image?.alt.ja.length).toBeGreaterThan(0);
+    const others = LUME_SPECIMENS.filter((s) => s.number !== 1);
+    for (const s of others) {
+      expect(s.image).toBeUndefined();
     }
   });
 });
@@ -118,5 +131,76 @@ describe("getSpecimenByQrPayload", () => {
 
   test("returns undefined for nonsense input", () => {
     expect(getSpecimenByQrPayload("definitely not a code")).toBeUndefined();
+  });
+});
+
+describe("getSpecimenVisual", () => {
+  const baseSpecimen: LumeSpecimen = {
+    number: 1,
+    floor: 1,
+    plate: "I",
+    form: "halo",
+    hue: "amber",
+    qr: "lu-test-fixture",
+    name: { en: "n", "zh-tw": "n", "zh-cn": "n", ja: "n", ko: "n" },
+    notes: { en: "x", "zh-tw": "x", "zh-cn": "x", ja: "x", ko: "x" },
+  };
+
+  test("returns the glyph branch when the specimen has no image", () => {
+    const visual = getSpecimenVisual(baseSpecimen, "en");
+    expect(visual.kind).toBe("glyph");
+    if (visual.kind === "glyph") {
+      expect(visual.form).toBe("halo");
+      expect(visual.hue).toBe("amber");
+    }
+  });
+
+  test("returns the image branch when the specimen has an image", () => {
+    const visual = getSpecimenVisual(
+      {
+        ...baseSpecimen,
+        image: {
+          src: "/images/specimens/test.svg",
+          alt: {
+            en: "Test artwork",
+            "zh-tw": "測試圖",
+            "zh-cn": "测试图",
+            ja: "テスト",
+            ko: "테스트",
+          },
+        },
+      },
+      "ja"
+    );
+    expect(visual.kind).toBe("image");
+    if (visual.kind === "image") {
+      expect(visual.src).toBe("/images/specimens/test.svg");
+      expect(visual.alt).toBe("テスト");
+    }
+  });
+
+  test("falls back to English alt when the active locale is missing", () => {
+    // Construct a deliberately partial alt to exercise the fallback path.
+    // We cast through a partial because the catalogue type requires every
+    // locale; a real catalogue would never ship in this state but the
+    // helper must still degrade gracefully.
+    const alt = {
+      en: "English fallback",
+    } as unknown as LumeSpecimen["image"] extends infer T
+      ? T extends { alt: infer A }
+        ? A
+        : never
+      : never;
+    const visual = getSpecimenVisual(
+      {
+        ...baseSpecimen,
+        image: { src: "/x.svg", alt },
+      },
+      "ja"
+    );
+    expect(visual.kind).toBe("image");
+    if (visual.kind === "image") {
+      expect(visual.alt).toBe("English fallback");
+    }
   });
 });

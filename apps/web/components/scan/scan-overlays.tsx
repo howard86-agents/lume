@@ -1,6 +1,10 @@
 "use client";
 
-import { LUME_TOTAL_SPECIMENS, type LumeSpecimen } from "@lume/data/specimens";
+import {
+  getSpecimenVisual,
+  LUME_TOTAL_SPECIMENS,
+  type LumeSpecimen,
+} from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import type { CSSProperties, ReactElement } from "react";
@@ -166,6 +170,7 @@ export function SuccessSheet({
     100,
     Math.round((collectedCount / LUME_TOTAL_SPECIMENS) * 100)
   );
+  const visual = getSpecimenVisual(specimen, lang);
   return (
     <div aria-modal="true" role="dialog" style={SHEET_BACKDROP_STYLE}>
       <div style={SHEET_STYLE}>
@@ -184,6 +189,7 @@ export function SuccessSheet({
           form={specimen.form}
           glow={0.7}
           hue={specimen.hue}
+          image={visual.kind === "image" ? visual : undefined}
           size={148}
         />
         <h2 style={NAME_STYLE}>{specimen.name[lang] ?? specimen.name.en}</h2>

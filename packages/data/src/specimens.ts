@@ -60,6 +60,27 @@ export type LumeSpecimenNumber =
 export type LumeSpecimenName = Readonly<Record<LumeLocale, string>>;
 
 /**
+ * Optional artwork attached to a specimen. When set, every renderer that
+ * understands the image field swaps the abstract glyph out for the image
+ * (correctly sized/cropped for the surface). Keeping the field optional
+ * means the catalogue can ship before any artwork has landed.
+ *
+ *   - `src` is consumed verbatim by `<img src=...>`. The build does not
+ *     remap the value, so absolute paths and pre-bundled URLs both work.
+ *     Public-folder paths (e.g. `/images/specimens/<slug>.svg`) are the
+ *     conventional choice.
+ *   - `alt` is per-locale so screen readers can announce the artwork in
+ *     the visitor's active language. The English string is required and
+ *     used as a fallback when the active locale is missing.
+ */
+export interface LumeSpecimenImage {
+  /** Per-language alt text. The English string is the canonical fallback. */
+  alt: LumeSpecimenName;
+  /** URL handed to `<img src>`; typically a path under the web public folder. */
+  src: string;
+}
+
+/**
  * One entry in the 23-specimen catalogue. The shape is deliberately flat
  * so renderers can map over it without further normalisation.
  */
@@ -70,6 +91,12 @@ export interface LumeSpecimen {
   form: LumeFormName;
   /** Accent hue used for the glow halo and plate accents. */
   hue: LumeAccent;
+  /**
+   * Optional artwork that replaces the generated glyph on every surface
+   * that understands images (gallery, detail, scan-success, card). When
+   * absent, the surface falls back to the abstract `form`/`hue` glyph.
+   */
+  image?: LumeSpecimenImage;
   /** Per-language display name. */
   name: LumeSpecimenName;
   /** Per-language short field-guide notes (one or two sentences). */
@@ -111,6 +138,19 @@ export const LUME_SPECIMENS: readonly LumeSpecimen[] = [
     form: "halo",
     hue: "amber",
     qr: "lu-01-aurum",
+    image: {
+      // Placeholder artwork shipping under apps/web/public so the
+      // image-vs-glyph fallback path is exercised end-to-end. Real
+      // exhibition artwork lands via issue #63.
+      src: "/images/specimens/lu-01-aurum.svg",
+      alt: {
+        en: "Aurum — a warm amber halo of layered light",
+        "zh-tw": "金光 — 層層相疊的溫暖琥珀色光環",
+        "zh-cn": "金光 — 层层相叠的温暖琥珀色光环",
+        ja: "金の灯 — 重なり合う暖かな琥珀色のヘイロー",
+        ko: "금빛 — 겹겹이 퍼지는 따뜻한 호박빛 헤일로",
+      },
+    },
     name: {
       en: "Aurum",
       "zh-tw": "金光",
@@ -741,3 +781,34 @@ export function extractQrSlug(payload: string): string | undefined {
 export const SAMPLE_FOUND: readonly LumeSpecimenNumber[] = [
   1, 4, 8, 11, 16, 21,
 ];
+
+/**
+ * Resolved per-render visual choice for a specimen — either an image
+ * (when the catalogue has supplied one) or the generated glyph.
+ *
+ * The discriminator lets every renderer (gallery tile, detail plate,
+ * scan-success sheet, achievement card) branch on `kind` without
+ * duplicating the locale-resolution rules.
+ */
+export type LumeSpecimenVisual =
+  | { alt: string; kind: "image"; src: string }
+  | { form: LumeFormName; hue: LumeAccent; kind: "glyph" };
+
+/**
+ * Pick the visual rendering for a specimen. Returns the image branch
+ * (with its alt text resolved against `lang`) when the specimen has an
+ * `image` set; otherwise returns the abstract-glyph branch.
+ *
+ * Pure and side-effect-free so renderers can call it inside JSX without
+ * worrying about render counts.
+ */
+export function getSpecimenVisual(
+  specimen: LumeSpecimen,
+  lang: LumeLocale
+): LumeSpecimenVisual {
+  if (specimen.image) {
+    const alt = specimen.image.alt[lang] ?? specimen.image.alt.en;
+    return { kind: "image", src: specimen.image.src, alt };
+  }
+  return { kind: "glyph", form: specimen.form, hue: specimen.hue };
+}

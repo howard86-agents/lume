@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  getSpecimenVisual,
   LUME_SPECIMENS_BY_FLOOR,
   LUME_TOTAL_SPECIMENS,
   type LumeFloor,
@@ -201,7 +202,9 @@ interface SpecimenTileProps {
 }
 
 function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
+  const { lang } = useLocale();
   const number = String(specimen.number).padStart(2, "0");
+  const visual = getSpecimenVisual(specimen, lang);
   const tileBody = (
     <>
       <span style={TILE_NUMBER_STYLE}>NO. {number}</span>
@@ -210,6 +213,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
         found={found}
         glow={found ? 0.55 : 0.4}
         hue={specimen.hue}
+        image={visual.kind === "image" ? visual : undefined}
         size={88}
       />
       {found ? (

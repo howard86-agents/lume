@@ -1,5 +1,6 @@
 import { LUME_FORM_NAMES } from "@lume/data/glyphs";
 import {
+  getSpecimenVisual,
   LUME_SPECIMENS,
   LUME_SPECIMENS_BY_FLOOR,
   LUME_TOTAL_SPECIMENS,
@@ -54,6 +55,10 @@ const META_STYLE: CSSProperties = {
 
 function SpecimenTile({ specimen }: { specimen: LumeSpecimen }) {
   const found = SAMPLE_FOUND.includes(specimen.number);
+  // The system preview is a static dev surface with no useLocale wiring,
+  // so we resolve alt text against English. Visitor-facing surfaces still
+  // resolve against the active locale.
+  const visual = getSpecimenVisual(specimen, "en");
   return (
     <article style={TILE_STYLE}>
       <span style={NUMBER_STYLE}>
@@ -64,6 +69,7 @@ function SpecimenTile({ specimen }: { specimen: LumeSpecimen }) {
         found={found}
         glow={0.6}
         hue={specimen.hue}
+        image={visual.kind === "image" ? visual : undefined}
         size={108}
       />
       <div style={NAME_STYLE}>{specimen.name.en}</div>
