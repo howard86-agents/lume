@@ -1,3 +1,3 @@
-import { appConfig } from "@workspace-template/data";
+import { appConfig } from "@lume/data";
 
 console.log(`${appConfig.name}: CLI ready`);

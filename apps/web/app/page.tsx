@@ -1,4 +1,4 @@
-import { appConfig } from "@workspace-template/data";
+import { appConfig } from "@lume/data";
 
 export default function HomePage() {
   return (

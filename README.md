@@ -1,13 +1,13 @@
-# workspace-template
+# lume
 
-Maison-style full-stack Turborepo template for Howard agent projects.
+Lume is a 23-specimen QR-scan field guide that visitors walk through across four floors of a venue, collecting light-form specimens until they reach 23/23 and take home a personalized achievement card. This repository is a Bun + Turborepo monorepo following the Maison-style template shape.
 
 ## Stack
 
 - Bun workspace + Turborepo
-- Next.js app in `apps/web`
+- Next.js app in `apps/web` (the visitor-facing scanner experience)
 - Bun CLI starter in `apps/cli`
-- Shared data package in `packages/data`
+- Shared specimen and locale data in `packages/data`
 - Prisma/Postgres package in `packages/database`
 - Shared TypeScript configs in `packages/config-typescript`
 - Ultracite/Biome, Husky, Commitlint, Gitleaks, Typos, Dependabot, GitHub Actions CI
@@ -46,16 +46,8 @@ bun run dev         # Run persistent dev tasks
 | `pre-push` | Ultracite check, Turbo typecheck, Typos, Gitleaks history scan | `git push --no-verify` |
 | CI | Ultracite check, typecheck, Typos, Gitleaks, actionlint | Required for merge |
 
-Build is intentionally not in CI by default; Vercel previews should own app build validation unless a generated project decides otherwise.
+Build is intentionally not in CI by default; Vercel previews own app build validation unless this repo decides otherwise.
 
 ## Agent workflow
 
 Read `AGENTS.md` before editing. Keep work issue-scoped, inspect code first, make atomic conventional commits, run checks, and document stack/base notes for dependent PRs.
-
-## Customizing a generated repo
-
-1. Replace `workspace-template` and `@workspace-template/*` package names with the project namespace.
-2. Update `CONTEXT.md` with product-specific goals and non-goals.
-3. Replace the starter homepage and seed data.
-4. Add product models to `packages/database/prisma/schema.prisma`.
-5. Keep quality gates intact unless the repo explicitly chooses different gates.
