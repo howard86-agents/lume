@@ -124,6 +124,47 @@ const STATUS_ERROR_STYLE: CSSProperties = {
   letterSpacing: 0.5,
 };
 
+const NICKNAME_FIELD_STYLE: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 6,
+  width: "min(360px, 100%)",
+  margin: "0 auto",
+};
+
+const NICKNAME_LABEL_STYLE: CSSProperties = {
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 10,
+  letterSpacing: 3,
+  textTransform: "uppercase",
+  color: LU.base.ink2,
+};
+
+const NICKNAME_INPUT_STYLE: CSSProperties = {
+  appearance: "none",
+  width: "100%",
+  height: 44,
+  padding: "0 16px",
+  borderRadius: 999,
+  border: `1px solid ${LU.rule.hair}`,
+  background: LU.glass.surface1,
+  color: LU.base.ink,
+  fontSize: 16,
+  fontWeight: 500,
+  textAlign: "center",
+  fontFamily: "var(--lu-font-display)",
+  // iOS Safari font-size < 16px triggers the auto-zoom-on-focus
+  // behaviour; keep the field at 16 so the page stays put.
+};
+
+/**
+ * Maximum nickname length on the card. Long enough for any of the
+ * five-language Visitor labels to spell out without clipping; short
+ * enough that the achievement-card layout never wraps.
+ */
+const NICKNAME_MAX_LENGTH = 24;
+
 /** Build the date string the card renders, formatted in the active locale. */
 function formatCardDate(lang: string): string {
   const formatter = new Intl.DateTimeFormat(lang, {
@@ -136,7 +177,7 @@ function formatCardDate(lang: string): string {
 
 export default function CardPage() {
   const router = useRouter();
-  const { hydrated, completion, state, markCardSaved } = useLume();
+  const { hydrated, completion, state, markCardSaved, setNickname } = useLume();
   const { t, lang } = useLocale();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -156,6 +197,16 @@ export default function CardPage() {
   const dateLabel = useMemo(() => formatCardDate(lang), [lang]);
 
   const nickname = state.nickname.trim() || t.card_visitor_default;
+
+  const onNicknameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      // Keep the persisted nickname identical to what the visitor typed
+      // (whitespace and all) — the trim only happens at the read-site so
+      // we never destroy intentional in-name spaces.
+      setNickname(event.target.value);
+    },
+    [setNickname]
+  );
 
   const onSave = useCallback(async () => {
     const node = cardRef.current;
@@ -179,8 +230,8 @@ export default function CardPage() {
   }, [isSaving, markCardSaved, router]);
 
   // Defer rendering the card until provider hydration so the visitor
-  // does not flash the localised "Visitor" fallback over the resolved
-  // nickname (issue #26 will introduce the editable field).
+  // does not flash the localised "Visitor" fallback over their persisted
+  // nickname.
   if (!hydrated) {
     return <main style={PAGE_STYLE} />;
   }
@@ -210,6 +261,24 @@ export default function CardPage() {
           />
         </CardStage>
       </section>
+
+      <div style={NICKNAME_FIELD_STYLE}>
+        <label htmlFor="lume-card-nickname" style={NICKNAME_LABEL_STYLE}>
+          {t.card_nickname_label}
+        </label>
+        <input
+          autoCapitalize="words"
+          autoComplete="off"
+          id="lume-card-nickname"
+          maxLength={NICKNAME_MAX_LENGTH}
+          onChange={onNicknameChange}
+          placeholder={t.card_nickname_placeholder}
+          spellCheck={false}
+          style={NICKNAME_INPUT_STYLE}
+          type="text"
+          value={state.nickname}
+        />
+      </div>
 
       <footer style={FOOTER_STYLE}>
         <button
