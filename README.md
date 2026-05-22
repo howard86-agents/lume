@@ -48,6 +48,12 @@ bun run dev         # Run persistent dev tasks
 
 Build is intentionally not in CI by default; Vercel previews own app build validation unless this repo decides otherwise.
 
+## Deployment
+
+See [`docs/deployment-guide.md`](./docs/deployment-guide.md) for the
+Vercel release flow, domain options, environment-variable expectations,
+and rollback procedure.
+
 ## Agent workflow
 
 Read `AGENTS.md` before editing. Keep work issue-scoped, inspect code first, make atomic conventional commits, run checks, and document stack/base notes for dependent PRs.

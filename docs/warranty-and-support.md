@@ -174,10 +174,9 @@ owner does not raise them as bugs during standby:
 - [`docs/qa/test-checklist.md`](./qa/test-checklist.md) — the
   pre-release test bar engineering walks before any standby fix is
   shipped.
-- Deployment guide (issue [#29][issue-29]) — build/release steps,
-  hosting choice, environment variables, and rollback procedure that
-  this warranty depends on. Once #29 lands, the file lives at
-  `docs/deployment-guide.md` and replaces this reference.
+- [`docs/deployment-guide.md`](./deployment-guide.md) — build/release
+  steps, hosting choice, environment variables, and rollback procedure
+  that this warranty depends on.
 - [`docs/content-update-guide.md`](./content-update-guide.md) —
   engineer-managed catalogue edits the owner may request during the
   engagement.
