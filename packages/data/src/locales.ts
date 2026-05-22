@@ -120,9 +120,11 @@ const EN = {
   index_dock_card: "View card",
 
   // Specimen detail — `/specimen/[n]`
-  specimen_plate_label: "Plate",
-  specimen_floor_label: "Floor",
+  specimen_plate_label: "PLATE",
+  specimen_floor_label: "FLOOR",
   specimen_number_label: "No.",
+  specimen_specimen_label: "SPECIMEN",
+  specimen_field_notes: "FIELD NOTES",
   specimen_collected_at: "Collected {date}",
   specimen_back: "Back to index",
   specimen_locked: "Not yet collected",
@@ -133,6 +135,7 @@ const EN = {
   complete_body:
     "Every light-form is in your index. Take home a card to remember the walk.",
   complete_view_card: "View your card",
+  complete_light_forms_lit: "LIGHT-FORMS LIT",
 
   // Achievement card — `/card`
   card_title: "Your field guide",
@@ -236,9 +239,11 @@ const ZH_TW: LumeLocaleBundle = {
   index_dock_scan: "掃描",
   index_dock_card: "查看成就卡",
 
-  specimen_plate_label: "圖版",
+  specimen_plate_label: "圖板",
   specimen_floor_label: "樓層",
   specimen_number_label: "編號",
+  specimen_specimen_label: "標本",
+  specimen_field_notes: "觀察筆記",
   specimen_collected_at: "收集於 {date}",
   specimen_back: "返回圖鑑",
   specimen_locked: "尚未收集",
@@ -247,6 +252,7 @@ const ZH_TW: LumeLocaleBundle = {
   complete_title: "你找齊了所有 23 種光體",
   complete_body: "每一種光體都在你的圖鑑中。帶一張卡片回家紀念這場散步吧。",
   complete_view_card: "查看你的成就卡",
+  complete_light_forms_lit: "光形已點亮",
 
   card_title: "你的田野指南",
   card_visitor_default: "訪客",
@@ -339,9 +345,11 @@ const ZH_CN: LumeLocaleBundle = {
   index_dock_scan: "扫描",
   index_dock_card: "查看成就卡",
 
-  specimen_plate_label: "图版",
+  specimen_plate_label: "图板",
   specimen_floor_label: "楼层",
   specimen_number_label: "编号",
+  specimen_specimen_label: "标本",
+  specimen_field_notes: "观察笔记",
   specimen_collected_at: "收集于 {date}",
   specimen_back: "返回图鉴",
   specimen_locked: "尚未收集",
@@ -350,6 +358,7 @@ const ZH_CN: LumeLocaleBundle = {
   complete_title: "你找齐了所有 23 种光体",
   complete_body: "每一种光体都在你的图鉴中。带一张卡片回家纪念这次漫步吧。",
   complete_view_card: "查看你的成就卡",
+  complete_light_forms_lit: "光形已点亮",
 
   card_title: "你的田野指南",
   card_visitor_default: "访客",
@@ -448,6 +457,8 @@ const JA: LumeLocaleBundle = {
   specimen_plate_label: "プレート",
   specimen_floor_label: "フロア",
   specimen_number_label: "番号",
+  specimen_specimen_label: "標本",
+  specimen_field_notes: "フィールドノート",
   specimen_collected_at: "{date} に収集",
   specimen_back: "図鑑へ戻る",
   specimen_locked: "まだ収集していません",
@@ -457,6 +468,7 @@ const JA: LumeLocaleBundle = {
   complete_body:
     "すべての光体があなたの図鑑に揃いました。今日の散策の記念にカードをどうぞ。",
   complete_view_card: "カードを見る",
+  complete_light_forms_lit: "灯火がともった",
 
   card_title: "あなたのフィールドガイド",
   card_visitor_default: "ビジター",
@@ -557,6 +569,8 @@ const KO: LumeLocaleBundle = {
   specimen_plate_label: "플레이트",
   specimen_floor_label: "층",
   specimen_number_label: "번호",
+  specimen_specimen_label: "표본",
+  specimen_field_notes: "관찰 노트",
   specimen_collected_at: "{date} 수집",
   specimen_back: "도감으로",
   specimen_locked: "아직 수집하지 않음",
@@ -566,6 +580,7 @@ const KO: LumeLocaleBundle = {
   complete_body:
     "모든 빛이 도감에 들어왔습니다. 오늘의 산책을 기억할 카드를 가져가세요.",
   complete_view_card: "카드 보기",
+  complete_light_forms_lit: "빛이 켜졌습니다",
 
   card_title: "내 도감",
   card_visitor_default: "방문자",
