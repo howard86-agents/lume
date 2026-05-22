@@ -127,9 +127,9 @@ export function LumeSpecimen({
           <Image
             alt={image.alt}
             decoding="async"
-            // The artwork (when stylised SVG/PNG) frequently leans on
-            // transparent edges + a glow. Disable next/image optimisation so
-            // SVGs render verbatim and PNGs keep their alpha at 2x export.
+            // Disable next/image optimisation so SVG and PNG artwork is
+            // delivered as authored (transparent edges, glow alpha) and
+            // captured 1:1 at the card export's 2x scale.
             height={Math.round(size * 0.78)}
             loading="lazy"
             src={image.src}
