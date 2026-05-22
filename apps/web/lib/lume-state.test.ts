@@ -4,6 +4,7 @@ import {
   clearLumeState,
   collectedCount,
   collectedNumbers,
+  hasPersistedLumeState,
   INITIAL_LUME_STATE,
   isComplete,
   LUME_STATE_STORAGE_KEY,
@@ -232,5 +233,49 @@ describe("persistence", () => {
       length: 0,
     } satisfies Storage;
     expect(() => saveLumeState(storage, INITIAL_LUME_STATE)).not.toThrow();
+  });
+});
+
+describe("hasPersistedLumeState", () => {
+  test("returns false on an empty storage", () => {
+    const storage = new MemoryStorage();
+    expect(hasPersistedLumeState(storage)).toBe(false);
+  });
+
+  test("returns true once state has been persisted", () => {
+    const storage = new MemoryStorage();
+    saveLumeState(storage, INITIAL_LUME_STATE);
+    expect(hasPersistedLumeState(storage)).toBe(true);
+  });
+
+  test("returns true even when the persisted payload is malformed", () => {
+    const storage = new MemoryStorage();
+    storage.setItem(LUME_STATE_STORAGE_KEY, "not json");
+    // The payload exists, even if loadLumeState would discard it.
+    expect(hasPersistedLumeState(storage)).toBe(true);
+  });
+
+  test("returns false when storage is null (SSR)", () => {
+    expect(hasPersistedLumeState(null)).toBe(false);
+  });
+
+  test("returns false when storage access throws", () => {
+    const storage = {
+      getItem: () => {
+        throw new Error("denied");
+      },
+      setItem: () => {
+        // ignored
+      },
+      removeItem: () => {
+        // ignored
+      },
+      clear: () => {
+        // ignored
+      },
+      key: () => null,
+      length: 0,
+    } satisfies Storage;
+    expect(hasPersistedLumeState(storage)).toBe(false);
   });
 });

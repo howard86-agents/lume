@@ -272,6 +272,26 @@ export function loadLumeState(storage: Storage | null): LumeState {
 }
 
 /**
+ * Whether `storage` currently holds a persisted Lume state envelope.
+ *
+ * Cheaper than `loadLumeState` (no JSON parse) and used by the provider
+ * to distinguish a fresh first-time visitor (storage empty) from a
+ * returning visitor whose persisted preferences must take precedence
+ * over any client-side detection. Mirrors `loadLumeState`'s defensive
+ * posture: storage errors and missing keys both report "no payload".
+ */
+export function hasPersistedLumeState(storage: Storage | null): boolean {
+  if (!storage) {
+    return false;
+  }
+  try {
+    return storage.getItem(LUME_STATE_STORAGE_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Persist player state to a `Storage` instance. Wraps the state in the
  * versioned envelope and silently no-ops on storage errors so that a full
  * disk or denied access never crashes the UI.
