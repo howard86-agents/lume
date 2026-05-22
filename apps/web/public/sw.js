@@ -81,7 +81,7 @@ self.addEventListener("activate", (event) => {
  * (API routes, document HTML — handled separately) falls through to a
  * normal network fetch.
  */
-function isCachableAsset(url) {
+function isCacheableAsset(url) {
   if (url.pathname.startsWith("/_next/static/")) {
     return true;
   }
@@ -153,7 +153,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Immutable / hashed static assets: cache-first.
-  if (isCachableAsset(url)) {
+  if (isCacheableAsset(url)) {
     event.respondWith(
       (async () => {
         const cached = await caches.match(request);
