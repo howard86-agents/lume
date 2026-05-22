@@ -109,6 +109,7 @@ const EN = {
 
   // Index gallery — `/index`
   index_title: "Your field guide",
+  index_your_sky: "YOUR SKY",
   index_progress: "{found} / {total}",
   index_floor_label: "Floor {floor}",
   index_floor_count: "{found} / {total} found",
@@ -223,6 +224,7 @@ const ZH_TW: LumeLocaleBundle = {
   scan_result_invalid: "無法辨識的代碼",
 
   index_title: "你的圖鑑",
+  index_your_sky: "你的星空",
   index_progress: "{found} / {total}",
   index_floor_label: "{floor} 樓",
   index_floor_count: "{found} / {total} 已收集",
@@ -323,6 +325,7 @@ const ZH_CN: LumeLocaleBundle = {
   scan_result_invalid: "无法识别的代码",
 
   index_title: "你的图鉴",
+  index_your_sky: "你的星空",
   index_progress: "{found} / {total}",
   index_floor_label: "{floor} 楼",
   index_floor_count: "{found} / {total} 已收集",
@@ -426,6 +429,7 @@ const JA: LumeLocaleBundle = {
   scan_result_invalid: "認識できないコードです",
 
   index_title: "あなたの図鑑",
+  index_your_sky: "あなたの空",
   index_progress: "{found} / {total}",
   index_floor_label: "{floor} 階",
   index_floor_count: "{found} / {total} 体",
@@ -532,6 +536,7 @@ const KO: LumeLocaleBundle = {
   scan_result_invalid: "인식할 수 없는 코드예요",
 
   index_title: "내 도감",
+  index_your_sky: "당신의 하늘",
   index_progress: "{found} / {total}",
   index_floor_label: "{floor}층",
   index_floor_count: "{found} / {total} 수집",

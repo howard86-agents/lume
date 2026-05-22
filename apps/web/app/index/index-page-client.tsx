@@ -61,6 +61,23 @@ const TITLE_STYLE: CSSProperties = {
   margin: 0,
 };
 
+const EYEBROW_STYLE: CSSProperties = {
+  color: LU.accent.amber,
+  fontFamily: "var(--lu-font-display)",
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: "0.12em",
+  lineHeight: 1.2,
+  textTransform: "uppercase",
+  whiteSpace: "nowrap",
+};
+
+const CJK_EYEBROW_STYLE: CSSProperties = {
+  ...EYEBROW_STYLE,
+  letterSpacing: "0.04em",
+  textTransform: "none",
+};
+
 const SETTINGS_LINK_STYLE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -121,11 +138,14 @@ const GRID_STYLE: CSSProperties = {
 };
 
 const TILE_STYLE: CSSProperties = {
+  position: "relative",
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
-  gap: 8,
-  padding: "16px 8px 12px",
+  justifyContent: "center",
+  aspectRatio: "1 / 1",
+  minHeight: 0,
+  padding: 12,
+  overflow: "hidden",
   borderRadius: 18,
   border: `1px solid ${LU.rule.hair}`,
   background: LU.glass.surface1,
@@ -140,24 +160,45 @@ const TILE_LOCKED_STYLE: CSSProperties = {
 };
 
 const TILE_NUMBER_STYLE: CSSProperties = {
+  position: "absolute",
+  top: 10,
+  left: 10,
   fontFamily: "var(--lu-font-mono)",
   fontSize: 10,
-  letterSpacing: 2,
+  letterSpacing: 1.4,
   textTransform: "uppercase",
   color: LU.base.ink3,
+  zIndex: 2,
 };
 
 const TILE_NAME_STYLE: CSSProperties = {
-  fontSize: 13,
+  position: "absolute",
+  left: 10,
+  right: 10,
+  bottom: 10,
+  fontSize: 12,
   fontWeight: 600,
-  textAlign: "center",
+  lineHeight: 1.15,
+  textAlign: "left",
   color: LU.base.ink,
+  zIndex: 2,
 };
 
 const TILE_LOCKED_LABEL_STYLE: CSSProperties = {
   ...TILE_NAME_STYLE,
   color: LU.base.ink3,
   fontWeight: 500,
+};
+
+const TILE_LOCKED_GLYPH_FRAME_STYLE: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 68,
+  height: 68,
+  borderRadius: 22,
+  border: `1px dashed ${LU.rule.strong}`,
+  opacity: 0.72,
 };
 
 const DOCK_STYLE: CSSProperties = {
@@ -174,25 +215,47 @@ const DOCK_STYLE: CSSProperties = {
 
 const DOCK_BUTTON_STYLE: CSSProperties = {
   appearance: "none",
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  padding: "16px 24px",
+  display: "grid",
+  gridTemplateColumns: "44px 1fr 44px",
+  alignItems: "center",
+  gap: 10,
+  border: "1px solid rgba(255, 183, 85, 0.45)",
+  background: "rgba(255, 183, 85, 0.14)",
+  color: LU.accent.amber,
+  padding: "10px 12px",
   borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 13,
+  fontWeight: 700,
+  letterSpacing: 1.6,
+  textTransform: "uppercase",
   cursor: "pointer",
   width: "min(420px, 100%)",
   backdropFilter: "blur(12px)",
   WebkitBackdropFilter: "blur(12px)",
+  boxShadow: "0 0 0 1px rgba(255, 183, 85, 0.18)",
 };
 
 const DOCK_BUTTON_COMPLETE_STYLE: CSSProperties = {
   ...DOCK_BUTTON_STYLE,
   border: `1px solid ${LU.accent.mint}`,
   background: "rgba(126, 240, 196, 0.16)",
+  color: LU.accent.mint,
   boxShadow: "0 0 0 1px rgba(126, 240, 196, 0.35)",
+};
+
+const DOCK_ICON_STYLE: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 36,
+  height: 36,
+  borderRadius: 999,
+  background: "currentColor",
+};
+
+const DOCK_ICON_INK_STYLE: CSSProperties = {
+  color: LU.base.deep,
 };
 
 interface SpecimenTileProps {
@@ -205,19 +268,32 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   const { lang } = useLocale();
   const number = String(specimen.number).padStart(2, "0");
   const visual = getSpecimenVisual(specimen, lang);
+  const specimenName = specimen.name[lang];
   const tileBody = (
     <>
       <span style={TILE_NUMBER_STYLE}>NO. {number}</span>
-      <LumeSpecimenView
-        form={specimen.form}
-        found={found}
-        glow={found ? 0.55 : 0.4}
-        hue={specimen.hue}
-        image={visual.kind === "image" ? visual : undefined}
-        size={88}
-      />
       {found ? (
-        <span style={TILE_NAME_STYLE}>{specimen.name.en}</span>
+        <LumeSpecimenView
+          form={specimen.form}
+          found
+          glow={0.55}
+          hue={specimen.hue}
+          image={visual.kind === "image" ? visual : undefined}
+          size={68}
+        />
+      ) : (
+        <span style={TILE_LOCKED_GLYPH_FRAME_STYLE}>
+          <LumeSpecimenView
+            form={specimen.form}
+            found={false}
+            glow={0.22}
+            hue={specimen.hue}
+            size={54}
+          />
+        </span>
+      )}
+      {found ? (
+        <span style={TILE_NAME_STYLE}>{specimenName}</span>
       ) : (
         <span style={TILE_LOCKED_LABEL_STYLE}>{lockedLabel}</span>
       )}
@@ -226,7 +302,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   if (found) {
     return (
       <Link
-        aria-label={`${specimen.name.en} (no. ${number})`}
+        aria-label={`${specimenName} (no. ${number})`}
         href={`/specimen/${specimen.number}`}
         style={TILE_STYLE}
       >
@@ -244,7 +320,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
 export function IndexPageClient() {
   const router = useRouter();
   const { collectedNumbers, collectedCount, completion, state } = useLume();
-  const { t, format } = useLocale();
+  const { format, lang, t } = useLocale();
 
   const dockOnClick = () => {
     if (completion) {
@@ -265,7 +341,12 @@ export function IndexPageClient() {
     <main style={PAGE_STYLE}>
       <header style={HEADER_STYLE}>
         <div style={HEADER_TOP_ROW_STYLE}>
-          <h1 style={TITLE_STYLE}>{t.index_title}</h1>
+          <div>
+            <div style={lang === "en" ? EYEBROW_STYLE : CJK_EYEBROW_STYLE}>
+              {t.index_your_sky}
+            </div>
+            <h1 style={TITLE_STYLE}>{t.index_title}</h1>
+          </div>
           <Link
             aria-label={t.settings_title}
             href="/settings"
@@ -303,7 +384,9 @@ export function IndexPageClient() {
             style={{
               width: `${progressPct}%`,
               height: "100%",
-              background: completion ? LU.accent.mint : LU.accent.amber,
+              background: completion
+                ? LU.accent.mint
+                : `linear-gradient(90deg, ${LU.accent.cyan} 0%, ${LU.accent.amber} 100%)`,
               transition: "width 240ms ease-out",
             }}
           />
@@ -348,7 +431,42 @@ export function IndexPageClient() {
           style={completion ? DOCK_BUTTON_COMPLETE_STYLE : DOCK_BUTTON_STYLE}
           type="button"
         >
-          {completion ? t.index_dock_card : t.index_dock_scan}
+          <span aria-hidden="true" style={DOCK_ICON_STYLE}>
+            <svg
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              style={DOCK_ICON_INK_STYLE}
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <title>{t.index_dock_scan}</title>
+              <path d="M4 8.5h3l1.6-2h6.8l1.6 2h3v10H4z" />
+              <circle cx="12" cy="13.5" r="3.2" />
+            </svg>
+          </span>
+          <span>{completion ? t.index_dock_card : t.index_dock_scan}</span>
+          <span aria-hidden="true" style={{ justifySelf: "end" }}>
+            <svg
+              fill="none"
+              height="22"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              viewBox="0 0 24 24"
+              width="22"
+            >
+              <title>
+                {completion ? t.index_dock_card : t.index_dock_scan}
+              </title>
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" />
+            </svg>
+          </span>
         </button>
       </nav>
     </main>
