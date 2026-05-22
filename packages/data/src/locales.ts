@@ -76,6 +76,7 @@ const EN = {
     "Reach 23 of 23 to unlock your personalised achievement card.",
 
   // Camera permission — `/permission` and `/scan`
+  permission_before_we_begin: "BEFORE WE BEGIN",
   permission_title: "Allow camera",
   permission_body:
     "Lume uses the camera only to read QR markers. No images leave your device.",
@@ -202,6 +203,7 @@ const ZH_TW: LumeLocaleBundle = {
   onboarding_three_title: "把田野指南帶回家",
   onboarding_three_body: "集滿 23 / 23 即可解鎖你的專屬成就卡。",
 
+  permission_before_we_begin: "開始之前",
   permission_title: "允許使用相機",
   permission_body: "Lume 僅使用相機讀取 QR 標記。所有影像不會離開你的裝置。",
   permission_allow: "允許相機",
@@ -309,6 +311,7 @@ const ZH_CN: LumeLocaleBundle = {
   onboarding_three_title: "把田野指南带回家",
   onboarding_three_body: "集齐 23 / 23 即可解锁你的专属成就卡。",
 
+  permission_before_we_begin: "开始之前",
   permission_title: "允许使用相机",
   permission_body: "Lume 仅使用相机读取 QR 标记。所有图像都不会离开你的设备。",
   permission_allow: "允许相机",
@@ -417,6 +420,7 @@ const JA: LumeLocaleBundle = {
   onboarding_three_body:
     "23 / 23 を達成すると、あなただけのアチーブメントカードが手に入ります。",
 
+  permission_before_we_begin: "はじめる前に",
   permission_title: "カメラの使用を許可",
   permission_body:
     "Lume はカメラを QR マーカーの読み取りのみに使用します。映像が端末の外に出ることはありません。",
@@ -530,6 +534,7 @@ const KO: LumeLocaleBundle = {
   onboarding_three_body:
     "23 / 23을 모두 채우면 당신만의 어치브먼트 카드가 잠금 해제됩니다.",
 
+  permission_before_we_begin: "시작하기 전에",
   permission_title: "카메라 권한 허용",
   permission_body:
     "Lume는 QR 마커를 읽는 데에만 카메라를 사용합니다. 영상은 기기를 떠나지 않습니다.",

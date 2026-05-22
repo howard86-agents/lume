@@ -2,8 +2,28 @@ import { describe, expect, test } from "bun:test";
 import {
   LUME_DEFAULT_LOCALE,
   LUME_LOCALE_BUNDLES,
+  LUME_LOCALES,
   resolveBrowserLocale,
 } from "./locales";
+
+describe("locale bundles", () => {
+  test("includes the permission pre-prompt eyebrow in every supported locale", () => {
+    expect(
+      Object.fromEntries(
+        LUME_LOCALES.map((locale) => [
+          locale,
+          LUME_LOCALE_BUNDLES[locale].permission_before_we_begin,
+        ])
+      )
+    ).toEqual({
+      en: "BEFORE WE BEGIN",
+      "zh-tw": "開始之前",
+      "zh-cn": "开始之前",
+      ja: "はじめる前に",
+      ko: "시작하기 전에",
+    });
+  });
+});
 
 describe("resolveBrowserLocale", () => {
   test("maps Japanese browser tags to ja", () => {
