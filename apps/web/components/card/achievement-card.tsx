@@ -6,6 +6,7 @@ import {
   type LumeSpecimen,
 } from "@lume/data/specimens";
 import { LU, type LumeAccent } from "@lume/data/tokens";
+import Image from "next/image";
 import {
   type CSSProperties,
   type ForwardedRef,
@@ -250,6 +251,66 @@ function dotStyle(specimen: LumeSpecimen, lit: boolean): CSSProperties {
   };
 }
 
+/** Wrapper style used when a lit specimen has bespoke artwork. */
+const IMAGE_DOT_WRAPPER_STYLE: CSSProperties = {
+  width: 18,
+  height: 18,
+  borderRadius: "50%",
+  overflow: "hidden",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  position: "relative",
+};
+
+/**
+ * Render either the existing hue-glow dot or — when the specimen has
+ * bespoke artwork *and* it is in the lit state — a small circular image
+ * inside a hue-tinted halo. The card export runs at `scale: 2` so an 18px
+ * dot rasterises at 36px, big enough to read the placeholder thumbnail.
+ *
+ * Locked specimens never reveal artwork (mirrors LumeSpecimen's
+ * found/locked contract), so the image branch only activates on `lit`.
+ */
+function GridDot({
+  specimen,
+  lit,
+}: {
+  lit: boolean;
+  specimen: LumeSpecimen;
+}): ReactElement {
+  if (lit && specimen.image) {
+    const rgb = ACCENT_TO_RGB[specimen.hue];
+    return (
+      <span
+        aria-hidden="true"
+        style={{
+          ...IMAGE_DOT_WRAPPER_STYLE,
+          boxShadow: `0 0 8px rgba(${rgb}, 0.55)`,
+          background:
+            `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.45) 0%, ` +
+            `rgba(${rgb}, 0.18) 60%, rgba(${rgb}, 0) 100%)`,
+        }}
+      >
+        <Image
+          alt=""
+          decoding="sync"
+          height={18}
+          src={specimen.image.src}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+          }}
+          unoptimized
+          width={18}
+        />
+      </span>
+    );
+  }
+  return <span aria-hidden="true" style={dotStyle(specimen, lit)} />;
+}
+
 const ACCENT_TO_RGB: Record<LumeAccent, string> = {
   amber: "255, 183, 85",
   cyan: "105, 224, 255",
@@ -294,13 +355,10 @@ function AchievementCardImpl(
       <section style={GRID_WRAPPER_STYLE}>
         <div style={GRID_STYLE}>
           {LUME_SPECIMENS.map((s) => (
-            <span
-              aria-hidden="true"
+            <GridDot
               key={s.qr}
-              style={dotStyle(
-                s,
-                highlightedNumbers ? highlightedNumbers.has(s.number) : true
-              )}
+              lit={highlightedNumbers ? highlightedNumbers.has(s.number) : true}
+              specimen={s}
             />
           ))}
         </div>
