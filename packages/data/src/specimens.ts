@@ -138,6 +138,19 @@ export const LUME_SPECIMENS: readonly LumeSpecimen[] = [
     form: "halo",
     hue: "amber",
     qr: "lu-01-aurum",
+    image: {
+      // Placeholder artwork shipping under apps/web/public so the
+      // image-vs-glyph fallback path is exercised end-to-end. Real
+      // exhibition artwork lands via issue #63.
+      src: "/images/specimens/lu-01-aurum.svg",
+      alt: {
+        en: "Aurum — a warm amber halo of layered light",
+        "zh-tw": "金光 — 層層相疊的溫暖琥珀色光環",
+        "zh-cn": "金光 — 层层相叠的温暖琥珀色光环",
+        ja: "金の灯 — 重なり合う暖かな琥珀色のヘイロー",
+        ko: "금빛 — 겹겹이 퍼지는 따뜻한 호박빛 헤일로",
+      },
+    },
     name: {
       en: "Aurum",
       "zh-tw": "金光",

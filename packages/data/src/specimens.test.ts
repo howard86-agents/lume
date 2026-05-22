@@ -54,6 +54,17 @@ describe("LUME_SPECIMENS catalogue", () => {
       expect(getSpecimenByNumber(n)).toBeDefined();
     }
   });
+
+  test("specimen #1 ships a placeholder image; the other 22 fall back to the glyph", () => {
+    const aurum = getSpecimenByNumber(1);
+    expect(aurum?.image?.src).toBe("/images/specimens/lu-01-aurum.svg");
+    expect(aurum?.image?.alt.en.length).toBeGreaterThan(0);
+    expect(aurum?.image?.alt.ja.length).toBeGreaterThan(0);
+    const others = LUME_SPECIMENS.filter((s) => s.number !== 1);
+    for (const s of others) {
+      expect(s.image).toBeUndefined();
+    }
+  });
 });
 
 describe("getSpecimenByNumber", () => {
