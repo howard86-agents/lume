@@ -96,6 +96,16 @@ const TITLE_STYLE: CSSProperties = {
   textAlign: "center",
 };
 
+const TITLE_PREFIX_STYLE: CSSProperties = {
+  color: LU.accent.amber,
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 13,
+  fontWeight: 700,
+  letterSpacing: 2.4,
+  marginRight: 10,
+  verticalAlign: "middle",
+};
+
 const BODY_STYLE: CSSProperties = {
   color: LU.base.ink2,
   fontSize: 15,
@@ -192,13 +202,14 @@ function StepTwoPreview() {
   const tiles: {
     form: "halo" | "ring" | "petal" | "prism" | "lattice" | "spire";
     hue: "amber" | "cyan" | "magenta" | "mint" | "violet" | "rose";
+    locked?: boolean;
   }[] = [
     { form: "halo", hue: "amber" },
     { form: "ring", hue: "cyan" },
     { form: "petal", hue: "rose" },
-    { form: "prism", hue: "violet" },
-    { form: "lattice", hue: "magenta" },
-    { form: "spire", hue: "mint" },
+    { form: "prism", hue: "violet", locked: true },
+    { form: "lattice", hue: "magenta", locked: true },
+    { form: "spire", hue: "mint", locked: true },
   ];
   return (
     <div
@@ -210,17 +221,34 @@ function StepTwoPreview() {
         width: "70%",
       }}
     >
-      {tiles.map((tile) => (
-        <LumeSpecimen
-          form={tile.form}
-          glow={0.55}
-          hue={tile.hue}
-          key={`${tile.form}-${tile.hue}`}
-          size={68}
-        />
-      ))}
+      {tiles.map((tile) =>
+        tile.locked ? (
+          <span
+            key={`${tile.form}-${tile.hue}-locked`}
+            style={{
+              width: 68,
+              height: 68,
+              borderRadius: "50%",
+              border: `1.5px dashed ${LU.base.ink3}`,
+              opacity: 0.45,
+            }}
+          />
+        ) : (
+          <LumeSpecimen
+            form={tile.form}
+            glow={0.55}
+            hue={tile.hue}
+            key={`${tile.form}-${tile.hue}`}
+            size={68}
+          />
+        )
+      )}
     </div>
   );
+}
+
+function formatStepNumber(value: number) {
+  return value.toString().padStart(2, "0");
 }
 
 function StepThreePreview() {
@@ -288,6 +316,7 @@ export default function OnboardingPage() {
   const { t, format } = useLocale();
   const [step, setStep] = useState(0);
   const isLast = step === TOTAL_STEPS - 1;
+  const currentStep = step + 1;
 
   const steps = [
     {
@@ -320,8 +349,9 @@ export default function OnboardingPage() {
       <header style={HEADER_STYLE}>
         <span style={STEP_INDICATOR_STYLE}>
           {format("onboarding_step_indicator", {
-            current: step + 1,
-            total: TOTAL_STEPS,
+            current: formatStepNumber(currentStep),
+            label: t.onboarding_how_it_works,
+            total: formatStepNumber(TOTAL_STEPS),
           })}
         </span>
         <button
@@ -343,7 +373,12 @@ export default function OnboardingPage() {
         }}
       >
         <div style={PREVIEW_STYLE}>{steps[step].preview}</div>
-        <h1 style={TITLE_STYLE}>{steps[step].title}</h1>
+        <h1 style={TITLE_STYLE}>
+          <span style={TITLE_PREFIX_STYLE}>
+            {formatStepNumber(currentStep)}
+          </span>
+          {steps[step].title}
+        </h1>
         <p style={BODY_STYLE}>{steps[step].body}</p>
       </section>
 

@@ -62,7 +62,8 @@ const EN = {
   language_step: "Step 1 of 3",
 
   // Onboarding — `/onboarding`
-  onboarding_step_indicator: "Step {current} of {total}",
+  onboarding_how_it_works: "HOW IT WORKS",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "Skip",
   onboarding_next: "Next",
   onboarding_begin: "Begin",
@@ -189,7 +190,8 @@ const ZH_TW: LumeLocaleBundle = {
   language_skip: "略過",
   language_step: "步驟 1 / 3",
 
-  onboarding_step_indicator: "步驟 {current} / {total}",
+  onboarding_how_it_works: "玩法說明",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "略過",
   onboarding_next: "下一步",
   onboarding_begin: "開始",
@@ -295,7 +297,8 @@ const ZH_CN: LumeLocaleBundle = {
   language_skip: "跳过",
   language_step: "步骤 1 / 3",
 
-  onboarding_step_indicator: "步骤 {current} / {total}",
+  onboarding_how_it_works: "玩法说明",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "跳过",
   onboarding_next: "下一步",
   onboarding_begin: "开始",
@@ -401,7 +404,8 @@ const JA: LumeLocaleBundle = {
   language_skip: "スキップ",
   language_step: "ステップ 1 / 3",
 
-  onboarding_step_indicator: "ステップ {current} / {total}",
+  onboarding_how_it_works: "遊び方",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "スキップ",
   onboarding_next: "次へ",
   onboarding_begin: "はじめる",
@@ -513,7 +517,8 @@ const KO: LumeLocaleBundle = {
   language_skip: "건너뛰기",
   language_step: "단계 1 / 3",
 
-  onboarding_step_indicator: "단계 {current} / {total}",
+  onboarding_how_it_works: "이용 방법",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "건너뛰기",
   onboarding_next: "다음",
   onboarding_begin: "시작하기",
