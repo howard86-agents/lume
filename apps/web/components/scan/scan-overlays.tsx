@@ -41,11 +41,16 @@ const SHEET_BACKDROP_STYLE: CSSProperties = {
   justifyContent: "center",
 };
 
-const SHEET_STYLE: CSSProperties = {
+const SHEET_STACK_STYLE: CSSProperties = {
+  position: "relative",
   width: "100%",
   maxWidth: 480,
+};
+
+const SHEET_STYLE: CSSProperties = {
+  width: "100%",
   margin: "0 auto",
-  padding: "24px 24px max(24px, env(safe-area-inset-bottom))",
+  padding: "96px 24px max(24px, env(safe-area-inset-bottom))",
   borderTopLeftRadius: 28,
   borderTopRightRadius: 28,
   border: `1px solid ${LU.rule.strong}`,
@@ -61,15 +66,38 @@ const SHEET_STYLE: CSSProperties = {
   boxShadow: "0 -32px 96px rgba(0, 0, 0, 0.55)",
 };
 
-const META_ROW_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "baseline",
-  gap: 12,
+const FLOATING_HERO_STYLE: CSSProperties = {
+  position: "absolute",
+  top: -84,
+  left: "50%",
+  zIndex: 1,
+  transform: "translateX(-50%)",
+  filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
+};
+
+const NEW_SPECIMEN_PILL_STYLE: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "7px 12px",
+  border: "1px solid rgba(255, 183, 85, 0.26)",
+  borderRadius: 999,
+  background: "rgba(255, 183, 85, 0.10)",
+  boxShadow: "0 0 24px rgba(255, 183, 85, 0.12)",
+  color: LU.base.ink,
   fontFamily: "var(--lu-font-mono)",
   fontSize: 11,
-  letterSpacing: 2,
+  fontWeight: 600,
+  letterSpacing: 1.4,
   textTransform: "uppercase",
-  color: LU.base.ink2,
+};
+
+const NEW_SPECIMEN_DOT_STYLE: CSSProperties = {
+  width: 7,
+  height: 7,
+  borderRadius: 999,
+  background: LU.accent.amber,
+  boxShadow: "0 0 14px rgba(255, 183, 85, 0.9)",
 };
 
 const NAME_STYLE: CSSProperties = {
@@ -111,10 +139,10 @@ const ACTIONS_STYLE: CSSProperties = {
 
 const PRIMARY_STYLE: CSSProperties = {
   appearance: "none",
-  flex: 1,
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
+  flex: 1.18,
+  border: "1px solid rgba(246, 246, 251, 0.88)",
+  background: LU.base.ink,
+  color: LU.base.deep,
   padding: "14px 16px",
   borderRadius: 999,
   fontSize: 15,
@@ -125,6 +153,14 @@ const PRIMARY_STYLE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const SECONDARY_STYLE: CSSProperties = {
+  ...PRIMARY_STYLE,
+  flex: 0.82,
+  border: `1px solid ${LU.rule.strong}`,
+  background: LU.glass.surface3,
+  color: LU.base.ink,
 };
 
 const TOAST_WRAPPER_STYLE: CSSProperties = {
@@ -173,62 +209,59 @@ export function SuccessSheet({
   const visual = getSpecimenVisual(specimen, lang);
   return (
     <div aria-modal="true" role="dialog" style={SHEET_BACKDROP_STYLE}>
-      <div style={SHEET_STYLE}>
-        <span style={META_ROW_STYLE}>
-          <span style={{ color: LU.accent.mint }}>{t.scan_result_added}</span>
-          <span style={{ color: LU.rule.strong }}>·</span>
-          <span>
-            {t.specimen_plate_label} {specimen.plate}
-          </span>
-          <span style={{ color: LU.rule.strong }}>·</span>
-          <span>
-            {t.specimen_floor_label} {specimen.floor}
-          </span>
-        </span>
+      <div style={SHEET_STACK_STYLE}>
         <LumeSpecimenView
           form={specimen.form}
           glow={0.7}
           hue={specimen.hue}
           image={visual.kind === "image" ? visual : undefined}
-          size={148}
+          size={160}
+          style={FLOATING_HERO_STYLE}
         />
-        <h2 style={NAME_STYLE}>{specimen.name[lang] ?? specimen.name.en}</h2>
-        <p style={NOTES_STYLE}>{specimen.notes[lang] ?? specimen.notes.en}</p>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <span style={PROGRESS_LABEL_STYLE}>
-            {format("index_progress", {
-              found: collectedCount,
-              total: LUME_TOTAL_SPECIMENS,
-            })}
+        <div style={SHEET_STYLE}>
+          <span style={NEW_SPECIMEN_PILL_STYLE}>
+            <span aria-hidden="true" style={NEW_SPECIMEN_DOT_STYLE} />
+            {t.scan_new_specimen}
           </span>
-          <span style={{ ...PROGRESS_LABEL_STYLE, color: LU.base.ink3 }}>
-            {progressPct}%
-          </span>
-        </div>
-        <div style={PROGRESS_TRACK_STYLE}>
+          <h2 style={NAME_STYLE}>{specimen.name[lang] ?? specimen.name.en}</h2>
+          <p style={NOTES_STYLE}>{specimen.notes[lang] ?? specimen.notes.en}</p>
           <div
             style={{
-              width: `${progressPct}%`,
-              height: "100%",
-              background: LU.accent.amber,
-              transition: "width 240ms ease-out",
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              width: "100%",
             }}
-          />
-        </div>
-        <div style={ACTIONS_STYLE}>
-          <Link href={`/specimen/${specimen.number}`} style={PRIMARY_STYLE}>
-            {t.scan_view_specimen}
-          </Link>
-          <button onClick={onContinue} style={PRIMARY_STYLE} type="button">
-            {t.scan_continue}
-          </button>
+          >
+            <span style={PROGRESS_LABEL_STYLE}>
+              {format("index_progress", {
+                found: collectedCount,
+                total: LUME_TOTAL_SPECIMENS,
+              })}
+            </span>
+            <span style={{ ...PROGRESS_LABEL_STYLE, color: LU.base.ink3 }}>
+              {progressPct}%
+            </span>
+          </div>
+          <div style={PROGRESS_TRACK_STYLE}>
+            <div
+              style={{
+                width: `${progressPct}%`,
+                height: "100%",
+                background: `linear-gradient(90deg, ${LU.accent.cyan} 0%, ${LU.accent.amber} 100%)`,
+                boxShadow: "0 0 18px rgba(255, 183, 85, 0.78)",
+                transition: "width 240ms ease-out",
+              }}
+            />
+          </div>
+          <div style={ACTIONS_STYLE}>
+            <button onClick={onContinue} style={PRIMARY_STYLE} type="button">
+              {t.scan_continue}
+            </button>
+            <Link href={`/specimen/${specimen.number}`} style={SECONDARY_STYLE}>
+              {t.scan_view_specimen}
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -237,10 +270,18 @@ export function SuccessSheet({
 
 export function DuplicateToast({
   onDismiss,
+  specimen,
 }: {
   onDismiss: () => void;
+  specimen?: LumeSpecimen;
 }): ReactElement {
-  const { t } = useLocale();
+  const { format, lang, t } = useLocale();
+  const message = specimen
+    ? format("scan_result_dupe_named", {
+        name: specimen.name[lang] ?? specimen.name.en,
+        n: specimen.number.toString().padStart(3, "0"),
+      })
+    : t.scan_result_dupe;
   return (
     <div style={TOAST_WRAPPER_STYLE}>
       <button
@@ -254,7 +295,7 @@ export function DuplicateToast({
         }}
         type="button"
       >
-        {t.scan_result_dupe}
+        {message}
       </button>
     </div>
   );

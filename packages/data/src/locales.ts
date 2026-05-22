@@ -62,7 +62,8 @@ const EN = {
   language_step: "Step 1 of 3",
 
   // Onboarding — `/onboarding`
-  onboarding_step_indicator: "Step {current} of {total}",
+  onboarding_how_it_works: "HOW IT WORKS",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "Skip",
   onboarding_next: "Next",
   onboarding_begin: "Begin",
@@ -93,6 +94,7 @@ const EN = {
     "Open Lume on a secure (https) link to enable scanning. You can use manual entry on any link.",
 
   // Scanner — `/scan`
+  scan_scanning: "SCANNING",
   scan_helper: "Centre the marker inside the frame.",
   scan_manual_open: "Enter code",
   scan_manual_title: "Enter code",
@@ -102,10 +104,12 @@ const EN = {
   scan_continue: "Continue scanning",
   scan_view_specimen: "View specimen",
   scan_back_to_index: "Back to index",
+  scan_new_specimen: "New specimen",
 
   // Scan-result feedback
   scan_result_added: "Added to your index",
   scan_result_dupe: "Already in your index",
+  scan_result_dupe_named: "{name} (no. {n}) — already in your index",
   scan_result_invalid: "Code not recognised",
 
   // Index gallery — `/index`
@@ -118,9 +122,11 @@ const EN = {
   index_dock_card: "View card",
 
   // Specimen detail — `/specimen/[n]`
-  specimen_plate_label: "Plate",
-  specimen_floor_label: "Floor",
+  specimen_plate_label: "PLATE",
+  specimen_floor_label: "FLOOR",
   specimen_number_label: "No.",
+  specimen_specimen_label: "SPECIMEN",
+  specimen_field_notes: "FIELD NOTES",
   specimen_collected_at: "Collected {date}",
   specimen_back: "Back to index",
   specimen_locked: "Not yet collected",
@@ -131,6 +137,7 @@ const EN = {
   complete_body:
     "Every light-form is in your index. Take home a card to remember the walk.",
   complete_view_card: "View your card",
+  complete_light_forms_lit: "LIGHT-FORMS LIT",
 
   // Achievement card — `/card`
   card_title: "Your field guide",
@@ -184,7 +191,8 @@ const ZH_TW: LumeLocaleBundle = {
   language_skip: "略過",
   language_step: "步驟 1 / 3",
 
-  onboarding_step_indicator: "步驟 {current} / {total}",
+  onboarding_how_it_works: "玩法說明",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "略過",
   onboarding_next: "下一步",
   onboarding_begin: "開始",
@@ -210,6 +218,7 @@ const ZH_TW: LumeLocaleBundle = {
   permission_insecure_body:
     "請以安全連線 (https) 開啟 Lume 才能掃描。任何連線下都可使用手動輸入。",
 
+  scan_scanning: "掃描中",
   scan_helper: "將標記對準畫面中央的圓框。",
   scan_manual_open: "輸入代碼",
   scan_manual_title: "輸入代碼",
@@ -219,9 +228,11 @@ const ZH_TW: LumeLocaleBundle = {
   scan_continue: "繼續掃描",
   scan_view_specimen: "查看光體",
   scan_back_to_index: "返回圖鑑",
+  scan_new_specimen: "新發現",
 
   scan_result_added: "已加入圖鑑",
   scan_result_dupe: "已收藏過了",
+  scan_result_dupe_named: "{name}（第 {n} 號）已在你的圖鑑中",
   scan_result_invalid: "無法辨識的代碼",
 
   index_title: "你的圖鑑",
@@ -232,9 +243,11 @@ const ZH_TW: LumeLocaleBundle = {
   index_dock_scan: "掃描",
   index_dock_card: "查看成就卡",
 
-  specimen_plate_label: "圖版",
+  specimen_plate_label: "圖板",
   specimen_floor_label: "樓層",
   specimen_number_label: "編號",
+  specimen_specimen_label: "標本",
+  specimen_field_notes: "觀察筆記",
   specimen_collected_at: "收集於 {date}",
   specimen_back: "返回圖鑑",
   specimen_locked: "尚未收集",
@@ -243,6 +256,7 @@ const ZH_TW: LumeLocaleBundle = {
   complete_title: "你找齊了所有 23 種光體",
   complete_body: "每一種光體都在你的圖鑑中。帶一張卡片回家紀念這場散步吧。",
   complete_view_card: "查看你的成就卡",
+  complete_light_forms_lit: "光形已點亮",
 
   card_title: "你的田野指南",
   card_visitor_default: "訪客",
@@ -285,7 +299,8 @@ const ZH_CN: LumeLocaleBundle = {
   language_skip: "跳过",
   language_step: "步骤 1 / 3",
 
-  onboarding_step_indicator: "步骤 {current} / {total}",
+  onboarding_how_it_works: "玩法说明",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "跳过",
   onboarding_next: "下一步",
   onboarding_begin: "开始",
@@ -311,6 +326,7 @@ const ZH_CN: LumeLocaleBundle = {
   permission_insecure_body:
     "请以安全连接 (https) 打开 Lume 才能扫描。任何连接下都可使用手动输入。",
 
+  scan_scanning: "扫描中",
   scan_helper: "将标记对准画面中央的圆框。",
   scan_manual_open: "输入代码",
   scan_manual_title: "输入代码",
@@ -320,9 +336,11 @@ const ZH_CN: LumeLocaleBundle = {
   scan_continue: "继续扫描",
   scan_view_specimen: "查看光体",
   scan_back_to_index: "返回图鉴",
+  scan_new_specimen: "新发现",
 
   scan_result_added: "已加入图鉴",
   scan_result_dupe: "已经收藏过了",
+  scan_result_dupe_named: "{name}（第 {n} 号）已在你的图鉴中",
   scan_result_invalid: "无法识别的代码",
 
   index_title: "你的图鉴",
@@ -333,9 +351,11 @@ const ZH_CN: LumeLocaleBundle = {
   index_dock_scan: "扫描",
   index_dock_card: "查看成就卡",
 
-  specimen_plate_label: "图版",
+  specimen_plate_label: "图板",
   specimen_floor_label: "楼层",
   specimen_number_label: "编号",
+  specimen_specimen_label: "标本",
+  specimen_field_notes: "观察笔记",
   specimen_collected_at: "收集于 {date}",
   specimen_back: "返回图鉴",
   specimen_locked: "尚未收集",
@@ -344,6 +364,7 @@ const ZH_CN: LumeLocaleBundle = {
   complete_title: "你找齐了所有 23 种光体",
   complete_body: "每一种光体都在你的图鉴中。带一张卡片回家纪念这次漫步吧。",
   complete_view_card: "查看你的成就卡",
+  complete_light_forms_lit: "光形已点亮",
 
   card_title: "你的田野指南",
   card_visitor_default: "访客",
@@ -386,7 +407,8 @@ const JA: LumeLocaleBundle = {
   language_skip: "スキップ",
   language_step: "ステップ 1 / 3",
 
-  onboarding_step_indicator: "ステップ {current} / {total}",
+  onboarding_how_it_works: "遊び方",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "スキップ",
   onboarding_next: "次へ",
   onboarding_begin: "はじめる",
@@ -415,6 +437,7 @@ const JA: LumeLocaleBundle = {
   permission_insecure_body:
     "セキュアな (https) リンクで Lume を開くとスキャンできます。手動入力はどのリンクでも利用できます。",
 
+  scan_scanning: "スキャン中",
   scan_helper: "マーカーを中央の円の中に合わせてください。",
   scan_manual_open: "コードを入力",
   scan_manual_title: "コードを入力",
@@ -424,9 +447,11 @@ const JA: LumeLocaleBundle = {
   scan_continue: "スキャンを続ける",
   scan_view_specimen: "光体を見る",
   scan_back_to_index: "図鑑へ戻る",
+  scan_new_specimen: "新しい標本",
 
   scan_result_added: "図鑑に追加しました",
   scan_result_dupe: "すでに図鑑にあります",
+  scan_result_dupe_named: "{name}（No. {n}）はすでに図鑑にあります",
   scan_result_invalid: "認識できないコードです",
 
   index_title: "あなたの図鑑",
@@ -440,6 +465,8 @@ const JA: LumeLocaleBundle = {
   specimen_plate_label: "プレート",
   specimen_floor_label: "フロア",
   specimen_number_label: "番号",
+  specimen_specimen_label: "標本",
+  specimen_field_notes: "フィールドノート",
   specimen_collected_at: "{date} に収集",
   specimen_back: "図鑑へ戻る",
   specimen_locked: "まだ収集していません",
@@ -449,6 +476,7 @@ const JA: LumeLocaleBundle = {
   complete_body:
     "すべての光体があなたの図鑑に揃いました。今日の散策の記念にカードをどうぞ。",
   complete_view_card: "カードを見る",
+  complete_light_forms_lit: "灯火がともった",
 
   card_title: "あなたのフィールドガイド",
   card_visitor_default: "ビジター",
@@ -493,7 +521,8 @@ const KO: LumeLocaleBundle = {
   language_skip: "건너뛰기",
   language_step: "단계 1 / 3",
 
-  onboarding_step_indicator: "단계 {current} / {total}",
+  onboarding_how_it_works: "이용 방법",
+  onboarding_step_indicator: "{label} · {current} / {total}",
   onboarding_skip: "건너뛰기",
   onboarding_next: "다음",
   onboarding_begin: "시작하기",
@@ -522,6 +551,7 @@ const KO: LumeLocaleBundle = {
   permission_insecure_body:
     "보안 (https) 링크로 Lume를 열어야 스캔할 수 있어요. 수동 입력은 어떤 링크에서도 가능합니다.",
 
+  scan_scanning: "스캔 중",
   scan_helper: "마커를 가운데 원 안에 맞춰 주세요.",
   scan_manual_open: "코드 입력",
   scan_manual_title: "코드 입력",
@@ -531,9 +561,11 @@ const KO: LumeLocaleBundle = {
   scan_continue: "계속 스캔",
   scan_view_specimen: "빛 보기",
   scan_back_to_index: "도감으로",
+  scan_new_specimen: "새 표본",
 
   scan_result_added: "도감에 추가됨",
   scan_result_dupe: "이미 도감에 있어요",
+  scan_result_dupe_named: "{name} (No. {n}) 이미 도감에 있습니다",
   scan_result_invalid: "인식할 수 없는 코드예요",
 
   index_title: "내 도감",
@@ -547,6 +579,8 @@ const KO: LumeLocaleBundle = {
   specimen_plate_label: "플레이트",
   specimen_floor_label: "층",
   specimen_number_label: "번호",
+  specimen_specimen_label: "표본",
+  specimen_field_notes: "관찰 노트",
   specimen_collected_at: "{date} 수집",
   specimen_back: "도감으로",
   specimen_locked: "아직 수집하지 않음",
@@ -556,6 +590,7 @@ const KO: LumeLocaleBundle = {
   complete_body:
     "모든 빛이 도감에 들어왔습니다. 오늘의 산책을 기억할 카드를 가져가세요.",
   complete_view_card: "카드 보기",
+  complete_light_forms_lit: "빛이 켜졌습니다",
 
   card_title: "내 도감",
   card_visitor_default: "방문자",

@@ -17,8 +17,8 @@ import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/l
  *
  * Renders the localized field-guide entry for one collected specimen:
  * plate/floor/NO. metadata in the chrome, the big LumeSpecimen glyph in
- * a glass plate, the localized name (with the English name beneath when
- * the active locale isn't English), the localized field notes, and the
+ * a glass plate, the editorial localized name with a mono Latin subtitle,
+ * the localized field notes, and the
  * timestamp from `collectedAt`. Back links to `/index`.
  *
  * Locked specimens (i.e. ones the visitor has not yet collected) are
@@ -64,10 +64,48 @@ const META_STYLE: CSSProperties = {
   color: LU.base.ink3,
 };
 
+const PLATE_LABEL_BASE_STYLE: CSSProperties = {
+  position: "absolute",
+  zIndex: 2,
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 10,
+  letterSpacing: 1.6,
+  lineHeight: 1.2,
+  textTransform: "uppercase",
+  color: LU.base.ink3,
+  textShadow: "0 0 12px rgba(246, 246, 251, 0.18)",
+};
+
+const PLATE_LABEL_TOP_LEFT_STYLE: CSSProperties = {
+  ...PLATE_LABEL_BASE_STYLE,
+  top: 18,
+  left: 20,
+};
+
+const PLATE_LABEL_TOP_RIGHT_STYLE: CSSProperties = {
+  ...PLATE_LABEL_BASE_STYLE,
+  top: 18,
+  right: 20,
+  textAlign: "right",
+};
+
+const PLATE_LABEL_BOTTOM_LEFT_STYLE: CSSProperties = {
+  ...PLATE_LABEL_BASE_STYLE,
+  bottom: 18,
+  left: 20,
+};
+
+const PLATE_LABEL_BOTTOM_RIGHT_STYLE: CSSProperties = {
+  ...PLATE_LABEL_BASE_STYLE,
+  bottom: 18,
+  right: 20,
+  textAlign: "right",
+};
+
 const PLATE_STYLE: CSSProperties = {
   alignSelf: "center",
   width: "min(360px, 90%)",
-  aspectRatio: "1 / 1",
+  aspectRatio: "5 / 6",
   borderRadius: 28,
   border: `1px solid ${LU.rule.hair}`,
   background: LU.glass.surface1,
@@ -79,17 +117,20 @@ const PLATE_STYLE: CSSProperties = {
 };
 
 const NAME_BLOCK_STYLE: CSSProperties = {
+  alignSelf: "center",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
+  alignItems: "flex-start",
   gap: 4,
-  textAlign: "center",
+  textAlign: "left",
+  width: "min(460px, 100%)",
 };
 
 const NAME_PRIMARY_STYLE: CSSProperties = {
-  fontSize: 28,
+  fontSize: "clamp(32px, 8vw, 36px)",
   fontWeight: 600,
-  letterSpacing: -0.4,
+  letterSpacing: -0.8,
+  lineHeight: 1.03,
   margin: 0,
 };
 
@@ -101,22 +142,36 @@ const NAME_SECONDARY_STYLE: CSSProperties = {
   color: LU.base.ink3,
 };
 
+const FIELD_NOTES_EYEBROW_STYLE: CSSProperties = {
+  alignSelf: "center",
+  width: "min(460px, 100%)",
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 11,
+  letterSpacing: 2.4,
+  textTransform: "uppercase",
+  color: LU.base.ink3,
+  marginTop: 8,
+};
+
 const NOTES_STYLE: CSSProperties = {
+  alignSelf: "center",
   color: LU.base.ink2,
   fontSize: 15,
   lineHeight: 1.55,
-  margin: "4px auto 0",
+  margin: 0,
   maxWidth: 460,
-  textAlign: "center",
+  textAlign: "left",
 };
 
 const TIMESTAMP_STYLE: CSSProperties = {
+  alignSelf: "center",
+  width: "min(460px, 100%)",
   fontFamily: "var(--lu-font-mono)",
   fontSize: 11,
   letterSpacing: 1.5,
   textTransform: "uppercase",
   color: LU.base.ink3,
-  textAlign: "center",
+  textAlign: "left",
 };
 
 interface SpecimenDetailProps {
@@ -202,8 +257,8 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
 
   const localizedName = specimen.name[lang];
   const localizedNotes = specimen.notes[lang];
-  const showEnglishSubtitle = lang !== "en";
   const visual = getSpecimenVisual(specimen, lang);
+  const specimenNumber = String(specimen.number).padStart(3, "0");
 
   const collectedAtText = formatCollectedAt(
     state.collectedAt[specimen.number],
@@ -235,6 +290,18 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
 
       <section style={PLATE_STYLE}>
         <PlateBackdrop specimen={specimen} />
+        <span style={PLATE_LABEL_TOP_LEFT_STYLE}>
+          {t.specimen_plate_label} · {specimen.plate}
+        </span>
+        <span style={PLATE_LABEL_TOP_RIGHT_STYLE}>
+          {t.specimen_floor_label} · {specimen.floor}
+        </span>
+        <span style={PLATE_LABEL_BOTTOM_LEFT_STYLE}>
+          {t.specimen_number_label} {specimenNumber}
+        </span>
+        <span style={PLATE_LABEL_BOTTOM_RIGHT_STYLE}>
+          {t.specimen_specimen_label}
+        </span>
         <div style={{ position: "relative" }}>
           <LumeSpecimenView
             form={specimen.form}
@@ -248,11 +315,10 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
 
       <section style={NAME_BLOCK_STYLE}>
         <h1 style={NAME_PRIMARY_STYLE}>{localizedName}</h1>
-        {showEnglishSubtitle ? (
-          <span style={NAME_SECONDARY_STYLE}>{specimen.name.en}</span>
-        ) : null}
+        <span style={NAME_SECONDARY_STYLE}>{specimen.name.en}</span>
       </section>
 
+      <span style={FIELD_NOTES_EYEBROW_STYLE}>{t.specimen_field_notes}</span>
       <p style={NOTES_STYLE}>{localizedNotes}</p>
 
       {collectedAtText ? (
