@@ -14,6 +14,7 @@ import {
   useState,
 } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
+import { ManualEntryDialog } from "../../components/scan/manual-entry-dialog";
 import {
   DuplicateToast,
   InvalidToast,
@@ -259,6 +260,8 @@ function ScanPageInner(): ReactElement {
     | { kind: "invalid" }
     | null
   >(null);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manualInput, setManualInput] = useState("");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -455,12 +458,35 @@ function ScanPageInner(): ReactElement {
       </p>
 
       <button
-        onClick={() => router.push("/index")}
+        onClick={() => setManualOpen(true)}
         style={MANUAL_LINK_STYLE}
         type="button"
       >
         {t.scan_manual_open}
       </button>
+
+      {manualOpen ? (
+        <ManualEntryDialog
+          input={manualInput}
+          onCancel={() => {
+            setManualOpen(false);
+            setManualInput("");
+          }}
+          onChange={setManualInput}
+          onSubmit={(payload) => {
+            const { result, specimen } = collectWithSpecimen(payload);
+            setManualOpen(false);
+            setManualInput("");
+            if (result === "new" && specimen) {
+              setActiveOverlay({ kind: "success", specimen });
+            } else if (result === "dupe") {
+              setActiveOverlay({ kind: "dupe" });
+            } else {
+              setActiveOverlay({ kind: "invalid" });
+            }
+          }}
+        />
+      ) : null}
 
       {activeOverlay?.kind === "success" ? (
         <SuccessSheet
