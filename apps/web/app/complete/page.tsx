@@ -71,6 +71,32 @@ const CENTER_STYLE: CSSProperties = {
   aspectRatio: "1 / 1",
 };
 
+const NUMERAL_STACK_STYLE: CSSProperties = {
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 6,
+};
+
+const NUMERAL_STYLE: CSSProperties = {
+  fontSize: 96,
+  fontWeight: 700,
+  letterSpacing: -3,
+  color: LU.base.ink,
+  lineHeight: 0.9,
+  textShadow: "0 0 24px rgba(126, 240, 196, 0.45)",
+};
+
+const NUMERAL_SUB_LABEL_STYLE: CSSProperties = {
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 11,
+  letterSpacing: 2.6,
+  textTransform: "uppercase",
+  color: LU.base.ink2,
+  textShadow: "0 0 18px rgba(126, 240, 196, 0.28)",
+};
+
 const TITLE_STYLE: CSSProperties = {
   fontSize: 28,
   fontWeight: 600,
@@ -170,16 +196,12 @@ export default function CompletePage() {
         <span
           aria-hidden="true"
           className="lume-complete-numeral"
-          style={{
-            position: "relative",
-            fontSize: 96,
-            fontWeight: 700,
-            letterSpacing: -3,
-            color: LU.base.ink,
-            textShadow: "0 0 24px rgba(126, 240, 196, 0.45)",
-          }}
+          style={NUMERAL_STACK_STYLE}
         >
-          23
+          <span style={NUMERAL_STYLE}>23</span>
+          <span style={NUMERAL_SUB_LABEL_STYLE}>
+            {t.complete_light_forms_lit}
+          </span>
         </span>
         {LUME_SPECIMENS.map((s, i) => {
           const pos = specimenClusterPosition(s, i);
