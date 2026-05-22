@@ -51,9 +51,9 @@ export interface LumeContextValue {
   /** Set of collected specimen numbers — handy for membership checks. */
   collectedNumbers: ReadonlySet<LumeSpecimenNumber>;
   /**
-   * Same as `collect` but additionally returns the resolved specimen on a
-   * `'new'` outcome so the success sheet can render it without re-querying
-   * the catalogue.
+   * Same as `collect` but additionally returns the resolved specimen on
+   * `'new'` and `'dupe'` outcomes so scan-result feedback can render it
+   * without re-querying the catalogue.
    */
   collectWithSpecimen: (payload: string) => {
     result: LumeCollectResult;

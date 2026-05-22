@@ -237,10 +237,18 @@ export function SuccessSheet({
 
 export function DuplicateToast({
   onDismiss,
+  specimen,
 }: {
   onDismiss: () => void;
+  specimen?: LumeSpecimen;
 }): ReactElement {
-  const { t } = useLocale();
+  const { format, lang, t } = useLocale();
+  const message = specimen
+    ? format("scan_result_dupe_named", {
+        name: specimen.name[lang] ?? specimen.name.en,
+        n: specimen.number.toString().padStart(3, "0"),
+      })
+    : t.scan_result_dupe;
   return (
     <div style={TOAST_WRAPPER_STYLE}>
       <button
@@ -254,7 +262,7 @@ export function DuplicateToast({
         }}
         type="button"
       >
-        {t.scan_result_dupe}
+        {message}
       </button>
     </div>
   );

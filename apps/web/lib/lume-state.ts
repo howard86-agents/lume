@@ -79,7 +79,7 @@ export type LumeAction =
 
 /** Reducer-step return — exposes the collect outcome alongside the new state. */
 export interface LumeReduceResult {
-  /** The specimen that was just collected (only on a `'new'` outcome). */
+  /** The specimen matched by the collect payload (set on `'new'` and `'dupe'`). */
   collectedSpecimen?: LumeSpecimen;
   /** Set when the action that produced this state was a `collect`. */
   collectResult?: LumeCollectResult;
@@ -132,7 +132,7 @@ function collectSpecimen(
     return { state, collectResult: "invalid" };
   }
   if (state.collected.includes(slug)) {
-    return { state, collectResult: "dupe" };
+    return { state, collectResult: "dupe", collectedSpecimen: specimen };
   }
   const ts = nowIso ?? new Date().toISOString();
   return {
