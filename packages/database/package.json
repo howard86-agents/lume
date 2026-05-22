@@ -26,6 +26,6 @@
     "@types/pg": "^8.16.0",
     "prisma": "latest",
     "tsx": "4.22.3",
-    "typescript": "5.5.4"
+    "typescript": "6.0.3"
   }
 }
