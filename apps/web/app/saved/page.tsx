@@ -1,8 +1,7 @@
 "use client";
 
-import { LU } from "@lume/data/tokens";
 import { useRouter } from "next/navigation";
-import { type CSSProperties, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
 
 /**
@@ -16,111 +15,6 @@ import { useLocale, useLume } from "../../components/lume-provider";
  * are redirected back to `/card` (or `/collection` if they have not yet
  * reached 23/23) so the confirmation cannot be surfaced out of order.
  */
-
-const PAGE_STYLE: CSSProperties = {
-  position: "relative",
-  minHeight: "var(--lu-screen-h)",
-  background: LU.aurora.cover,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  padding:
-    "max(48px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom))",
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 8,
-  textAlign: "center",
-};
-
-const EYEBROW_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.accent.mint,
-};
-
-const HERO_STYLE: CSSProperties = {
-  position: "relative",
-  alignSelf: "center",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "min(72vw, 280px)",
-  aspectRatio: "1 / 1",
-};
-
-const HALO_STYLE: CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  borderRadius: "50%",
-  background: LU.aurora.halo,
-  filter: "blur(28px)",
-  opacity: 0.7,
-};
-
-const ICON_STYLE: CSSProperties = {
-  position: "relative",
-  width: 96,
-  height: 96,
-  borderRadius: "50%",
-  border: `1px solid ${LU.accent.mint}`,
-  background: "rgba(126, 240, 196, 0.12)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "0 0 32px rgba(126, 240, 196, 0.35)",
-};
-
-const COPY_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 12,
-  textAlign: "center",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontSize: 28,
-  fontWeight: 600,
-  letterSpacing: -0.4,
-  margin: 0,
-  maxWidth: 360,
-};
-
-const BODY_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 15,
-  lineHeight: 1.5,
-  margin: 0,
-  maxWidth: 360,
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 12,
-};
-
-const PRIMARY_BUTTON_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  padding: "16px 24px",
-  borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  width: "min(320px, 100%)",
-};
 
 export default function SavedPage() {
   const router = useRouter();
@@ -141,20 +35,28 @@ export default function SavedPage() {
   }, [hydrated, completion, state.cardSaved, router]);
 
   return (
-    <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <span style={EYEBROW_STYLE}>{t.card_saved_eyebrow}</span>
+    <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between bg-aurora-cover px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
+      <header className="flex flex-col items-center gap-2 text-center">
+        <span className="font-mono-lu text-[11px] text-mint uppercase tracking-[3px]">
+          {t.card_saved_eyebrow}
+        </span>
       </header>
 
-      <section style={HERO_STYLE}>
-        <span aria-hidden="true" style={HALO_STYLE} />
-        <span style={ICON_STYLE}>
+      <section
+        className="relative flex w-[min(72vw,280px)] items-center justify-center self-center"
+        style={{ aspectRatio: "1 / 1" }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[28px]"
+        />
+        <span className="relative flex h-24 w-24 items-center justify-center rounded-[50%] border border-mint bg-[rgba(126,240,196,0.12)] shadow-[0_0_32px_rgba(126,240,196,0.35)]">
           <svg
             aria-hidden="true"
             fill="none"
             focusable="false"
             height="36"
-            stroke={LU.accent.mint}
+            stroke="var(--lu-accent-mint)"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
@@ -167,15 +69,19 @@ export default function SavedPage() {
         </span>
       </section>
 
-      <section style={COPY_STYLE}>
-        <h1 style={TITLE_STYLE}>{t.card_saved_title}</h1>
-        <p style={BODY_STYLE}>{t.card_saved_body}</p>
+      <section className="flex flex-col items-center gap-3 text-center">
+        <h1 className="m-0 max-w-[360px] font-semibold text-[28px] tracking-[-0.4px]">
+          {t.card_saved_title}
+        </h1>
+        <p className="m-0 max-w-[360px] text-[15px] text-ink-2 leading-normal">
+          {t.card_saved_body}
+        </p>
       </section>
 
-      <footer style={FOOTER_STYLE}>
+      <footer className="flex flex-col items-center gap-3">
         <button
+          className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={() => router.push("/collection")}
-          style={PRIMARY_BUTTON_STYLE}
           type="button"
         >
           {t.card_saved_back}

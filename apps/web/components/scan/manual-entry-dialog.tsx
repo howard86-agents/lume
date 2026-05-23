@@ -1,7 +1,6 @@
 "use client";
 
-import { LU } from "@lume/data/tokens";
-import type { CSSProperties, ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useLocale } from "../lume-provider";
 
 /**
@@ -12,81 +11,6 @@ import { useLocale } from "../lume-provider";
  * payload through the same useLume().collect() path the decode loop
  * uses, so the success/duplicate/invalid overlays light up identically.
  */
-
-const BACKDROP_STYLE: CSSProperties = {
-  position: "fixed",
-  inset: 0,
-  background: "rgba(8, 8, 13, 0.65)",
-  backdropFilter: "blur(8px)",
-  WebkitBackdropFilter: "blur(8px)",
-  zIndex: 50,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: 16,
-};
-
-const DIALOG_STYLE: CSSProperties = {
-  width: "100%",
-  maxWidth: 420,
-  background: LU.glass.surface3,
-  border: `1px solid ${LU.rule.strong}`,
-  borderRadius: 24,
-  padding: "24px 24px 20px",
-  display: "flex",
-  flexDirection: "column",
-  gap: 16,
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  margin: 0,
-  fontSize: 20,
-  fontWeight: 600,
-};
-
-const INPUT_STYLE: CSSProperties = {
-  appearance: "none",
-  width: "100%",
-  border: `1px solid ${LU.rule.strong}`,
-  borderRadius: 12,
-  padding: "14px 16px",
-  background: LU.glass.surface1,
-  color: LU.base.ink,
-  fontSize: 16,
-  fontFamily: "var(--lu-font-mono)",
-  letterSpacing: 0.5,
-};
-
-const ACTIONS_STYLE: CSSProperties = {
-  display: "flex",
-  gap: 12,
-  justifyContent: "flex-end",
-};
-
-const PRIMARY_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.accent.amber}`,
-  background: "rgba(255, 183, 85, 0.16)",
-  color: LU.base.ink,
-  padding: "12px 20px",
-  borderRadius: 999,
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: "pointer",
-  boxShadow: "0 0 0 1px rgba(255, 183, 85, 0.35)",
-};
-
-const SECONDARY_STYLE: CSSProperties = {
-  appearance: "none",
-  border: "none",
-  background: "transparent",
-  color: LU.base.ink2,
-  padding: "12px 20px",
-  fontSize: 14,
-  cursor: "pointer",
-};
 
 interface ManualEntryDialogProps {
   input: string;
@@ -104,8 +28,14 @@ export function ManualEntryDialog({
   const { t } = useLocale();
   const trimmed = input.trim();
   return (
-    <div aria-modal="true" role="dialog" style={BACKDROP_STYLE}>
+    <div
+      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[8px]"
+      role="dialog"
+      style={{ background: "rgba(8, 8, 13, 0.65)" }}
+    >
       <form
+        className="flex w-full max-w-[420px] flex-col gap-4 rounded-3xl border border-rule-strong bg-glass-3 p-[24px_24px_20px] backdrop-blur-[20px]"
         onSubmit={(e) => {
           e.preventDefault();
           if (trimmed.length === 0) {
@@ -113,29 +43,32 @@ export function ManualEntryDialog({
           }
           onSubmit(trimmed);
         }}
-        style={DIALOG_STYLE}
       >
-        <h2 style={TITLE_STYLE}>{t.scan_manual_title}</h2>
+        <h2 className="m-0 font-semibold text-xl">{t.scan_manual_title}</h2>
         <input
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect="off"
           autoFocus
+          className="w-full appearance-none rounded-xl border border-rule-strong bg-glass-1 p-[14px_16px] font-mono-lu text-base text-ink tracking-[0.5px]"
           inputMode="text"
           onChange={(e) => onChange(e.target.value)}
           placeholder={t.scan_manual_placeholder}
-          style={INPUT_STYLE}
           type="text"
           value={input}
         />
-        <div style={ACTIONS_STYLE}>
-          <button onClick={onCancel} style={SECONDARY_STYLE} type="button">
+        <div className="flex justify-end gap-3">
+          <button
+            className="cursor-pointer appearance-none border-none bg-transparent px-5 py-3 text-ink-2 text-sm"
+            onClick={onCancel}
+            type="button"
+          >
             {t.scan_manual_cancel}
           </button>
           <button
+            className="cursor-pointer appearance-none rounded-full border border-amber bg-[rgba(255,183,85,0.16)] px-5 py-3 font-semibold text-ink text-sm shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
             disabled={trimmed.length === 0}
             style={{
-              ...PRIMARY_STYLE,
               opacity: trimmed.length === 0 ? 0.5 : 1,
               cursor: trimmed.length === 0 ? "not-allowed" : "pointer",
             }}

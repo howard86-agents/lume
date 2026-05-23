@@ -88,44 +88,30 @@ export function LumeSpecimen({
   return (
     <div
       aria-hidden={showImage ? undefined : "true"}
-      className={className}
+      className={`relative inline-flex items-center justify-center ${className ?? ""}`}
       data-form={form}
       data-found={found ? "true" : "false"}
       data-hue={hue}
       data-image={showImage ? "true" : undefined}
-      style={{
-        position: "relative",
-        width: size,
-        height: size,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ...style,
-      }}
+      style={{ width: size, height: size, ...style }}
     >
       {/* Glow halo — sits behind the glyph and matches the specimen hue. */}
       <span
+        className="pointer-events-none absolute"
         style={{
-          position: "absolute",
           inset: -size * 0.08,
           background: haloFill,
           filter: found ? "blur(6px)" : "blur(8px)",
-          pointerEvents: "none",
         }}
       />
       <span
-        style={{
-          position: "relative",
-          display: "inline-flex",
-          width: size * 0.78,
-          height: size * 0.78,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="relative inline-flex items-center justify-center"
+        style={{ width: size * 0.78, height: size * 0.78 }}
       >
         {showImage && image ? (
           <Image
             alt={image.alt}
+            className="h-full w-full object-contain"
             decoding="async"
             // Disable next/image optimisation so SVG and PNG artwork is
             // delivered as authored (transparent edges, glow alpha) and
@@ -134,11 +120,6 @@ export function LumeSpecimen({
             loading="lazy"
             src={image.src}
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              // Preserve the luminous-edge feel that the glyph drop-shadow
-              // gives, so an image specimen still reads as a 'light-form'.
               filter: `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`,
             }}
             unoptimized

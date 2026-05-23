@@ -2,7 +2,6 @@
 
 import { LU } from "@lume/data/tokens";
 import { useRouter } from "next/navigation";
-import type { CSSProperties } from "react";
 import { useLocale } from "../../components/lume-provider";
 
 /**
@@ -17,107 +16,6 @@ import { useLocale } from "../../components/lume-provider";
  * getUserMedia call lives in the scanner permission slice (#20) so the
  * visitor sees this rationale before the OS-level prompt appears.
  */
-
-const PAGE_STYLE: CSSProperties = {
-  minHeight: "var(--lu-screen-h)",
-  background: LU.aurora.page,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  padding:
-    "max(48px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom))",
-  gap: 24,
-};
-
-const CONTENT_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 14,
-  marginTop: "auto",
-  marginBottom: "auto",
-};
-
-const EYEBROW_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.base.ink2,
-};
-
-const CARD_STYLE: CSSProperties = {
-  alignSelf: "stretch",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-  gap: 16,
-  padding: "32px 24px",
-  borderRadius: 24,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  backdropFilter: "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
-};
-
-const ICON_STYLE: CSSProperties = {
-  width: 96,
-  height: 96,
-  borderRadius: "50%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background:
-    "radial-gradient(circle at 50% 50%, rgba(255,183,85,0.30) 0%, rgba(255,183,85,0) 70%)",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontSize: 24,
-  fontWeight: 600,
-  letterSpacing: -0.3,
-  margin: 0,
-};
-
-const BODY_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 15,
-  lineHeight: 1.5,
-  margin: 0,
-  maxWidth: 360,
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  marginTop: "auto",
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-};
-
-const PRIMARY_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  padding: "16px 24px",
-  borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  width: "100%",
-};
-
-const SECONDARY_STYLE: CSSProperties = {
-  appearance: "none",
-  background: "transparent",
-  color: LU.base.ink2,
-  border: "none",
-  padding: "12px 24px",
-  fontSize: 14,
-  cursor: "pointer",
-  alignSelf: "center",
-};
 
 function CameraIcon() {
   return (
@@ -158,29 +56,41 @@ export default function PermissionPage() {
   const router = useRouter();
   const { t } = useLocale();
   return (
-    <main style={PAGE_STYLE}>
-      <div style={CONTENT_STYLE}>
-        <div style={EYEBROW_STYLE}>{t.permission_before_we_begin}</div>
-        <section style={CARD_STYLE}>
-          <span style={ICON_STYLE}>
+    <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
+      <div className="my-auto flex flex-col items-center gap-[14px]">
+        <div className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
+          {t.permission_before_we_begin}
+        </div>
+        <section className="flex flex-col items-center gap-4 self-stretch rounded-3xl border border-rule-hair bg-glass-1 px-6 py-8 text-center backdrop-blur-[16px]">
+          <span
+            className="flex h-24 w-24 items-center justify-center rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255,183,85,0.30) 0%, rgba(255,183,85,0) 70%)",
+            }}
+          >
             <CameraIcon />
           </span>
-          <h1 style={TITLE_STYLE}>{t.permission_title}</h1>
-          <p style={BODY_STYLE}>{t.permission_body}</p>
+          <h1 className="m-0 font-semibold text-[24px] tracking-[-0.3px]">
+            {t.permission_title}
+          </h1>
+          <p className="m-0 max-w-[360px] text-[15px] text-ink-2 leading-normal">
+            {t.permission_body}
+          </p>
         </section>
       </div>
 
-      <footer style={FOOTER_STYLE}>
+      <footer className="mt-auto flex flex-col gap-3">
         <button
+          className="w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={() => router.push("/scan")}
-          style={PRIMARY_STYLE}
           type="button"
         >
           {t.permission_allow}
         </button>
         <button
+          className="cursor-pointer appearance-none self-center border-none bg-transparent px-6 py-3 text-ink-2 text-sm"
           onClick={() => router.push("/collection")}
-          style={SECONDARY_STYLE}
           type="button"
         >
           {t.permission_not_now}

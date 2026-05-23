@@ -5,7 +5,7 @@ import {
   LUME_TOTAL_SPECIMENS,
   type LumeSpecimen,
 } from "@lume/data/specimens";
-import { LU, type LumeAccent } from "@lume/data/tokens";
+import type { LumeAccent } from "@lume/data/tokens";
 import Image from "next/image";
 import {
   type CSSProperties,
@@ -54,169 +54,13 @@ export interface AchievementCardProps {
   nickname: string;
 }
 
-/** Style helpers — kept module-scoped to avoid re-allocating per render. */
-const CARD_STYLE: CSSProperties = {
-  position: "relative",
-  width: ACHIEVEMENT_CARD_WIDTH,
-  height: ACHIEVEMENT_CARD_HEIGHT,
-  borderRadius: 28,
-  // Solid (non-translucent) aurora — no unsupported CSS blur dependency.
-  background:
-    "radial-gradient(120% 60% at 50% 0%, rgba(179, 144, 255, 0.55) 0%, rgba(179, 144, 255, 0) 60%)," +
-    "radial-gradient(80% 50% at 50% 100%, rgba(105, 224, 255, 0.32) 0%, rgba(105, 224, 255, 0) 60%)," +
-    "linear-gradient(180deg, #0a0a14 0%, #08080d 100%)",
-  border: `1px solid ${LU.rule.strong}`,
-  boxShadow:
-    "0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-  color: LU.base.ink,
-  overflow: "hidden",
-  display: "flex",
-  flexDirection: "column",
-  // The fixed-pixel design language assumes our display font has loaded.
-  fontFamily: "var(--lu-font-display)",
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: "18px 24px 0",
-};
-
-const EYEBROW_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.accent.mint,
-};
-
-const BRAND_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 4,
-  textTransform: "uppercase",
-  color: LU.base.ink3,
-};
-
-const HERO_STYLE: CSSProperties = {
-  position: "relative",
-  margin: "12px 24px 0",
-  height: 196,
-  borderRadius: 22,
-  // Solid plate — the "glassy" look is faked with two inset gradients.
-  background:
-    "linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)," +
-    "linear-gradient(180deg, #131322 0%, #0d0d18 100%)",
-  border: `1px solid ${LU.rule.hair}`,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  overflow: "hidden",
-};
-
-const HALO_STYLE: CSSProperties = {
-  position: "absolute",
-  inset: 12,
-  borderRadius: "50%",
-  background: LU.aurora.halo,
-  filter: "blur(28px)",
-  opacity: 0.85,
-};
-
-const HALO_CORE_STYLE: CSSProperties = {
-  position: "absolute",
-  width: 88,
-  height: 88,
-  borderRadius: "50%",
-  background:
-    "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%)",
-  filter: "blur(8px)",
-};
-
-const HERO_NUMERAL_STYLE: CSSProperties = {
-  position: "relative",
-  fontSize: 56,
-  fontWeight: 700,
-  letterSpacing: -1.4,
-  lineHeight: 1,
-  color: LU.base.ink,
-  textShadow: "0 0 16px rgba(255, 255, 255, 0.35)",
-};
-
-const HERO_NUMERAL_DIVIDER_STYLE: CSSProperties = {
-  position: "relative",
-  margin: "0 8px",
-  fontSize: 36,
-  fontWeight: 400,
-  color: LU.base.ink3,
-};
-
-const HERO_TOTAL_STYLE: CSSProperties = {
-  ...HERO_NUMERAL_STYLE,
-  fontSize: 36,
-  color: LU.base.ink2,
-  textShadow: "none",
-};
-
-const TITLE_BLOCK_STYLE: CSSProperties = {
-  margin: "20px 24px 0",
-  display: "flex",
-  flexDirection: "column",
-  gap: 4,
-  textAlign: "center",
-};
-
-const CARD_TITLE_STYLE: CSSProperties = {
-  fontSize: 22,
-  fontWeight: 600,
-  letterSpacing: -0.3,
-  color: LU.base.ink,
-};
-
-const GRID_WRAPPER_STYLE: CSSProperties = {
-  margin: "16px 24px 0",
-  padding: "12px 8px",
-  borderRadius: 18,
-  border: `1px solid ${LU.rule.hair}`,
-  background:
-    "linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%)",
-};
-
-const GRID_STYLE: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(6, 1fr)",
-  gap: 8,
-  justifyItems: "center",
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  marginTop: "auto",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: "14px 24px 18px",
-  borderTop: `1px solid ${LU.rule.hair}`,
-};
-
-const FOOTER_VISITOR_STYLE: CSSProperties = {
-  minWidth: 0,
-  maxWidth: "60%",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-  fontSize: 15,
-  fontWeight: 600,
-  letterSpacing: -0.2,
-  color: LU.base.ink,
-};
-
-const FOOTER_DATE_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 12,
-  fontWeight: 500,
-  letterSpacing: 1,
-  color: LU.base.ink2,
+const ACCENT_TO_RGB: Record<LumeAccent, string> = {
+  amber: "255, 183, 85",
+  cyan: "105, 224, 255",
+  magenta: "255, 122, 223",
+  mint: "126, 240, 196",
+  violet: "179, 144, 255",
+  rose: "255, 141, 161",
 };
 
 /**
@@ -234,7 +78,7 @@ function dotStyle(specimen: LumeSpecimen, lit: boolean): CSSProperties {
       background:
         `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.18) 0%, ` +
         `rgba(${rgb}, 0.06) 60%, rgba(${rgb}, 0) 80%)`,
-      border: `1px solid ${LU.rule.hair}`,
+      border: "1px solid var(--lu-rule-hair)",
     };
   }
   return {
@@ -247,18 +91,6 @@ function dotStyle(specimen: LumeSpecimen, lit: boolean): CSSProperties {
     boxShadow: `0 0 8px rgba(${rgb}, 0.55)`,
   };
 }
-
-/** Wrapper style used when a lit specimen has bespoke artwork. */
-const IMAGE_DOT_WRAPPER_STYLE: CSSProperties = {
-  width: 18,
-  height: 18,
-  borderRadius: "50%",
-  overflow: "hidden",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative",
-};
 
 /**
  * Render either the existing hue-glow dot or — when the specimen has
@@ -281,8 +113,8 @@ function GridDot({
     return (
       <span
         aria-hidden="true"
+        className="relative flex h-[18px] w-[18px] items-center justify-center overflow-hidden rounded-[50%]"
         style={{
-          ...IMAGE_DOT_WRAPPER_STYLE,
           boxShadow: `0 0 8px rgba(${rgb}, 0.55)`,
           background:
             `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.45) 0%, ` +
@@ -291,14 +123,10 @@ function GridDot({
       >
         <Image
           alt=""
+          className="h-full w-full object-contain"
           decoding="sync"
           height={18}
           src={specimen.image.src}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-          }}
           unoptimized
           width={18}
         />
@@ -307,15 +135,6 @@ function GridDot({
   }
   return <span aria-hidden="true" style={dotStyle(specimen, lit)} />;
 }
-
-const ACCENT_TO_RGB: Record<LumeAccent, string> = {
-  amber: "255, 183, 85",
-  cyan: "105, 224, 255",
-  magenta: "255, 122, 223",
-  mint: "126, 240, 196",
-  violet: "179, 144, 255",
-  rose: "255, 141, 161",
-};
 
 function AchievementCardImpl(
   props: AchievementCardProps,
@@ -329,26 +148,74 @@ function AchievementCardImpl(
     nickname,
   } = props;
   return (
-    <div data-export-card="lume-achievement" ref={ref} style={CARD_STYLE}>
-      <header style={HEADER_STYLE}>
-        <span style={EYEBROW_STYLE}>{fieldGuideLabel}</span>
-        <span style={BRAND_STYLE}>LUME</span>
+    <div
+      className="relative flex h-[480px] w-[360px] flex-col overflow-hidden rounded-[28px] border border-rule-strong text-ink"
+      data-export-card="lume-achievement"
+      ref={ref}
+      style={{
+        background:
+          "radial-gradient(120% 60% at 50% 0%, rgba(179, 144, 255, 0.55) 0%, rgba(179, 144, 255, 0) 60%)," +
+          "radial-gradient(80% 50% at 50% 100%, rgba(105, 224, 255, 0.32) 0%, rgba(105, 224, 255, 0) 60%)," +
+          "linear-gradient(180deg, #0a0a14 0%, #08080d 100%)",
+        boxShadow:
+          "0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+        fontFamily: "var(--lu-font-display)",
+      }}
+    >
+      <header className="flex items-center justify-between px-6 pt-[18px]">
+        <span className="font-mono-lu text-[10px] text-mint uppercase tracking-[3px]">
+          {fieldGuideLabel}
+        </span>
+        <span className="font-mono-lu text-[10px] text-ink-3 uppercase tracking-[4px]">
+          LUME
+        </span>
       </header>
 
-      <section style={HERO_STYLE}>
-        <span aria-hidden="true" style={HALO_STYLE} />
-        <span aria-hidden="true" style={HALO_CORE_STYLE} />
-        <span style={HERO_NUMERAL_STYLE}>{LUME_TOTAL_SPECIMENS}</span>
-        <span style={HERO_NUMERAL_DIVIDER_STYLE}>/</span>
-        <span style={HERO_TOTAL_STYLE}>{LUME_TOTAL_SPECIMENS}</span>
+      <section
+        className="relative mx-6 mt-3 flex h-[196px] items-center justify-center overflow-hidden rounded-[22px] border border-rule-hair"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)," +
+            "linear-gradient(180deg, #131322 0%, #0d0d18 100%)",
+        }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute inset-3 rounded-[50%] bg-aurora-halo opacity-[0.85] blur-[28px]"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute h-[88px] w-[88px] rounded-[50%] blur-[8px]"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%)",
+          }}
+        />
+        <span className="relative font-bold text-[56px] text-ink leading-none tracking-[-1.4px] [text-shadow:0_0_16px_rgba(255,255,255,0.35)]">
+          {LUME_TOTAL_SPECIMENS}
+        </span>
+        <span className="relative mx-2 font-normal text-[36px] text-ink-3">
+          /
+        </span>
+        <span className="relative font-bold text-[36px] text-ink-2 leading-none tracking-[-1.4px]">
+          {LUME_TOTAL_SPECIMENS}
+        </span>
       </section>
 
-      <section style={TITLE_BLOCK_STYLE}>
-        <span style={CARD_TITLE_STYLE}>{cardTitle}</span>
+      <section className="mx-6 mt-5 flex flex-col gap-1 text-center">
+        <span className="font-semibold text-[22px] text-ink tracking-[-0.3px]">
+          {cardTitle}
+        </span>
       </section>
 
-      <section style={GRID_WRAPPER_STYLE}>
-        <div style={GRID_STYLE}>
+      <section
+        className="mx-6 mt-4 rounded-[18px] border border-rule-hair px-2 py-3"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%)",
+        }}
+      >
+        <div className="grid grid-cols-6 justify-items-center gap-2">
           {LUME_SPECIMENS.map((s) => (
             <GridDot
               key={s.qr}
@@ -359,9 +226,13 @@ function AchievementCardImpl(
         </div>
       </section>
 
-      <footer style={FOOTER_STYLE}>
-        <span style={FOOTER_VISITOR_STYLE}>{nickname}</span>
-        <span style={FOOTER_DATE_STYLE}>{dateLabel}</span>
+      <footer className="mt-auto flex items-center justify-between border-rule-hair border-t px-6 pt-[14px] pb-[18px]">
+        <span className="min-w-0 max-w-[60%] truncate font-semibold text-[15px] text-ink tracking-[-0.2px]">
+          {nickname}
+        </span>
+        <span className="font-medium font-mono-lu text-ink-2 text-xs tracking-[1px]">
+          {dateLabel}
+        </span>
       </footer>
     </div>
   );

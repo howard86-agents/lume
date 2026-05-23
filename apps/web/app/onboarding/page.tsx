@@ -2,7 +2,7 @@
 
 import { LU } from "@lume/data/tokens";
 import { useRouter } from "next/navigation";
-import { type CSSProperties, useState } from "react";
+import { useState } from "react";
 import { useLocale } from "../../components/lume-provider";
 import { LumeSpecimen } from "../../components/specimen/lume-specimen";
 
@@ -40,123 +40,6 @@ const CARD_GLOW_DOT_HUES = [
   LU.accent.rose,
 ] as const;
 
-const PAGE_STYLE: CSSProperties = {
-  minHeight: "var(--lu-screen-h)",
-  background: LU.aurora.page,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  padding:
-    "max(48px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom))",
-  gap: 24,
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-};
-
-const STEP_INDICATOR_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.base.ink3,
-};
-
-const SKIP_STYLE: CSSProperties = {
-  appearance: "none",
-  background: "transparent",
-  color: LU.base.ink2,
-  border: "none",
-  fontSize: 14,
-  cursor: "pointer",
-};
-
-const PREVIEW_STYLE: CSSProperties = {
-  alignSelf: "center",
-  width: "min(320px, 90%)",
-  aspectRatio: "1 / 1",
-  borderRadius: 28,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative",
-  overflow: "hidden",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontSize: 28,
-  fontWeight: 600,
-  letterSpacing: -0.4,
-  margin: 0,
-  textAlign: "center",
-};
-
-const TITLE_PREFIX_STYLE: CSSProperties = {
-  color: LU.accent.amber,
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 13,
-  fontWeight: 700,
-  letterSpacing: 2.4,
-  marginRight: 10,
-  verticalAlign: "middle",
-};
-
-const BODY_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 15,
-  lineHeight: 1.5,
-  textAlign: "center",
-  maxWidth: 360,
-  margin: "0 auto",
-};
-
-const DOTS_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-};
-
-const DOT_BASE_STYLE: CSSProperties = {
-  width: 6,
-  height: 6,
-  borderRadius: "50%",
-  background: LU.glass.surface3,
-};
-
-const DOT_ACTIVE_STYLE: CSSProperties = {
-  ...DOT_BASE_STYLE,
-  width: 22,
-  background: LU.accent.amber,
-  boxShadow: "0 0 12px rgba(255, 183, 85, 0.65)",
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  marginTop: "auto",
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-};
-
-const PRIMARY_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  padding: "16px 24px",
-  borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  width: "100%",
-};
-
 /** Three corner finder patterns + a few data modules read clearly as a QR. */
 const QR_FINDERS = [
   [33, 33],
@@ -187,28 +70,12 @@ function StepOnePreview() {
   return (
     <div
       aria-hidden="true"
-      style={{
-        position: "relative",
-        width: "70%",
-        height: "70%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="relative flex h-[70%] w-[70%] items-center justify-center"
     >
-      <span
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "50%",
-          background: LU.aurora.halo,
-          filter: "blur(28px)",
-          opacity: 0.8,
-        }}
-      />
+      <span className="absolute inset-0 rounded-full bg-aurora-halo opacity-[0.8] blur-[28px]" />
       <svg
+        className="relative h-[82%] w-[82%]"
         role="presentation"
-        style={{ position: "relative", width: "82%", height: "82%" }}
         viewBox="0 0 120 120"
       >
         {/* QR placard the visitor is taught to look for */}
@@ -277,15 +144,7 @@ function StepTwoPreview() {
     { form: "spire", hue: "mint", locked: true },
   ];
   return (
-    <div
-      aria-hidden="true"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 12,
-        width: "70%",
-      }}
-    >
+    <div aria-hidden="true" className="grid w-[70%] grid-cols-3 gap-3">
       {tiles.map((tile) =>
         tile.locked ? (
           <span
@@ -320,41 +179,19 @@ function StepThreePreview() {
   return (
     <div
       aria-hidden="true"
+      className="relative flex w-[65%] flex-col justify-between overflow-hidden rounded-[22px] border border-rule-strong p-4 px-[18px]"
       style={{
-        position: "relative",
-        width: "65%",
         aspectRatio: "3 / 4",
-        borderRadius: 22,
-        border: `1px solid ${LU.rule.strong}`,
         background: `linear-gradient(160deg, ${LU.glass.surface3}, ${LU.glass.surface1}), ${LU.aurora.halo}`,
         backgroundBlendMode: "overlay",
         boxShadow: "0 12px 36px rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "16px 18px",
-        overflow: "hidden",
       }}
     >
-      <div
-        style={{
-          fontFamily: "var(--lu-font-mono)",
-          fontSize: 10,
-          letterSpacing: 2,
-          textTransform: "uppercase",
-          color: LU.base.ink2,
-        }}
-      >
+      <div className="font-mono-lu text-[10px] text-ink-2 uppercase tracking-[2px]">
         Lume · 23 / 23
       </div>
-      <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1 }}>23</div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(8, 1fr)",
-          gap: 4,
-        }}
-      >
+      <div className="font-bold text-[32px] tracking-[-1px]">23</div>
+      <div className="grid grid-cols-[repeat(8,1fr)] gap-1">
         {CARD_GLOW_DOT_KEYS.map((dotKey, i) => {
           const hue = CARD_GLOW_DOT_HUES[i % CARD_GLOW_DOT_HUES.length];
           return (
@@ -410,9 +247,9 @@ export default function OnboardingPage() {
   };
 
   return (
-    <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <span style={STEP_INDICATOR_STYLE}>
+    <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
+      <header className="flex items-center justify-between">
+        <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[3px]">
           {format("onboarding_step_indicator", {
             current: formatStepNumber(currentStep),
             label: t.onboarding_how_it_works,
@@ -420,44 +257,48 @@ export default function OnboardingPage() {
           })}
         </span>
         <button
+          className="cursor-pointer appearance-none border-none bg-transparent text-ink-2 text-sm"
           onClick={() => router.push("/permission")}
-          style={SKIP_STYLE}
           type="button"
         >
           {t.onboarding_skip}
         </button>
       </header>
 
-      <section
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          justifyContent: "center",
-        }}
-      >
-        <div style={PREVIEW_STYLE}>{steps[step].preview}</div>
-        <h1 style={TITLE_STYLE}>
-          <span style={TITLE_PREFIX_STYLE}>
+      <section className="flex flex-1 flex-col justify-center gap-5">
+        <div className="relative flex aspect-square w-[min(320px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1">
+          {steps[step].preview}
+        </div>
+        <h1 className="m-0 text-center font-semibold text-[28px] tracking-[-0.4px]">
+          <span className="mr-2.5 align-middle font-bold font-mono-lu text-[13px] text-amber tracking-[2.4px]">
             {formatStepNumber(currentStep)}
           </span>
           {steps[step].title}
         </h1>
-        <p style={BODY_STYLE}>{steps[step].body}</p>
+        <p className="m-0 mx-auto max-w-[360px] text-center text-[15px] text-ink-2 leading-normal">
+          {steps[step].body}
+        </p>
       </section>
 
-      <div style={DOTS_STYLE}>
+      <div className="flex items-center justify-center gap-2">
         {STEP_DOT_KEYS.map((dotKey, i) => (
           <span
+            className={
+              i === step
+                ? "h-1.5 w-[22px] rounded-[50%] bg-amber shadow-[0_0_12px_rgba(255,183,85,0.65)]"
+                : "h-1.5 w-1.5 rounded-full bg-glass-3"
+            }
             key={dotKey}
-            style={i === step ? DOT_ACTIVE_STYLE : DOT_BASE_STYLE}
           />
         ))}
       </div>
 
-      <footer style={FOOTER_STYLE}>
-        <button onClick={goNext} style={PRIMARY_STYLE} type="button">
+      <footer className="mt-auto flex flex-col gap-3">
+        <button
+          className="w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
+          onClick={goNext}
+          type="button"
+        >
           {isLast ? t.onboarding_begin : t.onboarding_next}
         </button>
       </footer>
