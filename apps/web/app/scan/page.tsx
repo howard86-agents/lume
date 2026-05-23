@@ -291,9 +291,12 @@ function ScanPageInner(): ReactElement {
         <div className="relative aspect-square w-[min(78vw,360px)] overflow-hidden rounded-[50%] border border-rule-strong bg-glass-1 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_24px_60px_rgba(0,0,0,0.55)]">
           {showVideo ? (
             <>
+              {/* No horizontal mirror: this flow uses the rear (environment)
+                  camera, a see-through view. Flipping it would reverse the
+                  visitor's framing. Mirroring is only correct for front cameras. */}
               <video
                 autoPlay
-                className="block h-full w-full -scale-x-100 bg-deep object-cover"
+                className="block h-full w-full bg-deep object-cover"
                 muted
                 playsInline
                 ref={videoRef}
