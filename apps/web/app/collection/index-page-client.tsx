@@ -31,7 +31,7 @@ import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume
 const FLOORS: readonly LumeFloor[] = [1, 2, 3, 4];
 
 const PAGE_STYLE: CSSProperties = {
-  minHeight: "100dvh",
+  minHeight: "var(--lu-screen-h)",
   background: LU.aurora.page,
   color: LU.base.ink,
   display: "flex",

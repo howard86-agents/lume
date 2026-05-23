@@ -41,7 +41,7 @@ const CARD_GLOW_DOT_HUES = [
 ] as const;
 
 const PAGE_STYLE: CSSProperties = {
-  minHeight: "100dvh",
+  minHeight: "var(--lu-screen-h)",
   background: LU.aurora.page,
   color: LU.base.ink,
   display: "flex",

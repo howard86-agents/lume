@@ -13,6 +13,7 @@
   --lu-base-ink: #f6f6fb;
   --lu-base-ink-2: rgb(246 246 251 / 0.72);
   --lu-base-ink-3: rgb(246 246 251 / 0.48);
+  --lu-screen-h: 100dvh;
 
   /* Glass surface tiers */
   --lu-glass-1: rgb(255 255 255 / 0.04);
@@ -96,7 +97,7 @@ html {
  *     into the host page background on iOS Safari.
  */
 body {
-  min-height: 100dvh;
+  min-height: var(--lu-screen-h);
   overscroll-behavior: none;
   color: var(--lu-base-ink);
   background: var(--lu-base-deep);

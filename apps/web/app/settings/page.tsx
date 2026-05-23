@@ -27,7 +27,7 @@ import { useLocale, useLume } from "../../components/lume-provider";
  */
 
 const PAGE_STYLE: CSSProperties = {
-  minHeight: "100dvh",
+  minHeight: "var(--lu-screen-h)",
   background: LU.aurora.page,
   color: LU.base.ink,
   display: "flex",

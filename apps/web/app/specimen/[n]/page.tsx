@@ -28,7 +28,7 @@ import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/l
  */
 
 const PAGE_STYLE: CSSProperties = {
-  minHeight: "100dvh",
+  minHeight: "var(--lu-screen-h)",
   background: LU.aurora.page,
   color: LU.base.ink,
   display: "flex",
