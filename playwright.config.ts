@@ -10,7 +10,8 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
+  outputDir: process.env.CI ? "/tmp/lume-playwright-results" : "test-results",
+  reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     trace: "on-first-retry",
