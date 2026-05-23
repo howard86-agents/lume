@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { fontVariables } from "./fonts";
 import "./globals.css";
+import { DeviceShell } from "../components/device-shell";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -39,7 +40,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html className={fontVariables} lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <DeviceShell>
+          <Providers>{children}</Providers>
+        </DeviceShell>
       </body>
     </html>
   );

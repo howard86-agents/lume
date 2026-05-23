@@ -109,3 +109,97 @@ pre,
 samp {
   font-family: var(--lu-font-mono);
 }
+
+/*
+ * Desktop/tablet iPhone shell.
+ * Below 768px these wrappers are display:contents (zero layout impact) so the
+ * app renders exactly as on a phone. At >=768px they become a centered iPhone
+ * frame, and --lu-screen-h flips to 100% so each page's min-height fills the
+ * frame instead of the whole desktop window.
+ */
+.lume-stage,
+.lume-frame,
+.lume-screen {
+  display: contents;
+}
+
+@media (min-width: 768px) {
+  .lume-stage {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        60% 45% at 50% 30%,
+        rgb(179 144 255 / 0.16),
+        transparent 70%
+      ),
+      radial-gradient(
+        50% 40% at 70% 75%,
+        rgb(105 224 255 / 0.12),
+        transparent 70%
+      ),
+      var(--lu-base-deep);
+  }
+
+  .lume-frame {
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    width: auto;
+    height: min(852px, calc(100dvh - 48px));
+    aspect-ratio: 393 / 852;
+    padding: 12px;
+    background: #0b0b0f;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 56px;
+    box-shadow:
+      0 0 0 2px rgb(0 0 0 / 0.6),
+      0 40px 120px rgb(0 0 0 / 0.55),
+      0 0 80px rgb(179 144 255 / 0.12);
+  }
+
+  /* Dynamic Island */
+  .lume-frame::before {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    z-index: 2;
+    width: 110px;
+    height: 32px;
+    pointer-events: none;
+    content: "";
+    background: #000;
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+
+  /* Home indicator */
+  .lume-frame::after {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    z-index: 2;
+    width: 130px;
+    height: 5px;
+    pointer-events: none;
+    content: "";
+    background: rgb(255 255 255 / 0.55);
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+
+  .lume-screen {
+    /* Pages read min-height from this var; inside the frame it = frame height */
+    --lu-screen-h: 100%;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--lu-base-deep);
+    border-radius: 44px;
+  }
+}
