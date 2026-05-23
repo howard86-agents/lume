@@ -279,9 +279,16 @@ function ScanPageInner(): ReactElement {
   const processedDeepLinkRef = useRef<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const lastDecodeRef = useRef<{ payload: string; at: number } | null>(null);
 
   const handleDecode = useCallback(
     (payload: string) => {
+      const now = Date.now();
+      const lastDecode = lastDecodeRef.current;
+      if (lastDecode?.payload === payload && now - lastDecode.at < 1500) {
+        return;
+      }
+      lastDecodeRef.current = { payload, at: now };
       const { result, specimen } = collectWithSpecimen(payload);
       if (result === "new" && specimen) {
         setActiveOverlay({ kind: "success", specimen });
@@ -343,6 +350,13 @@ function ScanPageInner(): ReactElement {
         });
       }
       setStatus("ready");
+      const e2ePayload =
+        process.env.NODE_ENV === "production"
+          ? undefined
+          : (stream as { __lumeE2eQrPayload?: unknown }).__lumeE2eQrPayload;
+      if (typeof e2ePayload === "string") {
+        handleDecode(e2ePayload);
+      }
     } catch (error) {
       const name = (error as { name?: string } | null)?.name;
       if (name === "NotAllowedError" || name === "SecurityError") {
@@ -355,7 +369,7 @@ function ScanPageInner(): ReactElement {
       }
       setStatus("error");
     }
-  }, []);
+  }, [handleDecode]);
 
   // Mount: diagnose environment then attempt to start the camera.
   // If the page was opened via a `?c=<code>` deep-link (e.g. from a

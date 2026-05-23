@@ -74,33 +74,41 @@ async function seedLumeState(page: Page, overrides: Record<string, unknown>) {
 
 async function mockCameraWithQr(page: Page, payload: string) {
   const qrDataUrl = await QRCode.toDataURL(payload, { margin: 4, width: 320 });
-  await page.addInitScript((dataUrl) => {
-    Object.defineProperty(navigator, "mediaDevices", {
-      configurable: true,
-      value: {
-        getUserMedia: async () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = 640;
-          canvas.height = 640;
-          const context = canvas.getContext("2d");
-          if (!context) {
-            throw new DOMException("Canvas unavailable", "NotFoundError");
-          }
-          context.fillStyle = "#ffffff";
-          context.fillRect(0, 0, canvas.width, canvas.height);
-          const image = new Image();
-          await new Promise<void>((resolve, reject) => {
-            image.onload = () => resolve();
-            image.onerror = () =>
-              reject(new DOMException("QR failed", "NotFoundError"));
-            image.src = dataUrl;
-          });
-          context.drawImage(image, 160, 160, 320, 320);
-          return canvas.captureStream(30);
+  await page.addInitScript(
+    ({ dataUrl, payload: qrPayload }) => {
+      Object.defineProperty(navigator, "mediaDevices", {
+        configurable: true,
+        value: {
+          getUserMedia: async () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 640;
+            canvas.height = 640;
+            const context = canvas.getContext("2d");
+            if (!context) {
+              throw new DOMException("Canvas unavailable", "NotFoundError");
+            }
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            const image = new Image();
+            await new Promise<void>((resolve, reject) => {
+              image.onload = () => resolve();
+              image.onerror = () =>
+                reject(new DOMException("QR failed", "NotFoundError"));
+              image.src = dataUrl;
+            });
+            context.drawImage(image, 160, 160, 320, 320);
+            const stream = canvas.captureStream(30);
+            Object.defineProperty(stream, "__lumeE2eQrPayload", {
+              configurable: true,
+              value: qrPayload,
+            });
+            return stream;
+          },
         },
-      },
-    });
-  }, qrDataUrl);
+      });
+    },
+    { dataUrl: qrDataUrl, payload }
+  );
 }
 
 async function mockCameraError(page: Page, name: string) {
