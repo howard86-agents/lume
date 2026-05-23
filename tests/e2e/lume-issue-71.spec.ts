@@ -4,7 +4,7 @@ import QRCode from "qrcode";
 const STORAGE_KEY = "lume:state:v1";
 const CARD_URL_PATTERN = /\/card$/;
 const COMPLETE_URL_PATTERN = /\/complete$/;
-const INDEX_URL_PATTERN = /\/index$/;
+const INDEX_URL_PATTERN = /\/collection$/;
 const PERMISSION_URL_PATTERN = /\/permission$/;
 const ENGLISH_LANGUAGE_PATTERN = /English/i;
 const MIRAGE_TILE_NAME_PATTERN = /(Mirage|海市).*no\. 08/i;
@@ -124,7 +124,7 @@ async function mockCameraError(page: Page, name: string) {
 }
 
 test.describe("issue #71 visitor collection flow", () => {
-  test("deep-link scan collects a specimen, opens localized success, and unlocks detail/index state", async ({
+  test("deep-link scan collects a specimen, opens localized success, and unlocks detail/collection state", async ({
     page,
   }) => {
     await seedLumeState(page, { lang: "zh-tw" });
@@ -200,7 +200,7 @@ test.describe("issue #71 visitor collection flow", () => {
       nickname: "Howard",
     });
 
-    await page.goto("/index");
+    await page.goto("/collection");
     await expect(page.getByText("23 / 23").first()).toBeVisible();
     await page.getByRole("button", { name: "View card" }).click();
 
@@ -259,11 +259,11 @@ test.describe("issue #71 visitor collection flow", () => {
     await expect(page.getByRole("dialog").getByText("1 / 23")).toBeVisible();
 
     await page.reload();
-    await page.goto("/index");
+    await page.goto("/collection");
     await expect(page.getByText("1 / 23").first()).toBeVisible();
 
     const resumed = await context.newPage();
-    await resumed.goto("/index");
+    await resumed.goto("/collection");
     await expect(resumed.getByText("1 / 23").first()).toBeVisible();
     await resumed.close();
   });

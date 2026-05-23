@@ -26,7 +26,7 @@ import { saveAchievementCard } from "../../lib/save-card";
  * via `modern-screenshot` after fonts are ready, then either open Web Share
  * (file payload, with download fallback) or download directly.
  *
- * Visitors who land here without 23/23 are redirected to `/index` so
+ * Visitors who land here without 23/23 are redirected to `/collection` so
  * the card cannot be saved prematurely.
  *
  * The card is scaled down with CSS `transform: scale()` to fit narrow
@@ -173,20 +173,17 @@ const NICKNAME_INPUT_STYLE: CSSProperties = {
  */
 const NICKNAME_MAX_LENGTH = 24;
 
-/** Build the date string the card renders, formatted in the active locale. */
-function formatCardDate(lang: string): string {
-  const formatter = new Intl.DateTimeFormat(lang, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  return formatter.format(new Date());
+/** Build the date the card renders — mono dotted `YYYY · MM · DD`. */
+function formatCardDate(): string {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${now.getFullYear()} · ${pad(now.getMonth() + 1)} · ${pad(now.getDate())}`;
 }
 
 export default function CardPage() {
   const router = useRouter();
   const { hydrated, completion, state, markCardSaved, setNickname } = useLume();
-  const { t, lang } = useLocale();
+  const { t } = useLocale();
   const cardRef = useRef<HTMLDivElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -198,11 +195,11 @@ export default function CardPage() {
       return;
     }
     if (!completion) {
-      router.replace("/index");
+      router.replace("/collection");
     }
   }, [hydrated, completion, router]);
 
-  const dateLabel = useMemo(() => formatCardDate(lang), [lang]);
+  const dateLabel = useMemo(() => formatCardDate(), []);
 
   const nickname = state.nickname.trim() || t.card_visitor_default;
 
@@ -252,7 +249,7 @@ export default function CardPage() {
       <header style={HEADER_STYLE}>
         <h1 style={TITLE_STYLE}>{t.card_title}</h1>
         <button
-          onClick={() => router.push("/index")}
+          onClick={() => router.push("/collection")}
           style={BACK_STYLE}
           type="button"
         >
@@ -263,7 +260,6 @@ export default function CardPage() {
       <section style={STAGE_STYLE}>
         <CardStage>
           <AchievementCard
-            badgeLabel={t.complete_eyebrow}
             cardTitle={t.card_title}
             dateLabel={dateLabel}
             fieldGuideLabel={t.card_field_guide}

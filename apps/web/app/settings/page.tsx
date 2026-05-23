@@ -201,7 +201,7 @@ export default function SettingsPage() {
         <h1 style={TITLE_STYLE}>{t.settings_title}</h1>
         <Link
           aria-label={t.settings_close}
-          href="/index"
+          href="/collection"
           style={{
             color: LU.base.ink2,
             textDecoration: "none",

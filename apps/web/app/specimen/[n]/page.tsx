@@ -3,6 +3,7 @@
 import {
   getSpecimenByNumber,
   getSpecimenVisual,
+  LUME_TOTAL_SPECIMENS,
   type LumeSpecimen,
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
@@ -19,10 +20,10 @@ import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/l
  * plate/floor/NO. metadata in the chrome, the big LumeSpecimen glyph in
  * a glass plate, the editorial localized name with a mono Latin subtitle,
  * the localized field notes, and the
- * timestamp from `collectedAt`. Back links to `/index`.
+ * timestamp from `collectedAt`. Back links to `/collection`.
  *
  * Locked specimens (i.e. ones the visitor has not yet collected) are
- * redirected back to `/index` so the route never accidentally reveals
+ * redirected back to `/collection` so the route never accidentally reveals
  * what's still to find.
  */
 
@@ -247,7 +248,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
       return;
     }
     if (!collectedNumbers.has(specimen.number)) {
-      router.replace("/index");
+      router.replace("/collection");
     }
   }, [hydrated, specimen, collectedNumbers, router]);
 
@@ -269,22 +270,12 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
   return (
     <main style={PAGE_STYLE}>
       <header style={HEADER_STYLE}>
-        <Link href="/index" style={BACK_LINK_STYLE}>
+        <Link href="/collection" style={BACK_LINK_STYLE}>
           <span aria-hidden="true">←</span>
           <span>{t.specimen_back}</span>
         </Link>
         <span style={META_STYLE}>
-          <span>
-            {t.specimen_plate_label} {specimen.plate}
-          </span>
-          <span style={{ color: LU.rule.strong }}>·</span>
-          <span>
-            {t.specimen_floor_label} {specimen.floor}
-          </span>
-          <span style={{ color: LU.rule.strong }}>·</span>
-          <span>
-            {t.specimen_number_label} {String(specimen.number).padStart(2, "0")}
-          </span>
+          {String(specimen.number).padStart(2, "0")} / {LUME_TOTAL_SPECIMENS}
         </span>
       </header>
 

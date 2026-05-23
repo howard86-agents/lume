@@ -15,7 +15,7 @@ import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
 
 /**
- * Collection gallery — `/index`.
+ * Collection gallery — `/collection`.
  *
  * Renders the visitor's full field guide grouped by floor (1..4):
  *   - header carries the NN/23 count and a thin progress bar,

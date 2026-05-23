@@ -387,10 +387,10 @@ function ScanPageInner(): ReactElement {
       if (result === "new" && specimen) {
         setActiveOverlay({ kind: "success", specimen });
       } else if (result === "dupe") {
-        // Show the toast briefly then route to /index so the visitor
+        // Show the toast briefly then route to /collection so the visitor
         // sees their existing entry counted.
         setActiveOverlay({ kind: "dupe", specimen });
-        setTimeout(() => router.replace("/index"), 1200);
+        setTimeout(() => router.replace("/collection"), 1200);
         return;
       } else {
         setActiveOverlay({ kind: "invalid" });
@@ -434,7 +434,7 @@ function ScanPageInner(): ReactElement {
   return (
     <main style={PAGE_STYLE}>
       <header style={HEADER_STYLE}>
-        <Link href="/index" style={BACK_LINK_STYLE}>
+        <Link href="/collection" style={BACK_LINK_STYLE}>
           ← {t.scan_back_to_index}
         </Link>
         <span style={TITLE_STYLE}>{t.scan_scanning}</span>
@@ -488,7 +488,7 @@ function ScanPageInner(): ReactElement {
                       {t.permission_retry}
                     </button>
                   ) : null}
-                  <Link href="/index" style={MANUAL_LINK_STYLE}>
+                  <Link href="/collection" style={MANUAL_LINK_STYLE}>
                     {t.scan_back_to_index}
                   </Link>
                 </div>
@@ -498,9 +498,11 @@ function ScanPageInner(): ReactElement {
         </div>
       </section>
 
-      <p style={HELPER_STYLE}>
-        {showVideo ? t.scan_helper : helperForStatus(status, t)}
-      </p>
+      {recovery ? null : (
+        <p style={HELPER_STYLE}>
+          {showVideo ? t.scan_helper : helperForStatus(status, t)}
+        </p>
+      )}
 
       <button
         onClick={() => setManualOpen(true)}
