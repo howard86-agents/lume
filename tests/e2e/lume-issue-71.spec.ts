@@ -7,7 +7,7 @@ const COMPLETE_URL_PATTERN = /\/complete$/;
 const INDEX_URL_PATTERN = /\/index$/;
 const PERMISSION_URL_PATTERN = /\/permission$/;
 const ENGLISH_LANGUAGE_PATTERN = /English/i;
-const MIRAGE_TILE_NAME_PATTERN = /Mirage.*no\. 08/i;
+const MIRAGE_TILE_NAME_PATTERN = /(Mirage|海市).*no\. 08/i;
 const SPECIMEN_8_URL_PATTERN = /\/specimen\/8$/;
 const SCAN_URL_PATTERN = /\/scan$/;
 
@@ -123,9 +123,9 @@ test.describe("issue #71 visitor collection flow", () => {
 
     await page.goto("/scan?c=LU-08-MIRAGE");
 
-    await expect(page.getByRole("dialog")).toContainText("已加入圖鑑");
+    await expect(page.getByRole("dialog")).toContainText("新發現");
     await expect(page.getByRole("heading", { name: "海市" })).toBeVisible();
-    await expect(page.getByText("1 / 23")).toBeVisible();
+    await expect(page.getByRole("dialog").getByText("1 / 23")).toBeVisible();
 
     await page.getByRole("link", { name: "查看光體" }).click();
     await expect(page).toHaveURL(SPECIMEN_8_URL_PATTERN);
@@ -163,7 +163,7 @@ test.describe("issue #71 visitor collection flow", () => {
       .fill(" https://lume.example/scan?c=lu-01-aurum ");
     await page.getByRole("button", { name: "Collect" }).click();
     await expect(page.getByRole("heading", { name: "Aurum" })).toBeVisible();
-    await expect(page.getByText("1 / 23")).toBeVisible();
+    await expect(page.getByRole("dialog").getByText("1 / 23")).toBeVisible();
 
     await page.getByRole("button", { name: "Continue scanning" }).click();
     await page.getByRole("button", { name: "Enter code" }).click();
@@ -207,7 +207,7 @@ test.describe("issue #71 visitor collection flow", () => {
       page.getByRole("heading", { name: "Your field guide" })
     ).toBeVisible();
     await expect(page.locator("#lume-card-nickname")).toHaveValue("Howard");
-    await expect(page.getByRole("button", { name: "Save card" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Save" })).toBeVisible();
   });
 
   test("unfinished visitors are redirected away from locked specimen, completion, and card routes", async ({
@@ -248,7 +248,7 @@ test.describe("issue #71 visitor collection flow", () => {
     await expect(page).toHaveURL(SCAN_URL_PATTERN);
 
     await expect(page.getByRole("heading", { name: "Mirage" })).toBeVisible();
-    await expect(page.getByText("1 / 23")).toBeVisible();
+    await expect(page.getByRole("dialog").getByText("1 / 23")).toBeVisible();
 
     await page.reload();
     await page.goto("/index");
