@@ -1,6 +1,57 @@
 @import "tailwindcss";
 
 /*
+ * Tailwind v4 theme bridge.
+ *
+ * Maps the Lume design tokens (the --lu-* custom properties defined in :root
+ * below) onto Tailwind's color namespace so utilities like `bg-deep`,
+ * `text-ink-2`, `border-rule-strong`, and `text-amber` generate. `@theme
+ * inline` makes each utility resolve straight to the existing --lu-* var, so
+ * the :root token map stays the single source of truth — retune a hue there
+ * and every utility follows.
+ */
+@theme inline {
+  --color-deep: var(--lu-base-deep);
+  --color-night: var(--lu-base-night);
+  --color-ink: var(--lu-base-ink);
+  --color-ink-2: var(--lu-base-ink-2);
+  --color-ink-3: var(--lu-base-ink-3);
+
+  --color-glass-1: var(--lu-glass-1);
+  --color-glass-2: var(--lu-glass-2);
+  --color-glass-3: var(--lu-glass-3);
+
+  --color-amber: var(--lu-accent-amber);
+  --color-cyan: var(--lu-accent-cyan);
+  --color-magenta: var(--lu-accent-magenta);
+  --color-mint: var(--lu-accent-mint);
+  --color-violet: var(--lu-accent-violet);
+  --color-rose: var(--lu-accent-rose);
+
+  --color-rule-hair: var(--lu-rule-hair);
+  --color-rule-strong: var(--lu-rule-strong);
+}
+
+/*
+ * Token-backed utilities that don't fit Tailwind's color namespace:
+ *   - the three prebuilt aurora gradients (multi-layer background-image)
+ *   - the Lume mono font chain — its CSS var name (--font-mono) is owned by
+ *     next/font, so it can't go in @theme without colliding.
+ */
+@utility bg-aurora-cover {
+  background-image: var(--lu-aurora-cover);
+}
+@utility bg-aurora-page {
+  background-image: var(--lu-aurora-page);
+}
+@utility bg-aurora-halo {
+  background-image: var(--lu-aurora-halo);
+}
+@utility font-mono-lu {
+  font-family: var(--lu-font-mono);
+}
+
+/*
  * Lume design tokens (mirror of packages/data/src/tokens.ts).
  *
  * Any color/gradient referenced by component CSS or Tailwind arbitrary
