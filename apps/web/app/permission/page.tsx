@@ -10,7 +10,7 @@ import { useLocale } from "../../components/lume-provider";
  *
  * Pure UI / nav step that explains why the camera is needed before the
  * browser's getUserMedia prompt fires on `/scan`. Allow takes the
- * visitor into the scanner; Not-now routes to `/index` so they can
+ * visitor into the scanner; Not-now routes to `/collection` so they can
  * still browse what they have collected and use manual entry later.
  *
  * Important: this route does not invoke any camera API. The real
@@ -96,8 +96,8 @@ const FOOTER_STYLE: CSSProperties = {
 
 const PRIMARY_STYLE: CSSProperties = {
   appearance: "none",
-  border: `1px solid ${LU.accent.amber}`,
-  background: "rgba(255, 183, 85, 0.16)",
+  border: `1px solid ${LU.rule.strong}`,
+  background: LU.glass.surface3,
   color: LU.base.ink,
   padding: "16px 24px",
   borderRadius: 999,
@@ -106,7 +106,6 @@ const PRIMARY_STYLE: CSSProperties = {
   letterSpacing: 0.4,
   cursor: "pointer",
   width: "100%",
-  boxShadow: "0 0 0 1px rgba(255, 183, 85, 0.35)",
 };
 
 const SECONDARY_STYLE: CSSProperties = {
@@ -180,7 +179,7 @@ export default function PermissionPage() {
           {t.permission_allow}
         </button>
         <button
-          onClick={() => router.push("/index")}
+          onClick={() => router.push("/collection")}
           style={SECONDARY_STYLE}
           type="button"
         >

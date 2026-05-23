@@ -2,7 +2,7 @@
  * Lume service worker — offline app-shell cache.
  *
  * Goals (issue #59):
- *   - Pre-cache the visitor-flow HTML shells (/, /index, /scan) on
+ *   - Pre-cache the visitor-flow HTML shells (/, /collection, /scan) on
  *     install so an offline reload still loads the cover, gallery, and
  *     scanner.
  *   - Cache-first for immutable Next.js static assets so the app shell
@@ -33,7 +33,7 @@ const ASSET_CACHE = `lume-assets-${VERSION}`;
 // install phase; failures are swallowed so a missing route never blocks
 // the install (e.g. a deploy that has just removed /scan should not
 // strand visitors on a stuck-installing service worker).
-const SHELL_ROUTES = ["/", "/index", "/scan"];
+const SHELL_ROUTES = ["/", "/collection", "/scan"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

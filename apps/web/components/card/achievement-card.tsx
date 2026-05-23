@@ -38,8 +38,6 @@ export const ACHIEVEMENT_CARD_HEIGHT = 480;
 
 /** Visual + accessibility props for the achievement card. */
 export interface AchievementCardProps {
-  /** Localised "23 of 23" eyebrow line. */
-  badgeLabel: string;
   /** Localised card title (e.g. "Your field guide"). */
   cardTitle: string;
   /** Pre-formatted date string (e.g. "22 May 2026"). */
@@ -169,14 +167,6 @@ const TITLE_BLOCK_STYLE: CSSProperties = {
   textAlign: "center",
 };
 
-const TITLE_EYEBROW_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.base.ink3,
-};
-
 const CARD_TITLE_STYLE: CSSProperties = {
   fontSize: 22,
   fontWeight: 600,
@@ -222,9 +212,10 @@ const FOOTER_VISITOR_STYLE: CSSProperties = {
 };
 
 const FOOTER_DATE_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-display)",
-  fontSize: 13,
+  fontFamily: "var(--lu-font-mono)",
+  fontSize: 12,
   fontWeight: 500,
+  letterSpacing: 1,
   color: LU.base.ink2,
 };
 
@@ -331,7 +322,6 @@ function AchievementCardImpl(
   ref: ForwardedRef<HTMLDivElement>
 ): ReactElement {
   const {
-    badgeLabel,
     cardTitle,
     dateLabel,
     fieldGuideLabel,
@@ -354,7 +344,6 @@ function AchievementCardImpl(
       </section>
 
       <section style={TITLE_BLOCK_STYLE}>
-        <span style={TITLE_EYEBROW_STYLE}>{badgeLabel}</span>
         <span style={CARD_TITLE_STYLE}>{cardTitle}</span>
       </section>
 

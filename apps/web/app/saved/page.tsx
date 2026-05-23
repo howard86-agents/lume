@@ -13,7 +13,7 @@ import { useLocale, useLume } from "../../components/lume-provider";
  * saved" moment) and offers a single primary action back to the index.
  *
  * Routing guards: visitors who reach this URL without `cardSaved` set
- * are redirected back to `/card` (or `/index` if they have not yet
+ * are redirected back to `/card` (or `/collection` if they have not yet
  * reached 23/23) so the confirmation cannot be surfaced out of order.
  */
 
@@ -132,7 +132,7 @@ export default function SavedPage() {
       return;
     }
     if (!completion) {
-      router.replace("/index");
+      router.replace("/collection");
       return;
     }
     if (!state.cardSaved) {
@@ -174,7 +174,7 @@ export default function SavedPage() {
 
       <footer style={FOOTER_STYLE}>
         <button
-          onClick={() => router.push("/index")}
+          onClick={() => router.push("/collection")}
           style={PRIMARY_BUTTON_STYLE}
           type="button"
         >

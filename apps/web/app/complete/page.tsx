@@ -29,7 +29,7 @@ import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume
  * settled state on first paint.
  *
  * Visitors who arrive at /complete without 23/23 are redirected to
- * /index so the reveal is never spoiled.
+ * /collection so the reveal is never spoiled.
  */
 
 const PAGE_STYLE: CSSProperties = {
@@ -124,8 +124,8 @@ const FOOTER_STYLE: CSSProperties = {
 
 const PRIMARY_STYLE: CSSProperties = {
   appearance: "none",
-  border: `1px solid ${LU.accent.mint}`,
-  background: "rgba(126, 240, 196, 0.16)",
+  border: `1px solid ${LU.rule.strong}`,
+  background: LU.glass.surface3,
   color: LU.base.ink,
   padding: "16px 24px",
   borderRadius: 999,
@@ -134,7 +134,6 @@ const PRIMARY_STYLE: CSSProperties = {
   letterSpacing: 0.4,
   cursor: "pointer",
   width: "min(320px, 100%)",
-  boxShadow: "0 0 0 1px rgba(126, 240, 196, 0.35)",
 };
 
 /**
@@ -162,7 +161,7 @@ export default function CompletePage() {
       return;
     }
     if (!completion) {
-      router.replace("/index");
+      router.replace("/collection");
     }
   }, [hydrated, completion, router]);
 

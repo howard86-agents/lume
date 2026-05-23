@@ -157,7 +157,33 @@ const PRIMARY_STYLE: CSSProperties = {
   width: "100%",
 };
 
+/** Three corner finder patterns + a few data modules read clearly as a QR. */
+const QR_FINDERS = [
+  [33, 33],
+  [61, 33],
+  [33, 61],
+] as const;
+const QR_MODULES = [
+  [52, 34],
+  [58, 40],
+  [52, 46],
+  [80, 52],
+  [74, 58],
+  [86, 58],
+  [54, 54],
+  [62, 60],
+  [54, 68],
+  [80, 66],
+  [56, 80],
+  [64, 74],
+  [72, 82],
+  [82, 78],
+  [70, 68],
+] as const;
+
 function StepOnePreview() {
+  const dark = LU.base.deep;
+  const light = LU.base.ink;
   return (
     <div
       aria-hidden="true"
@@ -177,23 +203,62 @@ function StepOnePreview() {
           borderRadius: "50%",
           background: LU.aurora.halo,
           filter: "blur(28px)",
-          opacity: 0.85,
+          opacity: 0.8,
         }}
       />
-      <span
-        style={{
-          position: "relative",
-          width: "60%",
-          height: "60%",
-          borderRadius: 16,
-          background:
-            "repeating-conic-gradient(rgba(246,246,251,0.92) 0% 25%, rgba(8,8,13,0.92) 0% 50%)",
-          backgroundSize: "32px 32px",
-          mixBlendMode: "screen",
-          opacity: 0.9,
-          border: `1px solid ${LU.rule.hair}`,
-        }}
-      />
+      <svg
+        role="presentation"
+        style={{ position: "relative", width: "82%", height: "82%" }}
+        viewBox="0 0 120 120"
+      >
+        {/* QR placard the visitor is taught to look for */}
+        <rect fill={light} height="64" rx="7" width="64" x="28" y="28" />
+        {QR_FINDERS.map(([fx, fy]) => (
+          <g key={`${fx}-${fy}`}>
+            <rect fill={dark} height="16" rx="2" width="16" x={fx} y={fy} />
+            <rect
+              fill={light}
+              height="11"
+              rx="1.5"
+              width="11"
+              x={fx + 2.5}
+              y={fy + 2.5}
+            />
+            <rect
+              fill={dark}
+              height="6"
+              rx="1"
+              width="6"
+              x={fx + 5}
+              y={fy + 5}
+            />
+          </g>
+        ))}
+        {QR_MODULES.map(([mx, my]) => (
+          <rect
+            fill={dark}
+            height="5"
+            key={`${mx}-${my}`}
+            rx="1"
+            width="5"
+            x={mx}
+            y={my}
+          />
+        ))}
+        {/* amber scan-corner reticle */}
+        <g
+          fill="none"
+          stroke={LU.accent.amber}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="3"
+        >
+          <path d="M12 34 V18 a6 6 0 0 1 6 -6 H34" />
+          <path d="M86 12 H102 a6 6 0 0 1 6 6 V34" />
+          <path d="M12 86 V102 a6 6 0 0 1 6 6 H34" />
+          <path d="M108 86 V102 a6 6 0 0 1 -6 6 H86" />
+        </g>
+      </svg>
     </div>
   );
 }

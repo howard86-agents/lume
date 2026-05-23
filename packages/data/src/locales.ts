@@ -113,7 +113,7 @@ const EN = {
   scan_result_dupe_named: "{name} (no. {n}) — already in your index",
   scan_result_invalid: "Code not recognised",
 
-  // Index gallery — `/index`
+  // Index gallery — `/collection`
   index_title: "Your field guide",
   index_your_sky: "YOUR SKY",
   index_progress: "{found} / {total}",
