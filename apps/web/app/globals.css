@@ -1,6 +1,57 @@
 @import "tailwindcss";
 
 /*
+ * Tailwind v4 theme bridge.
+ *
+ * Maps the Lume design tokens (the --lu-* custom properties defined in :root
+ * below) onto Tailwind's color namespace so utilities like `bg-deep`,
+ * `text-ink-2`, `border-rule-strong`, and `text-amber` generate. `@theme
+ * inline` makes each utility resolve straight to the existing --lu-* var, so
+ * the :root token map stays the single source of truth — retune a hue there
+ * and every utility follows.
+ */
+@theme inline {
+  --color-deep: var(--lu-base-deep);
+  --color-night: var(--lu-base-night);
+  --color-ink: var(--lu-base-ink);
+  --color-ink-2: var(--lu-base-ink-2);
+  --color-ink-3: var(--lu-base-ink-3);
+
+  --color-glass-1: var(--lu-glass-1);
+  --color-glass-2: var(--lu-glass-2);
+  --color-glass-3: var(--lu-glass-3);
+
+  --color-amber: var(--lu-accent-amber);
+  --color-cyan: var(--lu-accent-cyan);
+  --color-magenta: var(--lu-accent-magenta);
+  --color-mint: var(--lu-accent-mint);
+  --color-violet: var(--lu-accent-violet);
+  --color-rose: var(--lu-accent-rose);
+
+  --color-rule-hair: var(--lu-rule-hair);
+  --color-rule-strong: var(--lu-rule-strong);
+}
+
+/*
+ * Token-backed utilities that don't fit Tailwind's color namespace:
+ *   - the three prebuilt aurora gradients (multi-layer background-image)
+ *   - the Lume mono font chain — its CSS var name (--font-mono) is owned by
+ *     next/font, so it can't go in @theme without colliding.
+ */
+@utility bg-aurora-cover {
+  background-image: var(--lu-aurora-cover);
+}
+@utility bg-aurora-page {
+  background-image: var(--lu-aurora-page);
+}
+@utility bg-aurora-halo {
+  background-image: var(--lu-aurora-halo);
+}
+@utility font-mono-lu {
+  font-family: var(--lu-font-mono);
+}
+
+/*
  * Lume design tokens (mirror of packages/data/src/tokens.ts).
  *
  * Any color/gradient referenced by component CSS or Tailwind arbitrary
@@ -13,6 +64,7 @@
   --lu-base-ink: #f6f6fb;
   --lu-base-ink-2: rgb(246 246 251 / 0.72);
   --lu-base-ink-3: rgb(246 246 251 / 0.48);
+  --lu-screen-h: 100dvh;
 
   /* Glass surface tiers */
   --lu-glass-1: rgb(255 255 255 / 0.04);
@@ -96,7 +148,7 @@ html {
  *     into the host page background on iOS Safari.
  */
 body {
-  min-height: 100dvh;
+  min-height: var(--lu-screen-h);
   overscroll-behavior: none;
   color: var(--lu-base-ink);
   background: var(--lu-base-deep);
@@ -107,4 +159,98 @@ kbd,
 pre,
 samp {
   font-family: var(--lu-font-mono);
+}
+
+/*
+ * Desktop/tablet iPhone shell.
+ * Below 768px these wrappers are display:contents (zero layout impact) so the
+ * app renders exactly as on a phone. At >=768px they become a centered iPhone
+ * frame, and --lu-screen-h flips to 100% so each page's min-height fills the
+ * frame instead of the whole desktop window.
+ */
+.lume-stage,
+.lume-frame,
+.lume-screen {
+  display: contents;
+}
+
+@media (min-width: 768px) {
+  .lume-stage {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        60% 45% at 50% 30%,
+        rgb(179 144 255 / 0.16),
+        transparent 70%
+      ),
+      radial-gradient(
+        50% 40% at 70% 75%,
+        rgb(105 224 255 / 0.12),
+        transparent 70%
+      ),
+      var(--lu-base-deep);
+  }
+
+  .lume-frame {
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    width: auto;
+    height: min(852px, calc(100dvh - 48px));
+    aspect-ratio: 393 / 852;
+    padding: 12px;
+    background: #0b0b0f;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 56px;
+    box-shadow:
+      0 0 0 2px rgb(0 0 0 / 0.6),
+      0 40px 120px rgb(0 0 0 / 0.55),
+      0 0 80px rgb(179 144 255 / 0.12);
+  }
+
+  /* Dynamic Island */
+  .lume-frame::before {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    z-index: 2;
+    width: 110px;
+    height: 32px;
+    pointer-events: none;
+    content: "";
+    background: #000;
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+
+  /* Home indicator */
+  .lume-frame::after {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    z-index: 2;
+    width: 130px;
+    height: 5px;
+    pointer-events: none;
+    content: "";
+    background: rgb(255 255 255 / 0.55);
+    border-radius: 999px;
+    transform: translateX(-50%);
+  }
+
+  .lume-screen {
+    /* Pages read min-height from this var; inside the frame it = frame height */
+    --lu-screen-h: 100%;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--lu-base-deep);
+    border-radius: 44px;
+  }
 }

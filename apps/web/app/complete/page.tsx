@@ -6,7 +6,6 @@ import {
   LUME_TOTAL_SPECIMENS,
   type LumeSpecimen,
 } from "@lume/data/specimens";
-import { LU } from "@lume/data/tokens";
 import { useRouter } from "next/navigation";
 import { type CSSProperties, useEffect } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
@@ -31,110 +30,6 @@ import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume
  * Visitors who arrive at /complete without 23/23 are redirected to
  * /collection so the reveal is never spoiled.
  */
-
-const PAGE_STYLE: CSSProperties = {
-  position: "relative",
-  minHeight: "100dvh",
-  background: LU.aurora.cover,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  padding:
-    "max(48px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom))",
-  overflow: "hidden",
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 8,
-  textAlign: "center",
-};
-
-const EYEBROW_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.accent.mint,
-};
-
-const CENTER_STYLE: CSSProperties = {
-  position: "relative",
-  alignSelf: "center",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "min(82vw, 380px)",
-  aspectRatio: "1 / 1",
-};
-
-const NUMERAL_STACK_STYLE: CSSProperties = {
-  position: "relative",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 6,
-};
-
-const NUMERAL_STYLE: CSSProperties = {
-  fontSize: 96,
-  fontWeight: 700,
-  letterSpacing: -3,
-  color: LU.base.ink,
-  lineHeight: 0.9,
-  textShadow: "0 0 24px rgba(126, 240, 196, 0.45)",
-};
-
-const NUMERAL_SUB_LABEL_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 2.6,
-  textTransform: "uppercase",
-  color: LU.base.ink2,
-  textShadow: "0 0 18px rgba(126, 240, 196, 0.28)",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontSize: 28,
-  fontWeight: 600,
-  letterSpacing: -0.4,
-  margin: 0,
-  textAlign: "center",
-  maxWidth: 360,
-};
-
-const BODY_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 15,
-  lineHeight: 1.5,
-  textAlign: "center",
-  maxWidth: 380,
-  margin: "8px auto 0",
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-  alignItems: "center",
-};
-
-const PRIMARY_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  padding: "16px 24px",
-  borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  width: "min(320px, 100%)",
-};
 
 /**
  * Stagger the specimen-cluster reveal: each tile lights up at a slightly
@@ -174,31 +69,29 @@ export default function CompletePage() {
   }, [hydrated, completion, markFinalSeen]);
 
   return (
-    <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <span style={EYEBROW_STYLE}>{t.complete_eyebrow}</span>
+    <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between overflow-hidden bg-aurora-cover px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
+      <header className="flex flex-col items-center gap-2 text-center">
+        <span className="font-mono-lu text-[11px] text-mint uppercase tracking-[3px]">
+          {t.complete_eyebrow}
+        </span>
       </header>
 
-      <section style={CENTER_STYLE}>
+      <section
+        className="relative flex w-[min(82vw,380px)] items-center justify-center self-center"
+        style={{ aspectRatio: "1 / 1" }}
+      >
         <span
           aria-hidden="true"
-          className="lume-complete-halo"
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            background: LU.aurora.halo,
-            filter: "blur(40px)",
-            opacity: 0.7,
-          }}
+          className="lume-complete-halo absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[40px]"
         />
         <span
           aria-hidden="true"
-          className="lume-complete-numeral"
-          style={NUMERAL_STACK_STYLE}
+          className="lume-complete-numeral relative flex flex-col items-center gap-[6px]"
         >
-          <span style={NUMERAL_STYLE}>23</span>
-          <span style={NUMERAL_SUB_LABEL_STYLE}>
+          <span className="font-bold text-[96px] text-ink leading-[0.9] tracking-[-3px] [text-shadow:0_0_24px_rgba(126,240,196,0.45)]">
+            23
+          </span>
+          <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[2.6px] [text-shadow:0_0_18px_rgba(126,240,196,0.28)]">
             {t.complete_light_forms_lit}
           </span>
         </span>
@@ -208,11 +101,10 @@ export default function CompletePage() {
           return (
             <span
               aria-hidden="true"
-              className="lume-complete-tile"
+              className="lume-complete-tile absolute"
               key={s.qr}
               style={
                 {
-                  position: "absolute",
                   left: `${pos.x}%`,
                   top: `${pos.y}%`,
                   transform: "translate(-50%, -50%)",
@@ -234,14 +126,18 @@ export default function CompletePage() {
       </section>
 
       <div>
-        <h1 style={TITLE_STYLE}>{t.complete_title}</h1>
-        <p style={BODY_STYLE}>{t.complete_body}</p>
+        <h1 className="m-0 max-w-[360px] text-center font-semibold text-[28px] tracking-[-0.4px]">
+          {t.complete_title}
+        </h1>
+        <p className="mx-auto mt-2 max-w-[380px] text-center text-[15px] text-ink-2 leading-normal">
+          {t.complete_body}
+        </p>
       </div>
 
-      <footer style={FOOTER_STYLE}>
+      <footer className="flex flex-col items-center gap-3">
         <button
+          className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={() => router.push("/card")}
-          style={PRIMARY_STYLE}
           type="button"
         >
           {t.complete_view_card}

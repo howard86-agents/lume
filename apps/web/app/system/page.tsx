@@ -1,5 +1,4 @@
 import { LU, LU_ACCENTS } from "@lume/data/tokens";
-import type { CSSProperties } from "react";
 
 export const metadata = {
   title: "Lume — System preview",
@@ -32,13 +31,8 @@ const TYPE_SCALE = [
 
 const MONO_SAMPLE = "?c=LU-08-cyan-12";
 
-const SECTION_STYLE: CSSProperties = {
-  padding: "32px 24px",
-  borderTop: `1px solid ${LU.rule.hair}`,
-};
-
-const RULE_TILE_HEIGHT = 4;
 const SWATCH_SIZE = 88;
+const RULE_TILE_HEIGHT = 4;
 
 function PaletteRow({
   title,
@@ -48,60 +42,22 @@ function PaletteRow({
   entries: { name: string; value: string }[];
 }) {
   return (
-    <section style={SECTION_STYLE}>
-      <h2
-        style={{
-          fontSize: 14,
-          letterSpacing: 2,
-          textTransform: "uppercase",
-          color: LU.base.ink2,
-          margin: "0 0 16px",
-        }}
-      >
+    <section className="border-rule-hair border-t px-6 py-8">
+      <h2 className="m-0 mb-4 text-ink-2 text-sm uppercase tracking-[2px]">
         {title}
       </h2>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
-          gap: 16,
-        }}
-      >
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
         {entries.map((entry) => (
           <article
+            className="overflow-hidden rounded-[16px] border border-rule-hair bg-glass-1"
             key={entry.name}
-            style={{
-              borderRadius: 16,
-              overflow: "hidden",
-              border: `1px solid ${LU.rule.hair}`,
-              background: LU.glass.surface1,
-            }}
           >
-            <div
-              style={{
-                height: SWATCH_SIZE,
-                background: entry.value,
-              }}
-            />
-            <div style={{ padding: "10px 12px" }}>
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: LU.base.ink,
-                }}
-              >
+            <div style={{ height: SWATCH_SIZE, background: entry.value }} />
+            <div className="px-3 py-2.5">
+              <div className="font-medium text-[13px] text-ink">
                 {entry.name}
               </div>
-              <div
-                style={{
-                  fontFamily: "var(--lu-font-mono)",
-                  fontSize: 11,
-                  color: LU.base.ink3,
-                  marginTop: 2,
-                  wordBreak: "break-all",
-                }}
-              >
+              <div className="mt-[2px] break-all font-mono-lu text-[11px] text-ink-3">
                 {entry.value}
               </div>
             </div>
@@ -135,75 +91,31 @@ export default function SystemPreviewPage() {
   }));
 
   return (
-    <main
-      style={{
-        minHeight: "100dvh",
-        background: LU.aurora.page,
-        color: LU.base.ink,
-        padding: "48px 0 64px",
-      }}
-    >
-      <header style={{ padding: "0 24px 24px" }}>
-        <p
-          style={{
-            fontFamily: "var(--lu-font-mono)",
-            fontSize: 12,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: 0,
-          }}
-        >
+    <main className="min-h-[var(--lu-screen-h)] bg-aurora-page pt-12 pb-16 text-ink">
+      <header className="px-6 pb-6">
+        <p className="m-0 font-mono-lu text-ink-2 text-xs uppercase tracking-[2px]">
           Lume system preview
         </p>
-        <h1
-          style={{
-            fontSize: 40,
-            fontWeight: 600,
-            letterSpacing: -0.5,
-            margin: "8px 0 0",
-          }}
-        >
+        <h1 className="m-0 mt-2 font-semibold text-[40px] tracking-[-0.5px]">
           Type scale &amp; palette
         </h1>
-        <p style={{ color: LU.base.ink2, margin: "8px 0 0", maxWidth: 560 }}>
+        <p className="m-0 mt-2 max-w-[560px] text-ink-2">
           Internal preview surfaced for design + dev to verify Lume tokens and
           fonts render as expected. Not part of the visitor flow.
         </p>
       </header>
 
-      <section style={SECTION_STYLE}>
-        <h2
-          style={{
-            fontSize: 14,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: "0 0 16px",
-          }}
-        >
+      <section className="border-rule-hair border-t px-6 py-8">
+        <h2 className="m-0 mb-4 text-ink-2 text-sm uppercase tracking-[2px]">
           Type scale
         </h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className="flex flex-col gap-[18px]">
           {TYPE_SCALE.map((entry) => (
             <div
+              className="flex items-baseline gap-6 border-rule-hair border-t pt-3"
               key={entry.label}
-              style={{
-                display: "flex",
-                gap: 24,
-                alignItems: "baseline",
-                borderTop: `1px solid ${LU.rule.hair}`,
-                paddingTop: 12,
-              }}
             >
-              <div
-                style={{
-                  fontFamily: "var(--lu-font-mono)",
-                  color: LU.base.ink3,
-                  fontSize: 12,
-                  flex: "0 0 96px",
-                }}
-              >
+              <div className="flex-[0_0_96px] font-mono-lu text-ink-3 text-xs">
                 {entry.label}
               </div>
               <div
@@ -218,34 +130,11 @@ export default function SystemPreviewPage() {
               </div>
             </div>
           ))}
-          <div
-            style={{
-              borderTop: `1px solid ${LU.rule.hair}`,
-              paddingTop: 12,
-              display: "flex",
-              gap: 24,
-              alignItems: "baseline",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--lu-font-mono)",
-                color: LU.base.ink3,
-                fontSize: 12,
-                flex: "0 0 96px",
-              }}
-            >
+          <div className="flex items-baseline gap-6 border-rule-hair border-t pt-3">
+            <div className="flex-[0_0_96px] font-mono-lu text-ink-3 text-xs">
               Mono 14
             </div>
-            <div
-              style={{
-                fontFamily: "var(--lu-font-mono)",
-                fontSize: 14,
-                color: LU.base.ink2,
-              }}
-            >
-              {MONO_SAMPLE}
-            </div>
+            <div className="font-mono-lu text-ink-2 text-sm">{MONO_SAMPLE}</div>
           </div>
         </div>
       </section>
@@ -254,59 +143,25 @@ export default function SystemPreviewPage() {
       <PaletteRow entries={glassEntries} title="Glass surface tiers" />
       <PaletteRow entries={accentEntries} title="Accent hues" />
 
-      <section style={SECTION_STYLE}>
-        <h2
-          style={{
-            fontSize: 14,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: "0 0 16px",
-          }}
-        >
+      <section className="border-rule-hair border-t px-6 py-8">
+        <h2 className="m-0 mb-4 text-ink-2 text-sm uppercase tracking-[2px]">
           Rules / hairlines
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: 16,
-          }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
           {ruleEntries.map((entry) => (
             <article
+              className="rounded-[16px] border border-rule-hair bg-glass-1 p-4"
               key={entry.name}
-              style={{
-                borderRadius: 16,
-                padding: 16,
-                background: LU.glass.surface1,
-                border: `1px solid ${LU.rule.hair}`,
-              }}
             >
               <div
+                className="rounded-full"
                 style={{
                   height: RULE_TILE_HEIGHT,
                   background: entry.value,
-                  borderRadius: 999,
                 }}
               />
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  marginTop: 12,
-                }}
-              >
-                {entry.name}
-              </div>
-              <div
-                style={{
-                  fontFamily: "var(--lu-font-mono)",
-                  fontSize: 11,
-                  color: LU.base.ink3,
-                  marginTop: 2,
-                }}
-              >
+              <div className="mt-3 font-medium text-[13px]">{entry.name}</div>
+              <div className="mt-[2px] font-mono-lu text-[11px] text-ink-3">
                 {entry.value}
               </div>
             </article>

@@ -1,6 +1,5 @@
 "use client";
 
-import { LU } from "@lume/data/tokens";
 import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
@@ -34,137 +33,6 @@ import { saveAchievementCard } from "../../lib/save-card";
  * dimensions, so the exported image is independent of the live preview
  * scale.
  */
-
-const PAGE_STYLE: CSSProperties = {
-  position: "relative",
-  minHeight: "100dvh",
-  background: LU.aurora.page,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  padding:
-    "max(40px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom))",
-  gap: 24,
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontSize: 22,
-  fontWeight: 600,
-  letterSpacing: -0.3,
-  margin: 0,
-};
-
-const BACK_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  color: LU.base.ink2,
-  height: 36,
-  padding: "0 14px",
-  borderRadius: 999,
-  fontSize: 13,
-  cursor: "pointer",
-};
-
-const STAGE_STYLE: CSSProperties = {
-  flex: 1,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const FOOTER_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 12,
-};
-
-const ACTIONS_STYLE: CSSProperties = {
-  display: "flex",
-  justifyContent: "center",
-  gap: 12,
-  width: "min(360px, 100%)",
-};
-
-const PRIMARY_BUTTON_STYLE: CSSProperties = {
-  appearance: "none",
-  border: `1px solid ${LU.accent.mint}`,
-  background: "rgba(126, 240, 196, 0.16)",
-  color: LU.base.ink,
-  padding: "16px 24px",
-  borderRadius: 999,
-  fontSize: 16,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  flex: 1,
-  minWidth: 0,
-  boxShadow: "0 0 0 1px rgba(126, 240, 196, 0.35)",
-};
-
-const PRIMARY_BUTTON_DISABLED_STYLE: CSSProperties = {
-  ...PRIMARY_BUTTON_STYLE,
-  opacity: 0.65,
-  cursor: "wait",
-};
-
-const STATUS_STYLE: CSSProperties = {
-  minHeight: 18,
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 1.5,
-  textTransform: "uppercase",
-  color: LU.base.ink2,
-};
-
-const STATUS_ERROR_STYLE: CSSProperties = {
-  ...STATUS_STYLE,
-  color: LU.accent.rose,
-  textTransform: "none",
-  letterSpacing: 0.5,
-};
-
-const NICKNAME_FIELD_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 6,
-  width: "min(360px, 100%)",
-  margin: "0 auto",
-};
-
-const NICKNAME_LABEL_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 10,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.base.ink2,
-};
-
-const NICKNAME_INPUT_STYLE: CSSProperties = {
-  appearance: "none",
-  width: "100%",
-  height: 44,
-  padding: "0 16px",
-  borderRadius: 999,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  color: LU.base.ink,
-  fontSize: 16,
-  fontWeight: 500,
-  textAlign: "center",
-  fontFamily: "var(--lu-font-display)",
-  // iOS Safari font-size < 16px triggers the auto-zoom-on-focus
-  // behaviour; keep the field at 16 so the page stays put.
-};
 
 /**
  * Maximum nickname length on the card. Long enough for any of the
@@ -241,23 +109,27 @@ export default function CardPage() {
   // does not flash the localised "Visitor" fallback over their persisted
   // nickname.
   if (!hydrated) {
-    return <main style={PAGE_STYLE} />;
+    return (
+      <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between gap-6 bg-aurora-page px-5 pt-[max(40px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink" />
+    );
   }
 
   return (
-    <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <h1 style={TITLE_STYLE}>{t.card_title}</h1>
+    <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between gap-6 bg-aurora-page px-5 pt-[max(40px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
+      <header className="flex items-center justify-between">
+        <h1 className="m-0 font-semibold text-[22px] tracking-[-0.3px]">
+          {t.card_title}
+        </h1>
         <button
+          className="h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
           onClick={() => router.push("/collection")}
-          style={BACK_STYLE}
           type="button"
         >
           {t.card_saved_back}
         </button>
       </header>
 
-      <section style={STAGE_STYLE}>
+      <section className="flex flex-1 items-center justify-center">
         <CardStage>
           <AchievementCard
             cardTitle={t.card_title}
@@ -269,44 +141,44 @@ export default function CardPage() {
         </CardStage>
       </section>
 
-      <div style={NICKNAME_FIELD_STYLE}>
-        <label htmlFor="lume-card-nickname" style={NICKNAME_LABEL_STYLE}>
+      <div className="mx-auto flex w-[min(360px,100%)] flex-col items-center gap-[6px]">
+        <label
+          className="font-mono-lu text-[10px] text-ink-2 uppercase tracking-[3px]"
+          htmlFor="lume-card-nickname"
+        >
           {t.card_nickname_label}
         </label>
         <input
           autoCapitalize="words"
           autoComplete="off"
+          className="h-11 w-full appearance-none rounded-full border border-rule-hair bg-glass-1 px-4 text-center font-medium text-base text-ink"
           id="lume-card-nickname"
           maxLength={NICKNAME_MAX_LENGTH}
           onChange={onNicknameChange}
           placeholder={t.card_nickname_placeholder}
           spellCheck={false}
-          style={NICKNAME_INPUT_STYLE}
+          style={{ fontFamily: "var(--lu-font-display)" }}
           type="text"
           value={state.nickname}
         />
       </div>
 
-      <footer style={FOOTER_STYLE}>
-        <div style={ACTIONS_STYLE}>
+      <footer className="flex flex-col items-center gap-3">
+        <div className="flex w-[min(360px,100%)] justify-center gap-3">
           <button
             aria-busy={isSaving}
+            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("share")}
-            style={
-              isSaving ? PRIMARY_BUTTON_DISABLED_STYLE : PRIMARY_BUTTON_STYLE
-            }
             type="button"
           >
             {isSaving ? t.card_saving : t.card_share}
           </button>
           <button
             aria-busy={isSaving}
+            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("download")}
-            style={
-              isSaving ? PRIMARY_BUTTON_DISABLED_STYLE : PRIMARY_BUTTON_STYLE
-            }
             type="button"
           >
             {isSaving ? t.card_saving : t.card_save}
@@ -314,8 +186,8 @@ export default function CardPage() {
         </div>
         <span
           aria-live="polite"
+          className={`min-h-[18px] font-mono-lu text-[11px] uppercase tracking-[1.5px] ${errorMessage ? "text-rose normal-case tracking-[0.5px]" : "text-ink-2"}`}
           role="status"
-          style={errorMessage ? STATUS_ERROR_STYLE : STATUS_STYLE}
         >
           {errorMessage ?? ""}
         </span>

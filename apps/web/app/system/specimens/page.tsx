@@ -7,61 +7,18 @@ import {
   type LumeSpecimen,
   SAMPLE_FOUND,
 } from "@lume/data/specimens";
-import { LU } from "@lume/data/tokens";
-import type { CSSProperties } from "react";
 import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/lume-specimen";
 
 export const metadata = {
   title: "Lume — Specimens preview",
 };
 
-const SECTION_STYLE: CSSProperties = {
-  padding: "32px 24px",
-  borderTop: `1px solid ${LU.rule.hair}`,
-};
-
-const TILE_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 12,
-  padding: "20px 16px 16px",
-  borderRadius: 18,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  textAlign: "center",
-};
-
-const NUMBER_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 2,
-  textTransform: "uppercase",
-  color: LU.base.ink3,
-};
-
-const NAME_STYLE: CSSProperties = {
-  fontSize: 15,
-  fontWeight: 600,
-  color: LU.base.ink,
-  letterSpacing: 0.2,
-};
-
-const META_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  color: LU.base.ink3,
-};
-
 function SpecimenTile({ specimen }: { specimen: LumeSpecimen }) {
   const found = SAMPLE_FOUND.includes(specimen.number);
-  // The system preview is a static dev surface with no useLocale wiring,
-  // so we resolve alt text against English. Visitor-facing surfaces still
-  // resolve against the active locale.
   const visual = getSpecimenVisual(specimen, "en");
   return (
-    <article style={TILE_STYLE}>
-      <span style={NUMBER_STYLE}>
+    <article className="flex flex-col items-center gap-3 rounded-[18px] border border-rule-hair bg-glass-1 px-4 pt-5 pb-4 text-center">
+      <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2px]">
         NO. {String(specimen.number).padStart(2, "0")}
       </span>
       <LumeSpecimenView
@@ -72,19 +29,13 @@ function SpecimenTile({ specimen }: { specimen: LumeSpecimen }) {
         image={visual.kind === "image" ? visual : undefined}
         size={108}
       />
-      <div style={NAME_STYLE}>{specimen.name.en}</div>
-      <div style={META_STYLE}>
+      <div className="font-semibold text-[15px] text-ink tracking-[0.2px]">
+        {specimen.name.en}
+      </div>
+      <div className="font-mono-lu text-[11px] text-ink-3">
         FLOOR {specimen.floor} · PLATE {specimen.plate} · {specimen.form}
       </div>
-      <div
-        style={{
-          fontFamily: "var(--lu-font-mono)",
-          fontSize: 10,
-          color: LU.base.ink3,
-          letterSpacing: 1,
-          textTransform: "lowercase",
-        }}
-      >
+      <div className="font-mono-lu text-[10px] text-ink-3 lowercase tracking-[1px]">
         {specimen.qr}
       </div>
     </article>
@@ -93,8 +44,10 @@ function SpecimenTile({ specimen }: { specimen: LumeSpecimen }) {
 
 function FormCard({ form }: { form: (typeof LUME_FORM_NAMES)[number] }) {
   return (
-    <article style={TILE_STYLE}>
-      <span style={NUMBER_STYLE}>{form}</span>
+    <article className="flex flex-col items-center gap-3 rounded-[18px] border border-rule-hair bg-glass-1 px-4 pt-5 pb-4 text-center">
+      <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2px]">
+        {form}
+      </span>
       <LumeSpecimenView form={form} glow={0.55} hue="cyan" size={108} />
     </article>
   );
@@ -103,38 +56,15 @@ function FormCard({ form }: { form: (typeof LUME_FORM_NAMES)[number] }) {
 export default function SpecimensPreviewPage() {
   const foundCount = SAMPLE_FOUND.length;
   return (
-    <main
-      style={{
-        minHeight: "100dvh",
-        background: LU.aurora.page,
-        color: LU.base.ink,
-        padding: "48px 0 64px",
-      }}
-    >
-      <header style={{ padding: "0 24px 24px" }}>
-        <p
-          style={{
-            fontFamily: "var(--lu-font-mono)",
-            fontSize: 12,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: 0,
-          }}
-        >
+    <main className="min-h-[var(--lu-screen-h)] bg-aurora-page pt-12 pb-16 text-ink">
+      <header className="px-6 pb-6">
+        <p className="m-0 font-mono-lu text-ink-2 text-xs uppercase tracking-[2px]">
           Lume specimens preview
         </p>
-        <h1
-          style={{
-            fontSize: 40,
-            fontWeight: 600,
-            letterSpacing: -0.5,
-            margin: "8px 0 0",
-          }}
-        >
+        <h1 className="m-0 mt-2 font-semibold text-[40px] tracking-[-0.5px]">
           {LUME_TOTAL_SPECIMENS} light-forms
         </h1>
-        <p style={{ color: LU.base.ink2, margin: "8px 0 0", maxWidth: 560 }}>
+        <p className="m-0 mt-2 max-w-[560px] text-ink-2">
           Internal preview of every specimen tile in its found and locked state.
           Sample-found is hard-coded to {foundCount} specimens to mirror the
           design preview the gallery is being built against.
@@ -142,27 +72,12 @@ export default function SpecimensPreviewPage() {
       </header>
 
       {([1, 2, 3, 4] as const).map((floor) => (
-        <section key={floor} style={SECTION_STYLE}>
-          <header
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              marginBottom: 16,
-            }}
-          >
-            <h2
-              style={{
-                fontSize: 14,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                color: LU.base.ink2,
-                margin: 0,
-              }}
-            >
+        <section className="border-rule-hair border-t px-6 py-8" key={floor}>
+          <header className="mb-4 flex items-baseline justify-between">
+            <h2 className="m-0 text-ink-2 text-sm uppercase tracking-[2px]">
               Floor {floor}
             </h2>
-            <span style={META_STYLE}>
+            <span className="font-mono-lu text-[11px] text-ink-3">
               {
                 LUME_SPECIMENS_BY_FLOOR[floor].filter((s) =>
                   SAMPLE_FOUND.includes(s.number)
@@ -172,13 +87,7 @@ export default function SpecimensPreviewPage() {
               {LUME_SPECIMENS_BY_FLOOR[floor].length} sample-found
             </span>
           </header>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-              gap: 16,
-            }}
-          >
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
             {LUME_SPECIMENS_BY_FLOOR[floor].map((s) => (
               <SpecimenTile key={s.number} specimen={s} />
             ))}
@@ -186,60 +95,32 @@ export default function SpecimensPreviewPage() {
         </section>
       ))}
 
-      <section style={SECTION_STYLE}>
-        <h2
-          style={{
-            fontSize: 14,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: "0 0 16px",
-          }}
-        >
+      <section className="border-rule-hair border-t px-6 py-8">
+        <h2 className="m-0 mb-4 text-ink-2 text-sm uppercase tracking-[2px]">
           Form library ({LUME_FORM_NAMES.length} forms)
         </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-            gap: 16,
-          }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
           {LUME_FORM_NAMES.map((form) => (
             <FormCard form={form} key={form} />
           ))}
         </div>
       </section>
 
-      <section style={SECTION_STYLE}>
-        <h2
-          style={{
-            fontSize: 14,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: LU.base.ink2,
-            margin: "0 0 16px",
-          }}
-        >
+      <section className="border-rule-hair border-t px-6 py-8">
+        <h2 className="m-0 mb-4 text-ink-2 text-sm uppercase tracking-[2px]">
           Locked-state preview
         </h2>
-        <p style={{ color: LU.base.ink3, margin: "0 0 16px", fontSize: 13 }}>
+        <p className="m-0 mb-4 text-[13px] text-ink-3">
           Every specimen rendered as a locked tile (dimmed silhouette + faint
           halo) so the gallery knows what an unfound entry should look like.
         </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-            gap: 16,
-          }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4">
           {LUME_SPECIMENS.map((s) => (
             <article
+              className="flex flex-col items-center gap-3 rounded-[18px] border border-rule-hair bg-glass-1 px-3 py-4 text-center"
               key={s.number}
-              style={{ ...TILE_STYLE, padding: "16px 12px" }}
             >
-              <span style={NUMBER_STYLE}>
+              <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2px]">
                 NO. {String(s.number).padStart(2, "0")}
               </span>
               <LumeSpecimenView

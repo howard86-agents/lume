@@ -7,7 +7,7 @@ import {
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
-import type { CSSProperties, ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useLocale } from "../lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../specimen/lume-specimen";
 
@@ -29,167 +29,6 @@ import { LumeSpecimen as LumeSpecimenView } from "../specimen/lume-specimen";
  * presentational — the overlay manager on /scan owns when to show them.
  */
 
-const SHEET_BACKDROP_STYLE: CSSProperties = {
-  position: "fixed",
-  inset: 0,
-  background: "rgba(8, 8, 13, 0.55)",
-  backdropFilter: "blur(8px)",
-  WebkitBackdropFilter: "blur(8px)",
-  zIndex: 40,
-  display: "flex",
-  alignItems: "flex-end",
-  justifyContent: "center",
-};
-
-const SHEET_STACK_STYLE: CSSProperties = {
-  position: "relative",
-  width: "100%",
-  maxWidth: 480,
-};
-
-const SHEET_STYLE: CSSProperties = {
-  width: "100%",
-  margin: "0 auto",
-  padding: "96px 24px max(24px, env(safe-area-inset-bottom))",
-  borderTopLeftRadius: 28,
-  borderTopRightRadius: 28,
-  border: `1px solid ${LU.rule.strong}`,
-  borderBottom: "none",
-  background: LU.glass.surface3,
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 16,
-  textAlign: "center",
-  boxShadow: "0 -32px 96px rgba(0, 0, 0, 0.55)",
-};
-
-const FLOATING_HERO_STYLE: CSSProperties = {
-  position: "absolute",
-  top: -84,
-  left: "50%",
-  zIndex: 1,
-  transform: "translateX(-50%)",
-  filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
-};
-
-const NEW_SPECIMEN_PILL_STYLE: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  padding: "7px 12px",
-  border: "1px solid rgba(255, 183, 85, 0.26)",
-  borderRadius: 999,
-  background: "rgba(255, 183, 85, 0.10)",
-  boxShadow: "0 0 24px rgba(255, 183, 85, 0.12)",
-  color: LU.base.ink,
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: 1.4,
-  textTransform: "uppercase",
-};
-
-const NEW_SPECIMEN_DOT_STYLE: CSSProperties = {
-  width: 7,
-  height: 7,
-  borderRadius: 999,
-  background: LU.accent.amber,
-  boxShadow: "0 0 14px rgba(255, 183, 85, 0.9)",
-};
-
-const NAME_STYLE: CSSProperties = {
-  fontSize: 24,
-  fontWeight: 600,
-  letterSpacing: -0.3,
-  margin: 0,
-};
-
-const NOTES_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 14,
-  lineHeight: 1.5,
-  margin: 0,
-  maxWidth: 360,
-};
-
-const PROGRESS_LABEL_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 2,
-  textTransform: "uppercase",
-  color: LU.base.ink3,
-};
-
-const PROGRESS_TRACK_STYLE: CSSProperties = {
-  width: "100%",
-  height: 4,
-  borderRadius: 999,
-  background: LU.glass.surface2,
-  overflow: "hidden",
-};
-
-const ACTIONS_STYLE: CSSProperties = {
-  display: "flex",
-  gap: 12,
-  width: "100%",
-};
-
-const PRIMARY_STYLE: CSSProperties = {
-  appearance: "none",
-  flex: 1.18,
-  border: "1px solid rgba(246, 246, 251, 0.88)",
-  background: LU.base.ink,
-  color: LU.base.deep,
-  padding: "14px 16px",
-  borderRadius: 999,
-  fontSize: 15,
-  fontWeight: 600,
-  letterSpacing: 0.4,
-  cursor: "pointer",
-  textDecoration: "none",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const SECONDARY_STYLE: CSSProperties = {
-  ...PRIMARY_STYLE,
-  flex: 0.82,
-  border: `1px solid ${LU.rule.strong}`,
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-};
-
-const TOAST_WRAPPER_STYLE: CSSProperties = {
-  position: "fixed",
-  inset: 0,
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "flex-end",
-  justifyContent: "center",
-  zIndex: 30,
-  padding: "0 16px max(96px, env(safe-area-inset-bottom)) 16px",
-};
-
-const TOAST_BASE_STYLE: CSSProperties = {
-  pointerEvents: "auto",
-  width: "100%",
-  maxWidth: 420,
-  padding: "14px 18px",
-  borderRadius: 16,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface3,
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  color: LU.base.ink,
-  fontSize: 14,
-  textAlign: "center",
-  boxShadow: "0 24px 60px rgba(0, 0, 0, 0.5)",
-};
-
 interface SuccessSheetProps {
   collectedCount: number;
   onContinue: () => void;
@@ -208,42 +47,54 @@ export function SuccessSheet({
   );
   const visual = getSpecimenVisual(specimen, lang);
   return (
-    <div aria-modal="true" role="dialog" style={SHEET_BACKDROP_STYLE}>
-      <div style={SHEET_STACK_STYLE}>
+    <div
+      aria-modal="true"
+      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[8px]"
+      role="dialog"
+      style={{ background: "rgba(8, 8, 13, 0.55)" }}
+    >
+      <div className="relative w-full max-w-[480px]">
         <LumeSpecimenView
           form={specimen.form}
           glow={0.7}
           hue={specimen.hue}
           image={visual.kind === "image" ? visual : undefined}
           size={160}
-          style={FLOATING_HERO_STYLE}
+          style={{
+            position: "absolute",
+            top: -84,
+            left: "50%",
+            zIndex: 1,
+            transform: "translateX(-50%)",
+            filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
+          }}
         />
-        <div style={SHEET_STYLE}>
-          <span style={NEW_SPECIMEN_PILL_STYLE}>
-            <span aria-hidden="true" style={NEW_SPECIMEN_DOT_STYLE} />
+        <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-32px_96px_rgba(0,0,0,0.55)] backdrop-blur-[20px]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,183,85,0.26)] bg-[rgba(255,183,85,0.10)] px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
+            <span
+              aria-hidden="true"
+              className="h-[7px] w-[7px] rounded-full bg-amber shadow-[0_0_14px_rgba(255,183,85,0.9)]"
+            />
             {t.scan_new_specimen}
           </span>
-          <h2 style={NAME_STYLE}>{specimen.name[lang] ?? specimen.name.en}</h2>
-          <p style={NOTES_STYLE}>{specimen.notes[lang] ?? specimen.notes.en}</p>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <span style={PROGRESS_LABEL_STYLE}>
+          <h2 className="m-0 font-semibold text-2xl tracking-[-0.3px]">
+            {specimen.name[lang] ?? specimen.name.en}
+          </h2>
+          <p className="m-0 max-w-[360px] text-ink-2 text-sm leading-normal">
+            {specimen.notes[lang] ?? specimen.notes.en}
+          </p>
+          <div className="flex w-full items-baseline justify-between">
+            <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2px]">
               {format("index_progress", {
                 found: collectedCount,
                 total: LUME_TOTAL_SPECIMENS,
               })}
             </span>
-            <span style={{ ...PROGRESS_LABEL_STYLE, color: LU.base.ink3 }}>
+            <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2px]">
               {progressPct}%
             </span>
           </div>
-          <div style={PROGRESS_TRACK_STYLE}>
+          <div className="h-1 w-full overflow-hidden rounded-full bg-glass-2">
             <div
               style={{
                 width: `${progressPct}%`,
@@ -254,11 +105,18 @@ export function SuccessSheet({
               }}
             />
           </div>
-          <div style={ACTIONS_STYLE}>
-            <button onClick={onContinue} style={PRIMARY_STYLE} type="button">
+          <div className="flex w-full gap-3">
+            <button
+              className="inline-flex flex-[1.18] cursor-pointer appearance-none items-center justify-center rounded-full border border-[rgba(246,246,251,0.88)] bg-ink px-4 py-[14px] font-semibold text-[15px] text-deep tracking-[0.4px] no-underline"
+              onClick={onContinue}
+              type="button"
+            >
               {t.scan_continue}
             </button>
-            <Link href={`/specimen/${specimen.number}`} style={SECONDARY_STYLE}>
+            <Link
+              className="inline-flex flex-[0.82] cursor-pointer appearance-none items-center justify-center rounded-full border border-rule-strong bg-glass-3 px-4 py-[14px] font-semibold text-[15px] text-ink tracking-[0.4px] no-underline"
+              href={`/specimen/${specimen.number}`}
+            >
               {t.scan_view_specimen}
             </Link>
           </div>
@@ -283,16 +141,10 @@ export function DuplicateToast({
       })
     : t.scan_result_dupe;
   return (
-    <div style={TOAST_WRAPPER_STYLE}>
+    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
+        className="pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
         onClick={onDismiss}
-        style={{
-          ...TOAST_BASE_STYLE,
-          border: "1px solid rgba(255, 183, 85, 0.55)",
-          background: "rgba(255, 183, 85, 0.10)",
-          appearance: "none",
-          cursor: "pointer",
-        }}
         type="button"
       >
         {message}
@@ -308,16 +160,10 @@ export function InvalidToast({
 }): ReactElement {
   const { t } = useLocale();
   return (
-    <div style={TOAST_WRAPPER_STYLE}>
+    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
+        className="pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
         onClick={onDismiss}
-        style={{
-          ...TOAST_BASE_STYLE,
-          border: "1px solid rgba(255, 141, 161, 0.55)",
-          background: "rgba(255, 141, 161, 0.10)",
-          appearance: "none",
-          cursor: "pointer",
-        }}
         type="button"
       >
         {t.scan_result_invalid}

@@ -1,11 +1,9 @@
 "use client";
 
 import { LUME_TOTAL_SPECIMENS, type LumeSpecimen } from "@lume/data/specimens";
-import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  type CSSProperties,
   type ReactElement,
   Suspense,
   useCallback,
@@ -52,174 +50,15 @@ type ScanStatus =
   | "unsupported"
   | "error";
 
-const PAGE_STYLE: CSSProperties = {
-  minHeight: "100dvh",
-  background: LU.aurora.page,
-  color: LU.base.ink,
-  display: "flex",
-  flexDirection: "column",
-  padding:
-    "max(40px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom))",
-  gap: 24,
-};
-
-const HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-};
-
-const BACK_LINK_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  textDecoration: "none",
-  fontSize: 14,
-};
-
-const TITLE_STYLE: CSSProperties = {
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 3,
-  textTransform: "uppercase",
-  color: LU.base.ink2,
-};
-
-const PROGRESS_CHIP_STYLE: CSSProperties = {
-  minWidth: 64,
-  padding: "7px 10px",
-  borderRadius: 999,
-  border: "1px solid rgba(255, 183, 85, 0.45)",
-  background: "rgba(255, 183, 85, 0.10)",
-  boxShadow: "0 0 22px rgba(255, 183, 85, 0.22)",
-  color: LU.accent.amber,
-  fontFamily: "var(--lu-font-mono)",
-  fontSize: 11,
-  letterSpacing: 1.3,
-  textAlign: "center",
-};
-
-const FRAME_WRAPPER_STYLE: CSSProperties = {
-  flex: 1,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const FRAME_STYLE: CSSProperties = {
-  position: "relative",
-  width: "min(78vw, 360px)",
-  aspectRatio: "1 / 1",
-  borderRadius: "50%",
-  overflow: "hidden",
-  border: `1px solid ${LU.rule.strong}`,
-  boxShadow:
-    "0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 60px rgba(0,0,0,0.55)",
-  background: LU.glass.surface1,
-};
-
-const VIDEO_STYLE: CSSProperties = {
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
-  background: LU.base.deep,
-  display: "block",
-  transform: "scaleX(-1)" /* mirror for natural framing on phones */,
-};
-
-const FRAME_OVERLAY_STYLE: CSSProperties = {
-  position: "absolute",
-  inset: 0,
-  borderRadius: "50%",
-  border: `2px solid ${LU.glass.surface3}`,
-  pointerEvents: "none",
-  boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.06)",
-};
-
-const HELPER_STYLE: CSSProperties = {
-  textAlign: "center",
-  color: LU.base.ink2,
-  fontSize: 14,
-  margin: 0,
-};
-
-const MANUAL_LINK_STYLE: CSSProperties = {
-  appearance: "none",
-  background: "transparent",
-  color: LU.base.ink,
-  border: `1px solid ${LU.rule.strong}`,
-  padding: "12px 20px",
-  borderRadius: 999,
-  fontSize: 14,
-  fontWeight: 500,
-  cursor: "pointer",
-  alignSelf: "center",
-  textDecoration: "none",
-};
-
-const RECOVERY_CARD_STYLE: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 12,
-  padding: "24px 20px",
-  borderRadius: 20,
-  border: `1px solid ${LU.rule.hair}`,
-  background: LU.glass.surface1,
-  textAlign: "center",
-  margin: "0 auto",
-  maxWidth: 420,
-};
-
-const RECOVERY_TITLE_STYLE: CSSProperties = {
-  fontSize: 20,
-  fontWeight: 600,
-  margin: 0,
-};
-
-const RECOVERY_BODY_STYLE: CSSProperties = {
-  color: LU.base.ink2,
-  fontSize: 14,
-  lineHeight: 1.5,
-  margin: 0,
-};
-
-const RETRY_STYLE: CSSProperties = {
-  appearance: "none",
-  background: LU.glass.surface3,
-  color: LU.base.ink,
-  border: `1px solid ${LU.rule.strong}`,
-  padding: "12px 24px",
-  borderRadius: 999,
-  fontSize: 14,
-  fontWeight: 600,
-  cursor: "pointer",
-};
-
 function StartingPlaceholder({ label }: { label: string }) {
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 12,
-        color: LU.base.ink3,
-      }}
-    >
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-ink-3">
       <span
         aria-hidden="true"
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: "50%",
-          background: LU.accent.amber,
-          boxShadow: `0 0 16px ${LU.accent.amber}`,
-          animation: "lume-pulse 1.4s ease-in-out infinite",
-        }}
+        className="h-3 w-3 rounded-full bg-amber shadow-[0_0_16px_var(--lu-accent-amber)]"
+        style={{ animation: "lume-pulse 1.4s ease-in-out infinite" }}
       />
-      <span style={{ fontSize: 13, color: LU.base.ink2 }}>{label}</span>
+      <span className="text-[13px] text-ink-2">{label}</span>
       <style>{`
         @keyframes lume-pulse { 0%, 100% { opacity: 0.4; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
       `}</style>
@@ -250,9 +89,9 @@ export default function ScanPage(): ReactElement {
   return (
     <Suspense
       fallback={
-        <main style={PAGE_STYLE}>
-          <div style={FRAME_WRAPPER_STYLE}>
-            <div style={FRAME_STYLE} />
+        <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
+          <div className="flex flex-1 items-center justify-center">
+            <div className="relative aspect-square w-[min(78vw,360px)] overflow-hidden rounded-[50%] border border-rule-strong bg-glass-1 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_24px_60px_rgba(0,0,0,0.55)]" />
           </div>
         </main>
       }
@@ -432,13 +271,15 @@ function ScanPageInner(): ReactElement {
   const recovery = renderRecovery(status, t);
 
   return (
-    <main style={PAGE_STYLE}>
-      <header style={HEADER_STYLE}>
-        <Link href="/collection" style={BACK_LINK_STYLE}>
+    <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
+      <header className="flex items-center justify-between">
+        <Link className="text-ink-2 text-sm no-underline" href="/collection">
           ← {t.scan_back_to_index}
         </Link>
-        <span style={TITLE_STYLE}>{t.scan_scanning}</span>
-        <span style={PROGRESS_CHIP_STYLE}>
+        <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
+          {t.scan_scanning}
+        </span>
+        <span className="min-w-16 rounded-full border border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.10)] px-2.5 py-[7px] text-center font-mono-lu text-[11px] text-amber tracking-[1.3px] shadow-[0_0_22px_rgba(255,183,85,0.22)]">
           {format("index_progress", {
             found: collectedCount,
             total: LUME_TOTAL_SPECIMENS,
@@ -446,49 +287,46 @@ function ScanPageInner(): ReactElement {
         </span>
       </header>
 
-      <section style={FRAME_WRAPPER_STYLE}>
-        <div style={FRAME_STYLE}>
+      <section className="flex flex-1 items-center justify-center">
+        <div className="relative aspect-square w-[min(78vw,360px)] overflow-hidden rounded-[50%] border border-rule-strong bg-glass-1 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_24px_60px_rgba(0,0,0,0.55)]">
           {showVideo ? (
             <>
               <video
                 autoPlay
+                className="block h-full w-full -scale-x-100 bg-deep object-cover"
                 muted
                 playsInline
                 ref={videoRef}
-                style={VIDEO_STYLE}
               >
                 <track kind="captions" />
               </video>
               {status === "starting" ? (
                 <StartingPlaceholder label={t.permission_title} />
               ) : null}
-              <div aria-hidden="true" style={FRAME_OVERLAY_STYLE} />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-[50%] border-2 border-glass-3 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]"
+              />
             </>
           ) : null}
           {!showVideo && recovery ? (
-            <div
-              style={{
-                ...RECOVERY_CARD_STYLE,
-                position: "absolute",
-                inset: "auto",
-              }}
-            >
+            <div className="absolute inset-[auto] mx-auto flex max-w-[420px] flex-col items-center gap-3 rounded-[20px] border border-rule-hair bg-glass-1 p-[24px_20px] text-center">
               {recovery.body}
               {recovery.actions ? (
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 12,
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                  }}
-                >
+                <div className="flex flex-wrap justify-center gap-3">
                   {status === "denied" || status === "error" ? (
-                    <button onClick={onRetry} style={RETRY_STYLE} type="button">
+                    <button
+                      className="cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-3 font-semibold text-ink text-sm"
+                      onClick={onRetry}
+                      type="button"
+                    >
                       {t.permission_retry}
                     </button>
                   ) : null}
-                  <Link href="/collection" style={MANUAL_LINK_STYLE}>
+                  <Link
+                    className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
+                    href="/collection"
+                  >
                     {t.scan_back_to_index}
                   </Link>
                 </div>
@@ -499,14 +337,14 @@ function ScanPageInner(): ReactElement {
       </section>
 
       {recovery ? null : (
-        <p style={HELPER_STYLE}>
+        <p className="m-0 text-center text-ink-2 text-sm">
           {showVideo ? t.scan_helper : helperForStatus(status, t)}
         </p>
       )}
 
       <button
+        className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
         onClick={() => setManualOpen(true)}
-        style={MANUAL_LINK_STYLE}
         type="button"
       >
         {t.scan_manual_open}
@@ -571,8 +409,12 @@ function renderRecovery(
       return {
         body: (
           <>
-            <h2 style={RECOVERY_TITLE_STYLE}>{t.permission_denied_title}</h2>
-            <p style={RECOVERY_BODY_STYLE}>{t.permission_denied_body}</p>
+            <h2 className="m-0 font-semibold text-xl">
+              {t.permission_denied_title}
+            </h2>
+            <p className="m-0 text-ink-2 text-sm leading-normal">
+              {t.permission_denied_body}
+            </p>
           </>
         ),
         actions: true,
@@ -581,8 +423,12 @@ function renderRecovery(
       return {
         body: (
           <>
-            <h2 style={RECOVERY_TITLE_STYLE}>{t.permission_no_camera_title}</h2>
-            <p style={RECOVERY_BODY_STYLE}>{t.permission_no_camera_body}</p>
+            <h2 className="m-0 font-semibold text-xl">
+              {t.permission_no_camera_title}
+            </h2>
+            <p className="m-0 text-ink-2 text-sm leading-normal">
+              {t.permission_no_camera_body}
+            </p>
           </>
         ),
         actions: true,
@@ -591,8 +437,12 @@ function renderRecovery(
       return {
         body: (
           <>
-            <h2 style={RECOVERY_TITLE_STYLE}>{t.permission_insecure_title}</h2>
-            <p style={RECOVERY_BODY_STYLE}>{t.permission_insecure_body}</p>
+            <h2 className="m-0 font-semibold text-xl">
+              {t.permission_insecure_title}
+            </h2>
+            <p className="m-0 text-ink-2 text-sm leading-normal">
+              {t.permission_insecure_body}
+            </p>
           </>
         ),
         actions: true,
@@ -601,8 +451,12 @@ function renderRecovery(
       return {
         body: (
           <>
-            <h2 style={RECOVERY_TITLE_STYLE}>{t.permission_no_camera_title}</h2>
-            <p style={RECOVERY_BODY_STYLE}>{t.permission_no_camera_body}</p>
+            <h2 className="m-0 font-semibold text-xl">
+              {t.permission_no_camera_title}
+            </h2>
+            <p className="m-0 text-ink-2 text-sm leading-normal">
+              {t.permission_no_camera_body}
+            </p>
           </>
         ),
         actions: true,
@@ -611,8 +465,12 @@ function renderRecovery(
       return {
         body: (
           <>
-            <h2 style={RECOVERY_TITLE_STYLE}>{t.permission_denied_title}</h2>
-            <p style={RECOVERY_BODY_STYLE}>{t.permission_denied_body}</p>
+            <h2 className="m-0 font-semibold text-xl">
+              {t.permission_denied_title}
+            </h2>
+            <p className="m-0 text-ink-2 text-sm leading-normal">
+              {t.permission_denied_body}
+            </p>
           </>
         ),
         actions: true,
