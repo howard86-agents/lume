@@ -266,7 +266,7 @@ function ScanPageInner(): ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { format, t } = useLocale();
-  const { collectWithSpecimen, collectedCount } = useLume();
+  const { collectWithSpecimen, collectedCount, hydrated } = useLume();
   const [status, setStatus] = useState<ScanStatus>("initial");
   const [activeOverlay, setActiveOverlay] = useState<
     | { kind: "success"; specimen: LumeSpecimen }
@@ -276,11 +276,19 @@ function ScanPageInner(): ReactElement {
   >(null);
   const [manualOpen, setManualOpen] = useState(false);
   const [manualInput, setManualInput] = useState("");
+  const processedDeepLinkRef = useRef<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const lastDecodeRef = useRef<{ payload: string; at: number } | null>(null);
 
   const handleDecode = useCallback(
     (payload: string) => {
+      const now = Date.now();
+      const lastDecode = lastDecodeRef.current;
+      if (lastDecode?.payload === payload && now - lastDecode.at < 1500) {
+        return;
+      }
+      lastDecodeRef.current = { payload, at: now };
       const { result, specimen } = collectWithSpecimen(payload);
       if (result === "new" && specimen) {
         setActiveOverlay({ kind: "success", specimen });
@@ -342,6 +350,13 @@ function ScanPageInner(): ReactElement {
         });
       }
       setStatus("ready");
+      const e2ePayload =
+        process.env.NODE_ENV === "production"
+          ? undefined
+          : (stream as { __lumeE2eQrPayload?: unknown }).__lumeE2eQrPayload;
+      if (typeof e2ePayload === "string") {
+        handleDecode(e2ePayload);
+      }
     } catch (error) {
       const name = (error as { name?: string } | null)?.name;
       if (name === "NotAllowedError" || name === "SecurityError") {
@@ -354,7 +369,7 @@ function ScanPageInner(): ReactElement {
       }
       setStatus("error");
     }
-  }, []);
+  }, [handleDecode]);
 
   // Mount: diagnose environment then attempt to start the camera.
   // If the page was opened via a `?c=<code>` deep-link (e.g. from a
@@ -362,8 +377,12 @@ function ScanPageInner(): ReactElement {
   // doesn't have to load the in-app camera just to confirm the same
   // payload they already aimed their phone at.
   useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
     const c = searchParams?.get("c");
-    if (c) {
+    if (c && processedDeepLinkRef.current !== c) {
+      processedDeepLinkRef.current = c;
       const { result, specimen } = collectWithSpecimen(c);
       if (result === "new" && specimen) {
         setActiveOverlay({ kind: "success", specimen });
@@ -394,7 +413,14 @@ function ScanPageInner(): ReactElement {
     return () => {
       stopStream();
     };
-  }, [collectWithSpecimen, router, searchParams, startCamera, stopStream]);
+  }, [
+    collectWithSpecimen,
+    hydrated,
+    router,
+    searchParams,
+    startCamera,
+    stopStream,
+  ]);
 
   const onRetry = () => {
     startCamera().catch(() => {

@@ -31,6 +31,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: E2E (Playwright)
+        run: bun run test:e2e
+
       - name: Quality (typos, gitleaks, actionlint)
         uses: howard86/actions/quality@a99a85ee8cbe78d34e8f5e79bfd24db64fc9b112 # v1.0.0
         with:

@@ -206,6 +206,7 @@ const DOCK_STYLE: CSSProperties = {
   left: 0,
   right: 0,
   bottom: 0,
+  zIndex: 10,
   padding: "12px 20px max(20px, env(safe-area-inset-bottom)) 20px",
   background:
     "linear-gradient(180deg, rgba(8,8,13,0) 0%, rgba(8,8,13,0.85) 30%, #08080d 100%)",
