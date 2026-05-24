@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
@@ -203,7 +204,12 @@ export default function CardPage() {
         </div>
         <span
           aria-live="polite"
-          className={`min-h-[18px] font-mono-lu text-[11px] uppercase tracking-[1.5px] ${errorMessage ? "text-rose normal-case tracking-[0.5px]" : "text-ink-2"}`}
+          className={clsx(
+            "min-h-[18px] font-mono-lu text-[11px]",
+            errorMessage
+              ? "text-rose normal-case tracking-[0.5px]"
+              : "text-ink-2 uppercase tracking-[1.5px]"
+          )}
           role="status"
         >
           {errorMessage ?? ""}

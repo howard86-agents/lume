@@ -5,6 +5,7 @@ import {
   LUME_LOCALES,
   type LumeLocale,
 } from "@lume/data/locales";
+import clsx from "clsx";
 import { useLocale } from "../../components/lume-provider";
 import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
@@ -50,11 +51,12 @@ export default function LanguagePage() {
           const selected = lang === code;
           return (
             <label
-              className={
+              className={clsx(
+                "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border px-5 py-[18px] text-left text-base text-ink",
                 selected
-                  ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-amber bg-amber/10 px-5 py-[18px] text-left text-base text-ink ring-1 ring-amber/35"
-                  : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-rule-hair bg-glass-1 px-5 py-[18px] text-left text-base text-ink"
-              }
+                  ? "border-amber bg-amber/10 ring-1 ring-amber/35"
+                  : "border-rule-hair bg-glass-1"
+              )}
               key={code}
             >
               <input
@@ -75,18 +77,20 @@ export default function LanguagePage() {
               </span>
               <span
                 aria-hidden="true"
-                className={
+                className={clsx(
+                  "flex h-[18px] w-[18px] items-center justify-center rounded-full border transition-[border-color,box-shadow] duration-[var(--lu-dur-fast)]",
                   selected
-                    ? "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-amber shadow-[0_0_12px_rgba(255,183,85,0.65)] transition-[border-color,box-shadow] duration-[var(--lu-dur-fast)]"
-                    : "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-rule-strong transition-[border-color,box-shadow] duration-[var(--lu-dur-fast)]"
-                }
+                    ? "border-amber shadow-[0_0_12px_rgba(255,183,85,0.65)]"
+                    : "border-rule-strong"
+                )}
               >
                 <span
-                  className={
+                  className={clsx(
+                    "h-1.5 w-1.5 rounded-full bg-amber transition-[background-color,opacity,box-shadow] duration-[var(--lu-dur-fast)]",
                     selected
-                      ? "h-1.5 w-1.5 rounded-full bg-amber shadow-[0_0_8px_rgba(255,183,85,0.75)] transition-[background-color,opacity,box-shadow] duration-[var(--lu-dur-fast)]"
-                      : "h-1.5 w-1.5 rounded-full bg-amber opacity-0 transition-[background-color,opacity,box-shadow] duration-[var(--lu-dur-fast)]"
-                  }
+                      ? "shadow-[0_0_8px_rgba(255,183,85,0.75)]"
+                      : "opacity-0"
+                  )}
                 />
               </span>
             </label>

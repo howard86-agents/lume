@@ -5,6 +5,7 @@ import {
   LUME_LOCALES,
   type LumeLocale,
 } from "@lume/data/locales";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
@@ -65,11 +66,12 @@ export default function SettingsPage() {
             const selected = lang === code;
             return (
               <label
-                className={
+                className={clsx(
+                  "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border px-[18px] py-4 text-left text-base text-ink",
                   selected
-                    ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-amber bg-amber/10 px-[18px] py-4 text-left text-base text-ink ring-1 ring-amber/35"
-                    : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-rule-hair bg-glass-1 px-[18px] py-4 text-left text-base text-ink"
-                }
+                    ? "border-amber bg-amber/10 ring-1 ring-amber/35"
+                    : "border-rule-hair bg-glass-1"
+                )}
                 key={code}
               >
                 <input
@@ -90,11 +92,12 @@ export default function SettingsPage() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className={
+                  className={clsx(
+                    "h-[14px] w-[14px] rounded-[50%] border transition-[background-color,border-color] duration-[var(--lu-dur-fast)]",
                     selected
-                      ? "h-[14px] w-[14px] rounded-[50%] border border-amber bg-amber transition-[background-color,border-color] duration-[var(--lu-dur-fast)]"
-                      : "h-[14px] w-[14px] rounded-[50%] border border-rule-strong bg-transparent transition-[background-color,border-color] duration-[var(--lu-dur-fast)]"
-                  }
+                      ? "border-amber bg-amber"
+                      : "border-rule-strong bg-transparent"
+                  )}
                 />
               </label>
             );
