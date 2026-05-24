@@ -31,9 +31,6 @@ const TYPE_SCALE = [
 
 const MONO_SAMPLE = "?c=LU-08-cyan-12";
 
-const SWATCH_SIZE = 88;
-const RULE_TILE_HEIGHT = 4;
-
 function PaletteRow({
   title,
   entries,
@@ -52,7 +49,7 @@ function PaletteRow({
             className="overflow-hidden rounded-[16px] border border-rule-hair bg-glass-1"
             key={entry.name}
           >
-            <div style={{ height: SWATCH_SIZE, background: entry.value }} />
+            <div className="h-[88px]" style={{ background: entry.value }} />
             <div className="px-3 py-2.5">
               <div className="font-medium text-[13px] text-ink">
                 {entry.name}
@@ -154,11 +151,8 @@ export default function SystemPreviewPage() {
               key={entry.name}
             >
               <div
-                className="rounded-full"
-                style={{
-                  height: RULE_TILE_HEIGHT,
-                  background: entry.value,
-                }}
+                className="h-1 rounded-full"
+                style={{ background: entry.value }}
               />
               <div className="mt-3 font-medium text-[13px]">{entry.name}</div>
               <div className="mt-[2px] font-mono-lu text-[11px] text-ink-3">

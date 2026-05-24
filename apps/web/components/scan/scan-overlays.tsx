@@ -53,9 +53,8 @@ export function SuccessSheet({
   return (
     <div
       aria-modal="true"
-      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[6px]"
+      className="fixed inset-0 z-40 flex items-end justify-center bg-deep/55 backdrop-blur-[6px]"
       role="dialog"
-      style={{ background: "rgba(8, 8, 13, 0.55)" }}
     >
       <div className="relative w-full max-w-[480px] animate-toast-in">
         <div
@@ -84,7 +83,7 @@ export function SuccessSheet({
           />
         </div>
         <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-20px_48px_rgba(0,0,0,0.55)] backdrop-blur-[10px]">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,183,85,0.26)] bg-[rgba(255,183,85,0.10)] px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber/26 bg-amber/10 px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
             <span
               aria-hidden="true"
               className="h-[7px] w-[7px] rounded-full bg-amber shadow-[0_0_14px_rgba(255,183,85,0.9)]"
@@ -121,7 +120,7 @@ export function SuccessSheet({
           </div>
           <div className="flex w-full gap-3">
             <button
-              className="lu-press inline-flex flex-[1.18] cursor-pointer appearance-none items-center justify-center rounded-full border border-[rgba(246,246,251,0.88)] bg-ink px-4 py-[14px] font-semibold text-[15px] text-deep tracking-[0.4px] no-underline"
+              className="lu-press inline-flex flex-[1.18] cursor-pointer appearance-none items-center justify-center rounded-full border border-ink/88 bg-ink px-4 py-[14px] font-semibold text-[15px] text-deep tracking-[0.4px] no-underline"
               onClick={onContinue}
               type="button"
             >
@@ -167,7 +166,7 @@ export function DuplicateToast({
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex animate-toast-in items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
-        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-amber/55 bg-amber/10 p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >
@@ -192,7 +191,7 @@ export function InvalidToast({
       }}
     >
       <button
-        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-rose/55 bg-rose/10 p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >

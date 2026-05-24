@@ -6,7 +6,6 @@ import {
   LUME_TOTAL_SPECIMENS,
   type LumeSpecimen,
 } from "@lume/data/specimens";
-import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import type { CSSProperties } from "react";
@@ -71,16 +70,8 @@ function PlateBackdrop({ specimen }: { specimen: LumeSpecimen }) {
       }}
     >
       <span
+        className="absolute inset-0 rounded-[28px] bg-aurora-halo opacity-[0.18] mix-blend-screen blur-[40px]"
         data-hue={specimen.hue}
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 28,
-          background: LU.aurora.halo,
-          filter: "blur(40px)",
-          opacity: 0.18,
-          mixBlendMode: "screen",
-        }}
       />
     </span>
   );

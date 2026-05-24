@@ -44,15 +44,12 @@ export default function SavedPage() {
         </span>
       </header>
 
-      <section
-        className="relative flex w-[min(72vw,280px)] items-center justify-center self-center"
-        style={{ aspectRatio: "1 / 1" }}
-      >
+      <section className="relative flex aspect-square w-[min(72vw,280px)] items-center justify-center self-center">
         <span
           aria-hidden="true"
           className="absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[28px]"
         />
-        <span className="relative flex h-24 w-24 items-center justify-center rounded-[50%] border border-mint bg-[rgba(126,240,196,0.12)] shadow-[0_0_32px_rgba(126,240,196,0.35)]">
+        <span className="relative flex h-24 w-24 items-center justify-center rounded-[50%] border border-mint bg-mint/12 shadow-[0_0_32px_rgba(126,240,196,0.35)]">
           <svg
             aria-hidden="true"
             fill="none"

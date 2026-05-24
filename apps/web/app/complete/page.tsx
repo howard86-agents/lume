@@ -105,10 +105,7 @@ export default function CompletePage() {
         </span>
       </header>
 
-      <section
-        className="relative flex w-[min(82vw,380px)] items-center justify-center self-center"
-        style={{ aspectRatio: "1 / 1" }}
-      >
+      <section className="relative flex aspect-square w-[min(82vw,380px)] items-center justify-center self-center">
         <span
           aria-hidden="true"
           className="lume-complete-halo absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[16px]"

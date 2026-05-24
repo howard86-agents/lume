@@ -165,13 +165,12 @@ export default function CardPage() {
         <input
           autoCapitalize="words"
           autoComplete="off"
-          className="h-11 w-full appearance-none rounded-full border border-rule-hair bg-glass-1 px-4 text-center font-medium text-base text-ink"
+          className="h-11 w-full appearance-none rounded-full border border-rule-hair bg-glass-1 px-4 text-center font-display-lu font-medium text-base text-ink"
           id="lume-card-nickname"
           maxLength={NICKNAME_MAX_LENGTH}
           onChange={onNicknameChange}
           placeholder={t.card_nickname_placeholder}
           spellCheck={false}
-          style={{ fontFamily: "var(--lu-font-display)" }}
           type="text"
           value={state.nickname}
         />
@@ -185,7 +184,7 @@ export default function CardPage() {
         <div className="flex w-[min(360px,100%)] justify-center gap-3">
           <button
             aria-busy={isSaving}
-            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-mint/16 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] ring-1 ring-mint/35 disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("share")}
             type="button"
@@ -194,7 +193,7 @@ export default function CardPage() {
           </button>
           <button
             aria-busy={isSaving}
-            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-mint/16 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] ring-1 ring-mint/35 disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("download")}
             type="button"

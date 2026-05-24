@@ -30,9 +30,8 @@ export function ManualEntryDialog({
   return (
     <div
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[8px]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-deep/65 p-4 backdrop-blur-[8px]"
       role="dialog"
-      style={{ background: "rgba(8, 8, 13, 0.65)" }}
     >
       <form
         className="flex w-full max-w-[420px] flex-col gap-4 rounded-3xl border border-rule-strong bg-glass-3 p-[24px_24px_20px] backdrop-blur-[20px]"
@@ -66,12 +65,8 @@ export function ManualEntryDialog({
             {t.scan_manual_cancel}
           </button>
           <button
-            className="lu-press cursor-pointer appearance-none rounded-full border border-amber bg-[rgba(255,183,85,0.16)] px-5 py-3 font-semibold text-ink text-sm shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
+            className="lu-press cursor-pointer appearance-none rounded-full border border-amber bg-amber/16 px-5 py-3 font-semibold text-ink text-sm ring-1 ring-amber/35 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={trimmed.length === 0}
-            style={{
-              opacity: trimmed.length === 0 ? 0.5 : 1,
-              cursor: trimmed.length === 0 ? "not-allowed" : "pointer",
-            }}
             type="submit"
           >
             {t.scan_manual_submit}

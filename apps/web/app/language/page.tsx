@@ -52,7 +52,7 @@ export default function LanguagePage() {
             <label
               className={
                 selected
-                  ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-amber bg-[rgba(255,183,85,0.10)] px-5 py-[18px] text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
+                  ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-amber bg-amber/10 px-5 py-[18px] text-left text-base text-ink ring-1 ring-amber/35"
                   : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-rule-hair bg-glass-1 px-5 py-[18px] text-left text-base text-ink"
               }
               key={code}

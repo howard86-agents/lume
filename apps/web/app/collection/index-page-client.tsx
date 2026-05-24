@@ -259,8 +259,8 @@ export function IndexPageClient() {
         <button
           className={
             completion
-              ? "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
-              : "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
+              ? "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-mint/16 px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] ring-1 ring-mint/35 backdrop-blur-[12px]"
+              : "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-amber/45 bg-amber/14 px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] ring-1 ring-amber/18 backdrop-blur-[12px]"
           }
           onClick={dockOnClick}
           type="button"

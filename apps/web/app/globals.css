@@ -66,6 +66,9 @@
 @utility font-mono-lu {
   font-family: var(--lu-font-mono);
 }
+@utility font-display-lu {
+  font-family: var(--lu-font-display);
+}
 
 /*
  * Lume design tokens (mirror of packages/data/src/tokens.ts).

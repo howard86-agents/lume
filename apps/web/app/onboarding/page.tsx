@@ -148,14 +148,8 @@ function StepTwoPreview() {
       {tiles.map((tile) =>
         tile.locked ? (
           <span
+            className="h-[68px] w-[68px] rounded-full border-[1.5px] border-ink-3 border-dashed opacity-45"
             key={`${tile.form}-${tile.hue}-locked`}
-            style={{
-              width: 68,
-              height: 68,
-              borderRadius: "50%",
-              border: `1.5px dashed ${LU.base.ink3}`,
-              opacity: 0.45,
-            }}
           />
         ) : (
           <LumeSpecimen
