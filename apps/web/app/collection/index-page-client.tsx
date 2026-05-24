@@ -37,6 +37,7 @@ interface SpecimenTileProps {
 
 function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   const { lang } = useLocale();
+  const { navigate } = useViewTransitionRouter();
   const number = String(specimen.number).padStart(2, "0");
   const visual = getSpecimenVisual(specimen, lang);
   const specimenName = specimen.name[lang];
@@ -46,15 +47,17 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
         NO. {number}
       </span>
       {found ? (
-        <LumeSpecimenView
-          form={specimen.form}
-          found
-          glow={0.55}
-          hue={specimen.hue}
-          image={visual.kind === "image" ? visual : undefined}
-          index={specimen.number}
-          size={68}
-        />
+        <span className="inline-flex" data-hero>
+          <LumeSpecimenView
+            form={specimen.form}
+            found
+            glow={0.55}
+            hue={specimen.hue}
+            image={visual.kind === "image" ? visual : undefined}
+            index={specimen.number}
+            size={68}
+          />
+        </span>
       ) : (
         <span className="inline-flex h-[68px] w-[68px] items-center justify-center rounded-[22px] border border-rule-strong border-dashed opacity-[0.72]">
           <LumeSpecimenView
@@ -83,6 +86,19 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
         aria-label={`${specimenName} (no. ${number})`}
         className="lu-press lu-lift relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
         href={`/specimen/${specimen.number}`}
+        onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey) {
+            return;
+          }
+          e.preventDefault();
+          const hero =
+            e.currentTarget.querySelector<HTMLElement>("[data-hero]");
+          if (hero) {
+            // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
+            (hero.style as any).viewTransitionName = "specimen-hero";
+          }
+          navigate(`/specimen/${specimen.number}`, { mode: "morph" });
+        }}
       >
         {tileBody}
       </Link>

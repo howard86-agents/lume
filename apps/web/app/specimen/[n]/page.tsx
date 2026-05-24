@@ -10,9 +10,10 @@ import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import type { CSSProperties } from "react";
-import { use, useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import { useLocale, useLume } from "../../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/lume-specimen";
+import { useViewTransitionRouter } from "../../../lib/use-view-transition-router";
 
 /**
  * Specimen detail plate — `/specimen/[n]`.
@@ -87,6 +88,8 @@ function PlateBackdrop({ specimen }: { specimen: LumeSpecimen }) {
 export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
   const { n } = use(params);
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
+  const heroRef = useRef<HTMLDivElement>(null);
   const { hydrated, collectedNumbers, state } = useLume();
   const { lang, t } = useLocale();
 
@@ -130,6 +133,14 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         <Link
           className="lu-press inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
           href="/collection"
+          onClick={(e) => {
+            e.preventDefault();
+            if (heroRef.current) {
+              // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
+              (heroRef.current.style as any).viewTransitionName = "";
+            }
+            navigate("/collection", { mode: "back" });
+          }}
         >
           <span aria-hidden="true">←</span>
           <span>{t.specimen_back}</span>
@@ -157,7 +168,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         <span className="absolute right-5 bottom-[18px] z-[2] text-right font-mono-lu text-[10px] text-ink-3 uppercase leading-[1.2] tracking-[1.6px] [text-shadow:0_0_12px_rgba(246,246,251,0.18)]">
           {t.specimen_specimen_label}
         </span>
-        <div className="relative">
+        <div
+          className="relative"
+          ref={heroRef}
+          style={{ viewTransitionName: "specimen-hero" }}
+        >
           <LumeSpecimenView
             form={specimen.form}
             glow={0.7}

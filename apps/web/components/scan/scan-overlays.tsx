@@ -7,7 +7,8 @@ import {
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
-import type { ReactElement } from "react";
+import { type ReactElement, useRef } from "react";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 import { useLocale } from "../lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../specimen/lume-specimen";
 
@@ -41,6 +42,8 @@ export function SuccessSheet({
   onContinue,
 }: SuccessSheetProps): ReactElement {
   const { lang, t, format } = useLocale();
+  const { navigate } = useViewTransitionRouter();
+  const heroRef = useRef<HTMLDivElement>(null);
   const progressPct = Math.min(
     100,
     Math.round((collectedCount / LUME_TOTAL_SPECIMENS) * 100)
@@ -54,7 +57,10 @@ export function SuccessSheet({
       style={{ background: "rgba(8, 8, 13, 0.55)" }}
     >
       <div className="relative w-full max-w-[480px] animate-toast-in">
-        <div className="absolute top-[-84px] left-1/2 z-[1] flex h-40 w-40 -translate-x-1/2 items-center justify-center">
+        <div
+          className="absolute top-[-84px] left-1/2 z-[1] flex h-40 w-40 -translate-x-1/2 items-center justify-center"
+          ref={heroRef}
+        >
           {/* one-shot hue bloom behind the hero */}
           <span
             aria-hidden="true"
@@ -123,6 +129,18 @@ export function SuccessSheet({
             <Link
               className="lu-press inline-flex flex-[0.82] cursor-pointer appearance-none items-center justify-center rounded-full border border-rule-strong bg-glass-3 px-4 py-[14px] font-semibold text-[15px] text-ink tracking-[0.4px] no-underline"
               href={`/specimen/${specimen.number}`}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) {
+                  return;
+                }
+                e.preventDefault();
+                if (heroRef.current) {
+                  // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
+                  (heroRef.current.style as any).viewTransitionName =
+                    "specimen-hero";
+                }
+                navigate(`/specimen/${specimen.number}`, { mode: "morph" });
+              }}
             >
               {t.scan_view_specimen}
             </Link>

@@ -14,7 +14,12 @@ import { useCallback } from "react";
  * back to an instant navigation, so the app keeps working everywhere.
  */
 
-type ViewTransitionMode = "forward" | "back" | "sheet" | "sheet-close";
+type ViewTransitionMode =
+  | "forward"
+  | "back"
+  | "sheet"
+  | "sheet-close"
+  | "morph";
 
 interface NavigateOptions {
   /** Animation direction; defaults to "forward". */

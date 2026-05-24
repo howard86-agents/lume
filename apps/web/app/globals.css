@@ -461,6 +461,10 @@ samp {
   }
 }
 
+::view-transition-group(specimen-hero) {
+  animation-duration: var(--lu-dur-base);
+}
+
 /* Tactile press: spring scale-down on tap; also smooths selection/hover color
    changes on the same element. Applied to every tappable surface. */
 .lu-press {
