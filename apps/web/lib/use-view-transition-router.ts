@@ -4,67 +4,49 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 /**
- * View Transition-aware router wrapper.
+ * CSS-driven navigation router wrapper.
  *
- * Wraps next/navigation's useRouter so route changes animate via the native
- * View Transitions API. The direction is written to
- * document.documentElement.dataset.vt before navigating, so the
- * `[data-vt="..."]::view-transition-*` rules in globals.css pick the right
- * push / pop / sheet animation. Browsers without startViewTransition fall
- * back to an instant navigation, so the app keeps working everywhere.
+ * Wraps next/navigation's useRouter so route changes animate via CSS
+ * enter-only transforms (no View Transitions API). The direction is stored
+ * in a module-scoped variable before navigating; app/template.tsx reads it
+ * on mount via consumeNavDirection() to apply the matching enter class.
  */
 
-type ViewTransitionMode =
-  | "forward"
-  | "back"
-  | "sheet"
-  | "sheet-close"
-  | "morph";
+type NavDirection = "forward" | "back" | "sheet" | "sheet-close" | "morph";
 
 interface NavigateOptions {
   /** Animation direction; defaults to "forward". */
-  mode?: ViewTransitionMode;
+  mode?: NavDirection;
   /** Use router.replace instead of router.push (no new history entry). */
   replace?: boolean;
 }
 
-type StartViewTransition = (callback: () => void) => unknown;
+// "initial" is the cold-load state: no enter animation and no content cascade
+// until the first client navigation sets a real direction.
+let pendingDirection: NavDirection | "initial" = "initial";
 
-function runWithViewTransition(mode: ViewTransitionMode, navigate: () => void) {
-  if (typeof document === "undefined") {
-    navigate();
-    return;
-  }
-  document.documentElement.dataset.vt = mode;
-  const start = (
-    document as Document & { startViewTransition?: StartViewTransition }
-  ).startViewTransition;
-  if (typeof start === "function") {
-    start.call(document, navigate);
-    return;
-  }
-  navigate();
-}
+/** Read the current navigation direction (consumed by app/template.tsx). */
+export const consumeNavDirection = (): NavDirection | "initial" =>
+  pendingDirection;
 
 export function useViewTransitionRouter() {
   const router = useRouter();
 
   const navigate = useCallback(
     (href: string, options?: NavigateOptions) => {
-      const mode = options?.mode ?? "forward";
-      runWithViewTransition(mode, () => {
-        if (options?.replace) {
-          router.replace(href);
-        } else {
-          router.push(href);
-        }
-      });
+      pendingDirection = options?.mode ?? "forward";
+      if (options?.replace) {
+        router.replace(href);
+      } else {
+        router.push(href);
+      }
     },
     [router]
   );
 
   const back = useCallback(() => {
-    runWithViewTransition("back", () => router.back());
+    pendingDirection = "back";
+    router.back();
   }, [router]);
 
   return { navigate, back };

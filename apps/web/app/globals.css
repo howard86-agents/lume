@@ -42,6 +42,10 @@
     both;
   --animate-toast-in: toast-in var(--lu-dur-base) var(--lu-ease-spring) both;
   --animate-glyph-breathe: glyph-breathe 5s ease-in-out infinite;
+  --animate-nav-in-right: nav-in-right var(--lu-dur-base) var(--lu-ease-out)
+    both;
+  --animate-nav-in-left: nav-in-left var(--lu-dur-base) var(--lu-ease-out) both;
+  --animate-nav-in-up: nav-in-up var(--lu-dur-base) var(--lu-ease-spring) both;
 }
 
 /*
@@ -359,48 +363,14 @@ samp {
 
 /* Reduced motion: kill all animation/transition globally */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
+  * {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 }
 
-/* View Transitions: directional page animations (driven by use-view-transition-router) */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: var(--lu-dur-base);
-}
-[data-vt="forward"]::view-transition-old(root) {
-  animation: vt-out-left var(--lu-dur-base) var(--lu-ease-out) both;
-}
-[data-vt="forward"]::view-transition-new(root) {
-  animation: vt-in-right var(--lu-dur-base) var(--lu-ease-out) both;
-}
-[data-vt="back"]::view-transition-old(root) {
-  animation: vt-out-right var(--lu-dur-base) var(--lu-ease-out) both;
-}
-[data-vt="back"]::view-transition-new(root) {
-  animation: vt-in-left var(--lu-dur-base) var(--lu-ease-out) both;
-}
-[data-vt="sheet"]::view-transition-old(root) {
-  animation: none;
-}
-[data-vt="sheet"]::view-transition-new(root) {
-  animation: vt-in-up var(--lu-dur-base) var(--lu-ease-spring) both;
-}
-[data-vt="sheet-close"]::view-transition-old(root) {
-  z-index: 1;
-  animation: vt-out-down var(--lu-dur-base) var(--lu-ease-out) both;
-}
-[data-vt="sheet-close"]::view-transition-new(root) {
-  z-index: 0;
-  animation: none;
-}
-
-@keyframes vt-in-right {
+@keyframes nav-in-right {
   from {
     opacity: 0.6;
     transform: translateX(100%);
@@ -410,17 +380,8 @@ samp {
     transform: none;
   }
 }
-@keyframes vt-out-left {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0.6;
-    transform: translateX(-100%);
-  }
-}
-@keyframes vt-in-left {
+
+@keyframes nav-in-left {
   from {
     opacity: 0.6;
     transform: translateX(-100%);
@@ -428,41 +389,18 @@ samp {
   to {
     opacity: 1;
     transform: none;
-  }
-}
-@keyframes vt-out-right {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0.6;
-    transform: translateX(100%);
-  }
-}
-@keyframes vt-in-up {
-  from {
-    opacity: 0.85;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes vt-out-down {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0.85;
-    transform: translateY(100%);
   }
 }
 
-::view-transition-group(specimen-hero) {
-  animation-duration: var(--lu-dur-base);
+@keyframes nav-in-up {
+  from {
+    opacity: 0.85;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Tactile press: spring scale-down on tap; also smooths selection/hover color
@@ -487,10 +425,11 @@ samp {
   }
 }
 
-/* Content entrance: forward pushes cascade top-level sections in as the page
-   settles. Back/sheet transitions and first load do not stagger. The Phase-1
-   reduced-motion guard collapses this to an instant appearance. */
-[data-vt="forward"] [data-stagger] {
+/* Content entrance: forward navigation cascades top-level sections in as the
+   page settles (data-nav is set on the template wrapper by app/template.tsx).
+   Back/sheet transitions and first load do not stagger. The reduced-motion
+   guard above collapses this to an instant appearance. */
+[data-nav="forward"] [data-stagger] {
   animation: rise-in var(--lu-dur-base) var(--lu-ease-spring) both;
   animation-delay: calc(var(--lu-dur-base) + var(--i, 0) * 60ms);
 }
