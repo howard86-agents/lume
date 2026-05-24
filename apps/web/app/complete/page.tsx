@@ -7,7 +7,7 @@ import {
   type LumeSpecimen,
 } from "@lume/data/specimens";
 import { useRouter } from "next/navigation";
-import { type CSSProperties, useEffect } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
 import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
@@ -70,6 +70,33 @@ export default function CompletePage() {
     markFinalSeen();
   }, [hydrated, completion, markFinalSeen]);
 
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!(hydrated && completion)) {
+      return;
+    }
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduced) {
+      setCount(LUME_TOTAL_SPECIMENS);
+      return;
+    }
+    const duration = 700;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration);
+      setCount(Math.round(progress * LUME_TOTAL_SPECIMENS));
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [hydrated, completion]);
+
   return (
     <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between overflow-hidden bg-aurora-cover px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
       <header className="flex flex-col items-center gap-2 text-center">
@@ -88,10 +115,19 @@ export default function CompletePage() {
         />
         <span
           aria-hidden="true"
+          className="pointer-events-none absolute inset-0 m-auto h-40 w-40 animate-bloom rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 50%, var(--lu-accent-mint) 0%, transparent 70%)",
+            animationDelay: "700ms",
+          }}
+        />
+        <span
+          aria-hidden="true"
           className="lume-complete-numeral relative flex flex-col items-center gap-[6px]"
         >
           <span className="font-bold text-[96px] text-ink leading-[0.9] tracking-[-3px] [text-shadow:0_0_24px_rgba(126,240,196,0.45)]">
-            23
+            {count}
           </span>
           <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[2.6px] [text-shadow:0_0_18px_rgba(126,240,196,0.28)]">
             {t.complete_light_forms_lit}
