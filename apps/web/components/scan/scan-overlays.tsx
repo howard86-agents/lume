@@ -53,22 +53,29 @@ export function SuccessSheet({
       role="dialog"
       style={{ background: "rgba(8, 8, 13, 0.55)" }}
     >
-      <div className="relative w-full max-w-[480px]">
-        <LumeSpecimenView
-          form={specimen.form}
-          glow={0.7}
-          hue={specimen.hue}
-          image={visual.kind === "image" ? visual : undefined}
-          size={160}
-          style={{
-            position: "absolute",
-            top: -84,
-            left: "50%",
-            zIndex: 1,
-            transform: "translateX(-50%)",
-            filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
-          }}
-        />
+      <div className="relative w-full max-w-[480px] animate-toast-in">
+        <div className="absolute top-[-84px] left-1/2 z-[1] flex h-40 w-40 -translate-x-1/2 items-center justify-center">
+          {/* one-shot hue bloom behind the hero */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 animate-bloom rounded-full"
+            style={{
+              background: `radial-gradient(circle at 50% 50%, ${LU.accent[specimen.hue]} 0%, transparent 70%)`,
+            }}
+          />
+          <LumeSpecimenView
+            className="animate-collect-pop"
+            form={specimen.form}
+            glow={0.7}
+            hero
+            hue={specimen.hue}
+            image={visual.kind === "image" ? visual : undefined}
+            size={160}
+            style={{
+              filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
+            }}
+          />
+        </div>
         <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-32px_96px_rgba(0,0,0,0.55)] backdrop-blur-[20px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,183,85,0.26)] bg-[rgba(255,183,85,0.10)] px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
             <span
@@ -141,7 +148,7 @@ export function DuplicateToast({
       })
     : t.scan_result_dupe;
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
+    <div className="pointer-events-none fixed inset-0 z-30 flex animate-toast-in items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
         className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
         onClick={onDismiss}
@@ -160,7 +167,13 @@ export function InvalidToast({
 }): ReactElement {
   const { t } = useLocale();
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
+    <div
+      className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]"
+      style={{
+        animation:
+          "toast-in var(--lu-dur-base) var(--lu-ease-spring) both, shake 300ms ease-in-out var(--lu-dur-base) both",
+      }}
+    >
       <button
         className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
         onClick={onDismiss}
