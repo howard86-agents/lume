@@ -9,9 +9,12 @@ import {
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
-import { use, useEffect } from "react";
+import type { CSSProperties } from "react";
+import { use, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocale, useLume } from "../../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/lume-specimen";
+import { consumeMorphOrigin } from "../../../lib/morph-origin";
+import { useViewTransitionRouter } from "../../../lib/use-view-transition-router";
 
 /**
  * Specimen detail plate — `/specimen/[n]`.
@@ -86,6 +89,8 @@ function PlateBackdrop({ specimen }: { specimen: LumeSpecimen }) {
 export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
   const { n } = use(params);
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
+  const heroRef = useRef<HTMLDivElement>(null);
   const { hydrated, collectedNumbers, state } = useLume();
   const { lang, t } = useLocale();
 
@@ -108,6 +113,34 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
     notFound();
   }
 
+  useLayoutEffect(() => {
+    const el = heroRef.current;
+    if (!el) {
+      return;
+    }
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const origin = consumeMorphOrigin(specimen.number);
+    if (!origin) {
+      return;
+    }
+    const last = el.getBoundingClientRect();
+    const sx = Math.min(Math.max(origin.rect.width / last.width, 0.2), 5);
+    const sy = Math.min(Math.max(origin.rect.height / last.height, 0.2), 5);
+    const s = (sx + sy) / 2;
+    const dx = origin.rect.left - last.left;
+    const dy = origin.rect.top - last.top;
+    el.style.transformOrigin = "top left";
+    el.animate(
+      [
+        { transform: `translate(${dx}px,${dy}px) scale(${s})`, opacity: 0.4 },
+        { transform: "none", opacity: 1 },
+      ],
+      { duration: 360, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "both" }
+    );
+  }, [specimen.number]);
+
   const localizedName = specimen.name[lang];
   const localizedNotes = specimen.notes[lang];
   const visual = getSpecimenVisual(specimen, lang);
@@ -121,10 +154,18 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
 
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-5 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex items-center justify-between">
+      <header
+        className="flex items-center justify-between"
+        data-stagger
+        style={{ "--i": 0 } as CSSProperties}
+      >
         <Link
-          className="inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
+          className="lu-press inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
           href="/collection"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/collection", { mode: "back" });
+          }}
         >
           <span aria-hidden="true">←</span>
           <span>{t.specimen_back}</span>
@@ -134,7 +175,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </span>
       </header>
 
-      <section className="relative flex aspect-[5/6] w-[min(360px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1">
+      <section
+        className="relative flex aspect-[5/6] w-[min(360px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1"
+        data-stagger
+        style={{ "--i": 1 } as CSSProperties}
+      >
         <PlateBackdrop specimen={specimen} />
         <span className="absolute top-[18px] left-5 z-[2] font-mono-lu text-[10px] text-ink-3 uppercase leading-[1.2] tracking-[1.6px] [text-shadow:0_0_12px_rgba(246,246,251,0.18)]">
           {t.specimen_plate_label} · {specimen.plate}
@@ -148,10 +193,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         <span className="absolute right-5 bottom-[18px] z-[2] text-right font-mono-lu text-[10px] text-ink-3 uppercase leading-[1.2] tracking-[1.6px] [text-shadow:0_0_12px_rgba(246,246,251,0.18)]">
           {t.specimen_specimen_label}
         </span>
-        <div className="relative">
+        <div className="relative" ref={heroRef}>
           <LumeSpecimenView
             form={specimen.form}
             glow={0.7}
+            hero
             hue={specimen.hue}
             image={visual.kind === "image" ? visual : undefined}
             size={224}
@@ -159,7 +205,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </div>
       </section>
 
-      <section className="flex w-[min(460px,100%)] flex-col items-start gap-1 self-center text-left">
+      <section
+        className="flex w-[min(460px,100%)] flex-col items-start gap-1 self-center text-left"
+        data-stagger
+        style={{ "--i": 2 } as CSSProperties}
+      >
         <h1 className="m-0 font-semibold text-[clamp(32px,8vw,36px)] leading-[1.03] tracking-[-0.8px]">
           {localizedName}
         </h1>
@@ -168,15 +218,27 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </span>
       </section>
 
-      <span className="mt-2 w-[min(460px,100%)] self-center font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2.4px]">
+      <span
+        className="mt-2 w-[min(460px,100%)] self-center font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2.4px]"
+        data-stagger
+        style={{ "--i": 3 } as CSSProperties}
+      >
         {t.specimen_field_notes}
       </span>
-      <p className="m-0 max-w-[460px] self-center text-left text-[15px] text-ink-2 leading-[1.55]">
+      <p
+        className="m-0 max-w-[460px] self-center text-left text-[15px] text-ink-2 leading-[1.55]"
+        data-stagger
+        style={{ "--i": 4 } as CSSProperties}
+      >
         {localizedNotes}
       </p>
 
       {collectedAtText ? (
-        <p className="m-0 w-[min(460px,100%)] self-center text-left font-mono-lu text-[11px] text-ink-3 uppercase tracking-[1.5px]">
+        <p
+          className="m-0 w-[min(460px,100%)] self-center text-left font-mono-lu text-[11px] text-ink-3 uppercase tracking-[1.5px]"
+          data-stagger
+          style={{ "--i": 5 } as CSSProperties}
+        >
           {collectedAtText}
         </p>
       ) : null}

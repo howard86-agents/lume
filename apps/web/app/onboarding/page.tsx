@@ -1,10 +1,10 @@
 "use client";
 
 import { LU } from "@lume/data/tokens";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale } from "../../components/lume-provider";
 import { LumeSpecimen } from "../../components/specimen/lume-specimen";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Onboarding primer — `/onboarding`.
@@ -214,7 +214,7 @@ function StepThreePreview() {
 }
 
 export default function OnboardingPage() {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { t, format } = useLocale();
   const [step, setStep] = useState(0);
   const isLast = step === TOTAL_STEPS - 1;
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
 
   const goNext = () => {
     if (isLast) {
-      router.push("/permission");
+      navigate("/permission");
       return;
     }
     setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
@@ -248,7 +248,11 @@ export default function OnboardingPage() {
 
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex items-center justify-between">
+      <header
+        className="flex items-center justify-between"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <span className="font-mono-lu text-[11px] text-ink-3 uppercase tracking-[3px]">
           {format("onboarding_step_indicator", {
             current: formatStepNumber(currentStep),
@@ -257,15 +261,19 @@ export default function OnboardingPage() {
           })}
         </span>
         <button
-          className="cursor-pointer appearance-none border-none bg-transparent text-ink-2 text-sm"
-          onClick={() => router.push("/permission")}
+          className="lu-press cursor-pointer appearance-none border-none bg-transparent text-ink-2 text-sm"
+          onClick={() => navigate("/permission")}
           type="button"
         >
           {t.onboarding_skip}
         </button>
       </header>
 
-      <section className="flex flex-1 flex-col justify-center gap-5">
+      <section
+        className="flex flex-1 flex-col justify-center gap-5"
+        data-stagger
+        style={{ "--i": 1 } as React.CSSProperties}
+      >
         <div className="relative flex aspect-square w-[min(320px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1">
           {steps[step].preview}
         </div>
@@ -280,7 +288,11 @@ export default function OnboardingPage() {
         </p>
       </section>
 
-      <div className="flex items-center justify-center gap-2">
+      <div
+        className="flex items-center justify-center gap-2"
+        data-stagger
+        style={{ "--i": 2 } as React.CSSProperties}
+      >
         {STEP_DOT_KEYS.map((dotKey, i) => (
           <span
             className={
@@ -293,9 +305,13 @@ export default function OnboardingPage() {
         ))}
       </div>
 
-      <footer className="mt-auto flex flex-col gap-3">
+      <footer
+        className="mt-auto flex flex-col gap-3"
+        data-stagger
+        style={{ "--i": 3 } as React.CSSProperties}
+      >
         <button
-          className="w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
+          className="lu-press w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={goNext}
           type="button"
         >

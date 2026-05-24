@@ -7,7 +7,9 @@ import {
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
-import type { ReactElement } from "react";
+import { type ReactElement, useRef } from "react";
+import { setMorphOrigin } from "../../lib/morph-origin";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 import { useLocale } from "../lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../specimen/lume-specimen";
 
@@ -41,6 +43,8 @@ export function SuccessSheet({
   onContinue,
 }: SuccessSheetProps): ReactElement {
   const { lang, t, format } = useLocale();
+  const { navigate } = useViewTransitionRouter();
+  const heroRef = useRef<HTMLDivElement>(null);
   const progressPct = Math.min(
     100,
     Math.round((collectedCount / LUME_TOTAL_SPECIMENS) * 100)
@@ -49,27 +53,37 @@ export function SuccessSheet({
   return (
     <div
       aria-modal="true"
-      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[8px]"
+      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[6px]"
       role="dialog"
       style={{ background: "rgba(8, 8, 13, 0.55)" }}
     >
-      <div className="relative w-full max-w-[480px]">
-        <LumeSpecimenView
-          form={specimen.form}
-          glow={0.7}
-          hue={specimen.hue}
-          image={visual.kind === "image" ? visual : undefined}
-          size={160}
-          style={{
-            position: "absolute",
-            top: -84,
-            left: "50%",
-            zIndex: 1,
-            transform: "translateX(-50%)",
-            filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
-          }}
-        />
-        <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-32px_96px_rgba(0,0,0,0.55)] backdrop-blur-[20px]">
+      <div className="relative w-full max-w-[480px] animate-toast-in">
+        <div
+          className="absolute top-[-84px] left-1/2 z-[1] flex h-40 w-40 -translate-x-1/2 items-center justify-center"
+          ref={heroRef}
+        >
+          {/* one-shot hue bloom behind the hero */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 animate-bloom rounded-full"
+            style={{
+              background: `radial-gradient(circle at 50% 50%, ${LU.accent[specimen.hue]} 0%, transparent 70%)`,
+            }}
+          />
+          <LumeSpecimenView
+            className="animate-collect-pop"
+            form={specimen.form}
+            glow={0.7}
+            hero
+            hue={specimen.hue}
+            image={visual.kind === "image" ? visual : undefined}
+            size={160}
+            style={{
+              filter: "drop-shadow(0 30px 50px rgba(255, 183, 85, 0.18))",
+            }}
+          />
+        </div>
+        <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-20px_48px_rgba(0,0,0,0.55)] backdrop-blur-[10px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,183,85,0.26)] bg-[rgba(255,183,85,0.10)] px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
             <span
               aria-hidden="true"
@@ -101,21 +115,31 @@ export function SuccessSheet({
                 height: "100%",
                 background: `linear-gradient(90deg, ${LU.accent.cyan} 0%, ${LU.accent.amber} 100%)`,
                 boxShadow: "0 0 18px rgba(255, 183, 85, 0.78)",
-                transition: "width 240ms ease-out",
+                transition: "width var(--lu-dur-base) var(--lu-ease-out)",
               }}
             />
           </div>
           <div className="flex w-full gap-3">
             <button
-              className="inline-flex flex-[1.18] cursor-pointer appearance-none items-center justify-center rounded-full border border-[rgba(246,246,251,0.88)] bg-ink px-4 py-[14px] font-semibold text-[15px] text-deep tracking-[0.4px] no-underline"
+              className="lu-press inline-flex flex-[1.18] cursor-pointer appearance-none items-center justify-center rounded-full border border-[rgba(246,246,251,0.88)] bg-ink px-4 py-[14px] font-semibold text-[15px] text-deep tracking-[0.4px] no-underline"
               onClick={onContinue}
               type="button"
             >
               {t.scan_continue}
             </button>
             <Link
-              className="inline-flex flex-[0.82] cursor-pointer appearance-none items-center justify-center rounded-full border border-rule-strong bg-glass-3 px-4 py-[14px] font-semibold text-[15px] text-ink tracking-[0.4px] no-underline"
+              className="lu-press inline-flex flex-[0.82] cursor-pointer appearance-none items-center justify-center rounded-full border border-rule-strong bg-glass-3 px-4 py-[14px] font-semibold text-[15px] text-ink tracking-[0.4px] no-underline"
               href={`/specimen/${specimen.number}`}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) {
+                  return;
+                }
+                e.preventDefault();
+                if (heroRef.current) {
+                  setMorphOrigin(specimen.number, heroRef.current);
+                }
+                navigate(`/specimen/${specimen.number}`, { mode: "morph" });
+              }}
             >
               {t.scan_view_specimen}
             </Link>
@@ -141,9 +165,9 @@ export function DuplicateToast({
       })
     : t.scan_result_dupe;
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
+    <div className="pointer-events-none fixed inset-0 z-30 flex animate-toast-in items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
-        className="pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >
@@ -160,9 +184,15 @@ export function InvalidToast({
 }): ReactElement {
   const { t } = useLocale();
   return (
-    <div className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
+    <div
+      className="pointer-events-none fixed inset-0 z-30 flex items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]"
+      style={{
+        animation:
+          "toast-in var(--lu-dur-base) var(--lu-ease-spring) both, shake 300ms ease-in-out var(--lu-dur-base) both",
+      }}
+    >
       <button
-        className="pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >

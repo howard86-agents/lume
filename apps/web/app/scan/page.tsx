@@ -1,8 +1,7 @@
 "use client";
 
 import { LUME_TOTAL_SPECIMENS, type LumeSpecimen } from "@lume/data/specimens";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   type ReactElement,
   Suspense,
@@ -19,6 +18,7 @@ import {
   SuccessSheet,
 } from "../../components/scan/scan-overlays";
 import { useQrScanner } from "../../lib/use-qr-scanner";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Scanner — `/scan`.
@@ -102,7 +102,7 @@ export default function ScanPage(): ReactElement {
 }
 
 function ScanPageInner(): ReactElement {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const searchParams = useSearchParams();
   const { format, t } = useLocale();
   const { collectWithSpecimen, collectedCount, hydrated } = useLume();
@@ -160,6 +160,22 @@ function ScanPageInner(): ReactElement {
     const id = setTimeout(() => setActiveOverlay(null), 2400);
     return () => clearTimeout(id);
   }, [activeOverlay]);
+
+  // Pause the live video paint while an overlay is shown so backdrop-filter
+  // is not re-sampling a live feed every frame.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+    if (activeOverlay) {
+      video.pause();
+    } else if (status === "ready") {
+      video.play().catch(() => {
+        // Autoplay resume can fail silently on iOS; not fatal.
+      });
+    }
+  }, [activeOverlay, status]);
 
   const stopStream = useCallback(() => {
     if (streamRef.current) {
@@ -229,7 +245,10 @@ function ScanPageInner(): ReactElement {
         // Show the toast briefly then route to /collection so the visitor
         // sees their existing entry counted.
         setActiveOverlay({ kind: "dupe", specimen });
-        setTimeout(() => router.replace("/collection"), 1200);
+        setTimeout(
+          () => navigate("/collection", { mode: "sheet-close", replace: true }),
+          1200
+        );
         return;
       } else {
         setActiveOverlay({ kind: "invalid" });
@@ -255,7 +274,7 @@ function ScanPageInner(): ReactElement {
   }, [
     collectWithSpecimen,
     hydrated,
-    router,
+    navigate,
     searchParams,
     startCamera,
     stopStream,
@@ -273,9 +292,13 @@ function ScanPageInner(): ReactElement {
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
       <header className="flex items-center justify-between">
-        <Link className="text-ink-2 text-sm no-underline" href="/collection">
+        <button
+          className="lu-press text-ink-2 text-sm"
+          onClick={() => navigate("/collection", { mode: "sheet-close" })}
+          type="button"
+        >
           ← {t.scan_back_to_index}
-        </Link>
+        </button>
         <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
           {t.scan_scanning}
         </span>
@@ -319,19 +342,22 @@ function ScanPageInner(): ReactElement {
                 <div className="flex flex-wrap justify-center gap-3">
                   {status === "denied" || status === "error" ? (
                     <button
-                      className="cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-3 font-semibold text-ink text-sm"
+                      className="lu-press cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-3 font-semibold text-ink text-sm"
                       onClick={onRetry}
                       type="button"
                     >
                       {t.permission_retry}
                     </button>
                   ) : null}
-                  <Link
-                    className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
-                    href="/collection"
+                  <button
+                    className="lu-press cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm"
+                    onClick={() =>
+                      navigate("/collection", { mode: "sheet-close" })
+                    }
+                    type="button"
                   >
                     {t.scan_back_to_index}
-                  </Link>
+                  </button>
                 </div>
               ) : null}
             </div>
@@ -346,7 +372,7 @@ function ScanPageInner(): ReactElement {
       )}
 
       <button
-        className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
+        className="lu-press cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
         onClick={() => setManualOpen(true)}
         type="button"
       >

@@ -30,6 +30,22 @@
 
   --color-rule-hair: var(--lu-rule-hair);
   --color-rule-strong: var(--lu-rule-strong);
+
+  /* Motion: easings + named animations */
+  --ease-spring: var(--lu-ease-spring);
+  --ease-out-lu: var(--lu-ease-out);
+  --animate-rise-in: rise-in var(--lu-dur-base) var(--lu-ease-spring) both;
+  --animate-bloom: bloom var(--lu-dur-slow) var(--lu-ease-out) both;
+  --animate-halo-breathe: halo-breathe 4s ease-in-out infinite;
+  --animate-shake: shake 300ms ease-in-out both;
+  --animate-collect-pop: collect-pop var(--lu-dur-slow) var(--lu-ease-spring)
+    both;
+  --animate-toast-in: toast-in var(--lu-dur-base) var(--lu-ease-spring) both;
+  --animate-glyph-breathe: glyph-breathe 5s ease-in-out infinite;
+  --animate-nav-in-right: nav-in-right var(--lu-dur-base) var(--lu-ease-out)
+    both;
+  --animate-nav-in-left: nav-in-left var(--lu-dur-base) var(--lu-ease-out) both;
+  --animate-nav-in-up: nav-in-up var(--lu-dur-base) var(--lu-ease-spring) both;
 }
 
 /*
@@ -121,7 +137,97 @@
   --lu-font-mono:
     var(--font-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo,
     Consolas, monospace;
+  /* Motion: easing + durations */
+  --lu-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lu-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --lu-dur-instant: 120ms;
+  --lu-dur-fast: 200ms;
+  --lu-dur-base: 320ms;
+  --lu-dur-slow: 480ms;
+
   color-scheme: dark;
+}
+
+/* Shared keyframes (consumed by @theme animate-* tokens above) */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes bloom {
+  from {
+    opacity: 0.9;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@keyframes halo-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes collect-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes glyph-breathe {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
 }
 
 html,
@@ -253,4 +359,77 @@ samp {
     background: var(--lu-base-deep);
     border-radius: 44px;
   }
+}
+
+/* Reduced motion: kill all animation/transition globally */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes nav-in-right {
+  from {
+    opacity: 0.6;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes nav-in-left {
+  from {
+    opacity: 0.6;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes nav-in-up {
+  from {
+    opacity: 0.85;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Tactile press: spring scale-down on tap; also smooths selection/hover color
+   changes on the same element. Applied to every tappable surface. */
+.lu-press {
+  transition:
+    transform var(--lu-dur-instant) var(--lu-ease-spring),
+    background-color var(--lu-dur-fast) var(--lu-ease-out),
+    border-color var(--lu-dur-fast) var(--lu-ease-out),
+    box-shadow var(--lu-dur-fast) var(--lu-ease-out);
+}
+.lu-press:active {
+  transform: scale(0.96);
+}
+
+/* Desktop-only lift for tiles/pills. Pairs with .lu-press (which supplies the
+   transition); no effect on touch devices. */
+@media (hover: hover) {
+  .lu-lift:hover {
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+    transform: translateY(-2px);
+  }
+}
+
+/* Content entrance: forward navigation cascades top-level sections in as the
+   page settles (data-nav is set on the template wrapper by app/template.tsx).
+   Back/sheet transitions and first load do not stagger. The reduced-motion
+   guard above collapses this to an instant appearance. */
+[data-nav="forward"] [data-stagger] {
+  animation: rise-in var(--lu-dur-base) var(--lu-ease-spring) both;
+  animation-delay: calc(var(--lu-dur-base) + var(--i, 0) * 60ms);
 }

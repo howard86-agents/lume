@@ -9,9 +9,12 @@ import {
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
+import { setMorphOrigin } from "../../lib/morph-origin";
+import { useInViewport } from "../../lib/use-in-viewport";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Collection gallery — `/collection`.
@@ -37,6 +40,9 @@ interface SpecimenTileProps {
 
 function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   const { lang } = useLocale();
+  const { navigate } = useViewTransitionRouter();
+  const tileRef = useRef<HTMLDivElement>(null);
+  const inView = useInViewport(tileRef);
   const number = String(specimen.number).padStart(2, "0");
   const visual = getSpecimenVisual(specimen, lang);
   const specimenName = specimen.name[lang];
@@ -46,14 +52,18 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
         NO. {number}
       </span>
       {found ? (
-        <LumeSpecimenView
-          form={specimen.form}
-          found
-          glow={0.55}
-          hue={specimen.hue}
-          image={visual.kind === "image" ? visual : undefined}
-          size={68}
-        />
+        <span className="inline-flex" data-hero>
+          <LumeSpecimenView
+            form={specimen.form}
+            found
+            glow={0.55}
+            hue={specimen.hue}
+            image={visual.kind === "image" ? visual : undefined}
+            index={specimen.number}
+            paused={!inView}
+            size={68}
+          />
+        </span>
       ) : (
         <span className="inline-flex h-[68px] w-[68px] items-center justify-center rounded-[22px] border border-rule-strong border-dashed opacity-[0.72]">
           <LumeSpecimenView
@@ -78,27 +88,43 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   );
   if (found) {
     return (
-      <Link
-        aria-label={`${specimenName} (no. ${number})`}
-        className="relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
-        href={`/specimen/${specimen.number}`}
-      >
-        {tileBody}
-      </Link>
+      <div ref={tileRef}>
+        <Link
+          aria-label={`${specimenName} (no. ${number})`}
+          className="lu-press lu-lift relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
+          href={`/specimen/${specimen.number}`}
+          onClick={(e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey) {
+              return;
+            }
+            e.preventDefault();
+            const hero =
+              e.currentTarget.querySelector<HTMLElement>("[data-hero]");
+            if (hero) {
+              setMorphOrigin(specimen.number, hero);
+            }
+            navigate(`/specimen/${specimen.number}`, { mode: "morph" });
+          }}
+        >
+          {tileBody}
+        </Link>
+      </div>
     );
   }
   return (
-    <div
-      className="relative flex aspect-square min-h-0 cursor-default items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
-      title={lockedLabel}
-    >
-      {tileBody}
+    <div ref={tileRef}>
+      <div
+        className="relative flex aspect-square min-h-0 cursor-default items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
+        title={lockedLabel}
+      >
+        {tileBody}
+      </div>
     </div>
   );
 }
 
 export function IndexPageClient() {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { collectedNumbers, collectedCount, completion, state } = useLume();
   const { format, lang, t } = useLocale();
 
@@ -106,10 +132,10 @@ export function IndexPageClient() {
     if (completion) {
       // Loop visitors through the reveal once before the card; on
       // subsequent taps go straight to the card.
-      router.push(state.finalSeen ? "/card" : "/complete");
+      navigate(state.finalSeen ? "/card" : "/complete");
       return;
     }
-    router.push("/scan");
+    navigate("/scan", { mode: "sheet" });
   };
 
   const progressPct = Math.min(
@@ -119,7 +145,11 @@ export function IndexPageClient() {
 
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-[28px] bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(112px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex flex-col gap-2">
+      <header
+        className="flex flex-col gap-2"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <div className="flex items-center justify-between gap-3">
           <div>
             <div
@@ -135,10 +165,11 @@ export function IndexPageClient() {
               {t.index_title}
             </h1>
           </div>
-          <Link
+          <button
             aria-label={t.settings_title}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-rule-hair bg-glass-1 text-ink-2 no-underline"
-            href="/settings"
+            className="lu-press inline-flex h-9 w-9 items-center justify-center rounded-full border border-rule-hair bg-glass-1 text-ink-2"
+            onClick={() => navigate("/settings", { mode: "sheet" })}
+            type="button"
           >
             <svg
               aria-hidden="true"
@@ -156,7 +187,7 @@ export function IndexPageClient() {
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
-          </Link>
+          </button>
         </div>
         <div className="flex items-baseline justify-between font-mono-lu text-ink-2 text-xs uppercase tracking-[2px]">
           <span>
@@ -175,19 +206,23 @@ export function IndexPageClient() {
               background: completion
                 ? LU.accent.mint
                 : `linear-gradient(90deg, ${LU.accent.cyan} 0%, ${LU.accent.amber} 100%)`,
-              transition: "width 240ms ease-out",
+              transition: "width var(--lu-dur-base) var(--lu-ease-out)",
             }}
           />
         </div>
       </header>
 
-      {FLOORS.map((floor) => {
+      {FLOORS.map((floor, floorIndex) => {
         const specimens = LUME_SPECIMENS_BY_FLOOR[floor];
         const foundOnFloor = specimens.filter((s) =>
           collectedNumbers.has(s.number)
         ).length;
         return (
-          <section key={floor}>
+          <section
+            data-stagger
+            key={floor}
+            style={{ "--i": floorIndex + 1 } as React.CSSProperties}
+          >
             <header className="mb-3 flex items-baseline justify-between">
               <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
                 {format("index_floor_label", { floor })}
@@ -224,8 +259,8 @@ export function IndexPageClient() {
         <button
           className={
             completion
-              ? "grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
-              : "grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
+              ? "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
+              : "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
           }
           onClick={dockOnClick}
           type="button"

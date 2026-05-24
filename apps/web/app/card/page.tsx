@@ -16,6 +16,7 @@ import {
 } from "../../components/card/achievement-card";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { saveAchievementCard } from "../../lib/save-card";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Achievement card screen — `/card`.
@@ -50,6 +51,7 @@ function formatCardDate(): string {
 
 export default function CardPage() {
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { hydrated, completion, state, markCardSaved, setNickname } = useLume();
   const { t } = useLocale();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -100,9 +102,9 @@ export default function CardPage() {
         return;
       }
       markCardSaved();
-      router.push("/saved");
+      navigate("/saved", { mode: "sheet" });
     },
-    [isSaving, markCardSaved, router]
+    [isSaving, markCardSaved, navigate]
   );
 
   // Defer rendering the card until provider hydration so the visitor
@@ -116,20 +118,28 @@ export default function CardPage() {
 
   return (
     <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between gap-6 bg-aurora-page px-5 pt-[max(40px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex items-center justify-between">
+      <header
+        className="flex items-center justify-between"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <h1 className="m-0 font-semibold text-[22px] tracking-[-0.3px]">
           {t.card_title}
         </h1>
         <button
-          className="h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
-          onClick={() => router.push("/collection")}
+          className="lu-press h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
+          onClick={() => navigate("/collection", { mode: "back" })}
           type="button"
         >
           {t.card_saved_back}
         </button>
       </header>
 
-      <section className="flex flex-1 items-center justify-center">
+      <section
+        className="flex flex-1 items-center justify-center"
+        data-stagger
+        style={{ "--i": 1 } as React.CSSProperties}
+      >
         <CardStage>
           <AchievementCard
             cardTitle={t.card_title}
@@ -141,7 +151,11 @@ export default function CardPage() {
         </CardStage>
       </section>
 
-      <div className="mx-auto flex w-[min(360px,100%)] flex-col items-center gap-[6px]">
+      <div
+        className="mx-auto flex w-[min(360px,100%)] flex-col items-center gap-[6px]"
+        data-stagger
+        style={{ "--i": 2 } as React.CSSProperties}
+      >
         <label
           className="font-mono-lu text-[10px] text-ink-2 uppercase tracking-[3px]"
           htmlFor="lume-card-nickname"
@@ -163,11 +177,15 @@ export default function CardPage() {
         />
       </div>
 
-      <footer className="flex flex-col items-center gap-3">
+      <footer
+        className="flex flex-col items-center gap-3"
+        data-stagger
+        style={{ "--i": 3 } as React.CSSProperties}
+      >
         <div className="flex w-[min(360px,100%)] justify-center gap-3">
           <button
             aria-busy={isSaving}
-            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("share")}
             type="button"
@@ -176,7 +194,7 @@ export default function CardPage() {
           </button>
           <button
             aria-busy={isSaving}
-            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("download")}
             type="button"
