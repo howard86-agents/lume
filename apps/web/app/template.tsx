@@ -14,8 +14,11 @@ export default function Template({ children }: { children: ReactNode }) {
   const direction = consumeNavDirection();
   const cls = directionClass[direction] ?? "";
   // data-nav drives the forward-only [data-stagger] content cascade in globals.css.
+  // h-full keeps the height chain intact: at >=768px --lu-screen-h flips to 100%,
+  // so each page's main min-height:100% needs a definite-height parent to resolve
+  // against. Without it the content collapses to its own height inside the frame.
   return (
-    <div className={cls} data-nav={direction}>
+    <div className={`h-full ${cls}`.trim()} data-nav={direction}>
       {children}
     </div>
   );
