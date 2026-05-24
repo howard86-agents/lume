@@ -5,8 +5,8 @@ import {
   LUME_LOCALES,
   type LumeLocale,
 } from "@lume/data/locales";
-import { useRouter } from "next/navigation";
 import { useLocale } from "../../components/lume-provider";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Language picker — `/language`.
@@ -18,9 +18,9 @@ import { useLocale } from "../../components/lume-provider";
  */
 
 export default function LanguagePage() {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { lang, setLang, t } = useLocale();
-  const proceed = () => router.push("/onboarding");
+  const proceed = () => navigate("/onboarding");
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
       <header className="flex flex-col gap-2">

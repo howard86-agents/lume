@@ -1,10 +1,10 @@
 "use client";
 
 import { LU } from "@lume/data/tokens";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale } from "../../components/lume-provider";
 import { LumeSpecimen } from "../../components/specimen/lume-specimen";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Onboarding primer — `/onboarding`.
@@ -214,7 +214,7 @@ function StepThreePreview() {
 }
 
 export default function OnboardingPage() {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { t, format } = useLocale();
   const [step, setStep] = useState(0);
   const isLast = step === TOTAL_STEPS - 1;
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
 
   const goNext = () => {
     if (isLast) {
-      router.push("/permission");
+      navigate("/permission");
       return;
     }
     setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
@@ -258,7 +258,7 @@ export default function OnboardingPage() {
         </span>
         <button
           className="cursor-pointer appearance-none border-none bg-transparent text-ink-2 text-sm"
-          onClick={() => router.push("/permission")}
+          onClick={() => navigate("/permission")}
           type="button"
         >
           {t.onboarding_skip}

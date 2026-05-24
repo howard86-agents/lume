@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useLocale } from "../components/lume-provider";
+import { useViewTransitionRouter } from "../lib/use-view-transition-router";
 
 /**
  * Cover screen — the landing surface at `/`.
@@ -17,7 +17,7 @@ import { useLocale } from "../components/lume-provider";
 const HALO_SIZE = 320;
 
 export default function CoverPage() {
-  const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { t } = useLocale();
   return (
     <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between overflow-hidden bg-aurora-cover px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
@@ -65,7 +65,7 @@ export default function CoverPage() {
       <footer className="flex flex-col items-center gap-4">
         <button
           className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-8 py-4 font-semibold text-base text-ink tracking-[0.4px] backdrop-blur-[12px]"
-          onClick={() => router.push("/language")}
+          onClick={() => navigate("/language")}
           type="button"
         >
           {t.cover_enter}

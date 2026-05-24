@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Achievement-card save confirmation — `/saved`.
@@ -18,6 +19,7 @@ import { useLocale, useLume } from "../../components/lume-provider";
 
 export default function SavedPage() {
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { hydrated, completion, state } = useLume();
   const { t } = useLocale();
 
@@ -81,7 +83,7 @@ export default function SavedPage() {
       <footer className="flex flex-col items-center gap-3">
         <button
           className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
-          onClick={() => router.push("/collection")}
+          onClick={() => navigate("/collection", { mode: "sheet-close" })}
           type="button"
         >
           {t.card_saved_back}

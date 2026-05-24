@@ -6,10 +6,10 @@ import {
   type LumeLocale,
 } from "@lume/data/locales";
 import { LU } from "@lume/data/tokens";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Settings menu — `/settings`.
@@ -28,6 +28,7 @@ import { useLocale, useLume } from "../../components/lume-provider";
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { reset } = useLume();
   const { lang, setLang, t } = useLocale();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -44,13 +45,14 @@ export default function SettingsPage() {
         <h1 className="m-0 font-semibold text-[24px] tracking-[-0.3px]">
           {t.settings_title}
         </h1>
-        <Link
+        <button
           aria-label={t.settings_close}
-          className="text-ink-2 text-sm no-underline"
-          href="/collection"
+          className="text-ink-2 text-sm"
+          onClick={() => navigate("/collection", { mode: "sheet-close" })}
+          type="button"
         >
           {t.settings_close}
-        </Link>
+        </button>
       </header>
 
       <section className="flex flex-col gap-3">

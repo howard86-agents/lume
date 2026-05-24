@@ -16,6 +16,7 @@ import {
 } from "../../components/card/achievement-card";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { saveAchievementCard } from "../../lib/save-card";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Achievement card screen — `/card`.
@@ -50,6 +51,7 @@ function formatCardDate(): string {
 
 export default function CardPage() {
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { hydrated, completion, state, markCardSaved, setNickname } = useLume();
   const { t } = useLocale();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -100,9 +102,9 @@ export default function CardPage() {
         return;
       }
       markCardSaved();
-      router.push("/saved");
+      navigate("/saved", { mode: "sheet" });
     },
-    [isSaving, markCardSaved, router]
+    [isSaving, markCardSaved, navigate]
   );
 
   // Defer rendering the card until provider hydration so the visitor
@@ -122,7 +124,7 @@ export default function CardPage() {
         </h1>
         <button
           className="h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
-          onClick={() => router.push("/collection")}
+          onClick={() => navigate("/collection", { mode: "back" })}
           type="button"
         >
           {t.card_saved_back}

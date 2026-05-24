@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { type CSSProperties, useEffect } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
+import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
  * Completion reveal — `/complete`.
@@ -47,6 +48,7 @@ function specimenClusterPosition(specimen: LumeSpecimen, index: number) {
 
 export default function CompletePage() {
   const router = useRouter();
+  const { navigate } = useViewTransitionRouter();
   const { hydrated, completion, markFinalSeen } = useLume();
   const { lang, t } = useLocale();
 
@@ -137,7 +139,7 @@ export default function CompletePage() {
       <footer className="flex flex-col items-center gap-3">
         <button
           className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
-          onClick={() => router.push("/card")}
+          onClick={() => navigate("/card")}
           type="button"
         >
           {t.complete_view_card}
