@@ -50,7 +50,7 @@ export default function CoverPage() {
         <div className="relative flex h-80 w-80 items-center justify-center">
           <span
             aria-hidden="true"
-            className="lume-cover-halo absolute inset-0 rounded-full bg-aurora-halo opacity-[0.85] blur-[24px]"
+            className="lume-cover-halo absolute inset-0 rounded-full bg-aurora-halo opacity-[0.85] blur-[12px]"
           />
           <span
             aria-hidden="true"

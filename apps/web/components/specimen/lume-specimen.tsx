@@ -55,6 +55,10 @@ export interface LumeSpecimenProps {
    */
   index?: number;
   /**
+   * When true, pauses the halo-breathe animation (used for off-screen tiles).
+   */
+  paused?: boolean;
+  /**
    * Size of the square render area in CSS pixels. Defaults to `120` which
    * matches the gallery tile inner box. Pass a smaller number for chrome
    * and a larger number for detail-plate / completion variants.
@@ -73,6 +77,7 @@ const ACCENT_TO_RGB: Record<LumeAccent, string> = {
   rose: "255, 141, 161",
 };
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: inherent state branching (found/locked/hero/image)
 export function LumeSpecimen({
   form,
   hue,
@@ -83,6 +88,7 @@ export function LumeSpecimen({
   hero = false,
   image,
   index,
+  paused = false,
   style,
 }: LumeSpecimenProps): ReactElement {
   const rgb = ACCENT_TO_RGB[hue];
@@ -93,10 +99,18 @@ export function LumeSpecimen({
   // so the gallery still reads the form (as a hint of what's to find) but
   // does not reveal the full colour identity until the visitor scans it.
   const glyphColor = found ? accentColor : "rgba(246, 246, 251, 0.32)";
+  // Softer gradient stops compensate for reduced/removed blur filter
   const haloFill = found
-    ? `radial-gradient(circle at 50% 50%, rgba(${rgb}, ${haloOpacity * 0.9}) 0%, rgba(${rgb}, ${haloOpacity * 0.45}) 35%, rgba(${rgb}, 0) 70%)`
-    : `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.10) 0%, rgba(${rgb}, 0.04) 50%, rgba(${rgb}, 0) 75%)`;
+    ? `radial-gradient(circle at 50% 50%, rgba(${rgb}, ${haloOpacity * 0.8}) 0%, rgba(${rgb}, ${haloOpacity * 0.35}) 40%, rgba(${rgb}, 0) 72%)`
+    : `radial-gradient(circle at 50% 50%, rgba(${rgb}, 0.09) 0%, rgba(${rgb}, 0.03) 55%, rgba(${rgb}, 0) 78%)`;
   const showImage = Boolean(image && found);
+  // Reduce drop-shadow for small tiles (e.g. completion cluster ×23)
+  let glyphShadow = "none";
+  if (found && size > 40) {
+    glyphShadow = `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`;
+  } else if (found) {
+    glyphShadow = `drop-shadow(0 0 2px rgba(${rgb}, 0.4))`;
+  }
 
   return (
     <div
@@ -119,7 +133,8 @@ export function LumeSpecimen({
           {
             inset: -size * 0.08,
             background: haloFill,
-            filter: found ? "blur(6px)" : "blur(8px)",
+            filter: found ? undefined : "blur(3px)",
+            animationPlayState: breathing && paused ? "paused" : undefined,
             "--i": index ?? 0,
           } as CSSProperties
         }
@@ -144,7 +159,7 @@ export function LumeSpecimen({
             loading="lazy"
             src={image.src}
             style={{
-              filter: `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`,
+              filter: glyphShadow,
             }}
             unoptimized
             width={Math.round(size * 0.78)}
@@ -158,9 +173,7 @@ export function LumeSpecimen({
               opacity: found ? 1 : 0.65,
               // A subtle drop-shadow on the glyph stroke itself keeps the
               // edge readable on top of the halo.
-              filter: found
-                ? `drop-shadow(0 0 6px rgba(${rgb}, 0.55))`
-                : "none",
+              filter: glyphShadow,
             }}
           />
         )}

@@ -9,9 +9,11 @@ import {
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
+import { useRef } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
 import { setMorphOrigin } from "../../lib/morph-origin";
+import { useInViewport } from "../../lib/use-in-viewport";
 import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
@@ -39,6 +41,8 @@ interface SpecimenTileProps {
 function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   const { lang } = useLocale();
   const { navigate } = useViewTransitionRouter();
+  const tileRef = useRef<HTMLDivElement>(null);
+  const inView = useInViewport(tileRef);
   const number = String(specimen.number).padStart(2, "0");
   const visual = getSpecimenVisual(specimen, lang);
   const specimenName = specimen.name[lang];
@@ -56,6 +60,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
             hue={specimen.hue}
             image={visual.kind === "image" ? visual : undefined}
             index={specimen.number}
+            paused={!inView}
             size={68}
           />
         </span>
@@ -83,33 +88,37 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
   );
   if (found) {
     return (
-      <Link
-        aria-label={`${specimenName} (no. ${number})`}
-        className="lu-press lu-lift relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
-        href={`/specimen/${specimen.number}`}
-        onClick={(e) => {
-          if (e.metaKey || e.ctrlKey || e.shiftKey) {
-            return;
-          }
-          e.preventDefault();
-          const hero =
-            e.currentTarget.querySelector<HTMLElement>("[data-hero]");
-          if (hero) {
-            setMorphOrigin(specimen.number, hero);
-          }
-          navigate(`/specimen/${specimen.number}`, { mode: "morph" });
-        }}
-      >
-        {tileBody}
-      </Link>
+      <div ref={tileRef}>
+        <Link
+          aria-label={`${specimenName} (no. ${number})`}
+          className="lu-press lu-lift relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
+          href={`/specimen/${specimen.number}`}
+          onClick={(e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey) {
+              return;
+            }
+            e.preventDefault();
+            const hero =
+              e.currentTarget.querySelector<HTMLElement>("[data-hero]");
+            if (hero) {
+              setMorphOrigin(specimen.number, hero);
+            }
+            navigate(`/specimen/${specimen.number}`, { mode: "morph" });
+          }}
+        >
+          {tileBody}
+        </Link>
+      </div>
     );
   }
   return (
-    <div
-      className="relative flex aspect-square min-h-0 cursor-default items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
-      title={lockedLabel}
-    >
-      {tileBody}
+    <div ref={tileRef}>
+      <div
+        className="relative flex aspect-square min-h-0 cursor-default items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
+        title={lockedLabel}
+      >
+        {tileBody}
+      </div>
     </div>
   );
 }

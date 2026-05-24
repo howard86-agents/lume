@@ -111,7 +111,7 @@ export default function CompletePage() {
       >
         <span
           aria-hidden="true"
-          className="lume-complete-halo absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[40px]"
+          className="lume-complete-halo absolute inset-0 rounded-[50%] bg-aurora-halo opacity-[0.7] blur-[16px]"
         />
         <span
           aria-hidden="true"

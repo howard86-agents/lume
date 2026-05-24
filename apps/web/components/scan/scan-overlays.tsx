@@ -53,7 +53,7 @@ export function SuccessSheet({
   return (
     <div
       aria-modal="true"
-      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[8px]"
+      className="fixed inset-0 z-40 flex items-end justify-center backdrop-blur-[6px]"
       role="dialog"
       style={{ background: "rgba(8, 8, 13, 0.55)" }}
     >
@@ -83,7 +83,7 @@ export function SuccessSheet({
             }}
           />
         </div>
-        <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-32px_96px_rgba(0,0,0,0.55)] backdrop-blur-[20px]">
+        <div className="flex w-full flex-col items-center gap-4 rounded-t-[28px] border border-rule-strong border-b-0 bg-glass-3 p-[96px_24px_max(24px,env(safe-area-inset-bottom))] text-center shadow-[0_-20px_48px_rgba(0,0,0,0.55)] backdrop-blur-[10px]">
           <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(255,183,85,0.26)] bg-[rgba(255,183,85,0.10)] px-3 py-[7px] font-mono-lu font-semibold text-[11px] text-ink uppercase tracking-[1.4px] shadow-[0_0_24px_rgba(255,183,85,0.12)]">
             <span
               aria-hidden="true"
@@ -167,7 +167,7 @@ export function DuplicateToast({
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex animate-toast-in items-end justify-center p-[0_16px_max(96px,env(safe-area-inset-bottom))_16px]">
       <button
-        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,183,85,0.55)] bg-[rgba(255,183,85,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >
@@ -192,7 +192,7 @@ export function InvalidToast({
       }}
     >
       <button
-        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-[20px]"
+        className="lu-press pointer-events-auto w-full max-w-[420px] cursor-pointer appearance-none rounded-2xl border border-[rgba(255,141,161,0.55)] bg-[rgba(255,141,161,0.10)] p-[14px_18px] text-center text-ink text-sm shadow-[0_16px_36px_rgba(0,0,0,0.5)] backdrop-blur-[10px]"
         onClick={onDismiss}
         type="button"
       >

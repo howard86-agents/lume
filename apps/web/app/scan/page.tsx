@@ -161,6 +161,22 @@ function ScanPageInner(): ReactElement {
     return () => clearTimeout(id);
   }, [activeOverlay]);
 
+  // Pause the live video paint while an overlay is shown so backdrop-filter
+  // is not re-sampling a live feed every frame.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+    if (activeOverlay) {
+      video.pause();
+    } else if (status === "ready") {
+      video.play().catch(() => {
+        // Autoplay resume can fail silently on iOS; not fatal.
+      });
+    }
+  }, [activeOverlay, status]);
+
   const stopStream = useCallback(() => {
     if (streamRef.current) {
       for (const track of streamRef.current.getTracks()) {
