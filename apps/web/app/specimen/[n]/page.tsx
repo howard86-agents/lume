@@ -10,9 +10,10 @@ import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
 import type { CSSProperties } from "react";
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocale, useLume } from "../../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/lume-specimen";
+import { consumeMorphOrigin } from "../../../lib/morph-origin";
 import { useViewTransitionRouter } from "../../../lib/use-view-transition-router";
 
 /**
@@ -112,6 +113,34 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
     notFound();
   }
 
+  useLayoutEffect(() => {
+    const el = heroRef.current;
+    if (!el) {
+      return;
+    }
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const origin = consumeMorphOrigin(specimen.number);
+    if (!origin) {
+      return;
+    }
+    const last = el.getBoundingClientRect();
+    const sx = Math.min(Math.max(origin.rect.width / last.width, 0.2), 5);
+    const sy = Math.min(Math.max(origin.rect.height / last.height, 0.2), 5);
+    const s = (sx + sy) / 2;
+    const dx = origin.rect.left - last.left;
+    const dy = origin.rect.top - last.top;
+    el.style.transformOrigin = "top left";
+    el.animate(
+      [
+        { transform: `translate(${dx}px,${dy}px) scale(${s})`, opacity: 0.4 },
+        { transform: "none", opacity: 1 },
+      ],
+      { duration: 360, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "both" }
+    );
+  }, [specimen.number]);
+
   const localizedName = specimen.name[lang];
   const localizedNotes = specimen.notes[lang];
   const visual = getSpecimenVisual(specimen, lang);
@@ -135,10 +164,6 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
           href="/collection"
           onClick={(e) => {
             e.preventDefault();
-            if (heroRef.current) {
-              // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
-              (heroRef.current.style as any).viewTransitionName = "";
-            }
             navigate("/collection", { mode: "back" });
           }}
         >
@@ -168,11 +193,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         <span className="absolute right-5 bottom-[18px] z-[2] text-right font-mono-lu text-[10px] text-ink-3 uppercase leading-[1.2] tracking-[1.6px] [text-shadow:0_0_12px_rgba(246,246,251,0.18)]">
           {t.specimen_specimen_label}
         </span>
-        <div
-          className="relative"
-          ref={heroRef}
-          style={{ viewTransitionName: "specimen-hero" }}
-        >
+        <div className="relative" ref={heroRef}>
           <LumeSpecimenView
             form={specimen.form}
             glow={0.7}

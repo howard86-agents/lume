@@ -8,6 +8,7 @@ import {
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { type ReactElement, useRef } from "react";
+import { setMorphOrigin } from "../../lib/morph-origin";
 import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 import { useLocale } from "../lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../specimen/lume-specimen";
@@ -135,9 +136,7 @@ export function SuccessSheet({
                 }
                 e.preventDefault();
                 if (heroRef.current) {
-                  // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
-                  (heroRef.current.style as any).viewTransitionName =
-                    "specimen-hero";
+                  setMorphOrigin(specimen.number, heroRef.current);
                 }
                 navigate(`/specimen/${specimen.number}`, { mode: "morph" });
               }}

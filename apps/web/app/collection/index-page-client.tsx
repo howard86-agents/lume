@@ -11,6 +11,7 @@ import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { useLocale, useLume } from "../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../components/specimen/lume-specimen";
+import { setMorphOrigin } from "../../lib/morph-origin";
 import { useViewTransitionRouter } from "../../lib/use-view-transition-router";
 
 /**
@@ -94,8 +95,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
           const hero =
             e.currentTarget.querySelector<HTMLElement>("[data-hero]");
           if (hero) {
-            // biome-ignore lint/suspicious/noExplicitAny: viewTransitionName not in TS CSSStyleDeclaration yet
-            (hero.style as any).viewTransitionName = "specimen-hero";
+            setMorphOrigin(specimen.number, hero);
           }
           navigate(`/specimen/${specimen.number}`, { mode: "morph" });
         }}
