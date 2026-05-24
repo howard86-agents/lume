@@ -1,6 +1,6 @@
 "use client";
 
-import jsQR from "jsqr";
+import { BarcodeDetector, prepareZXingModule } from "barcode-detector/ponyfill";
 import { useEffect, useRef } from "react";
 
 /**
@@ -18,7 +18,32 @@ import { useEffect, useRef } from "react";
  * battery does not melt while the visitor lines up the marker, and the
  * loop pauses for a configurable cooldown after each successful decode
  * to avoid surfacing the same payload a dozen times in a row.
+ *
+ * Internally uses ZXing-C++ (via barcode-detector ponyfill) compiled to
+ * WASM for robust detection of rotated, low-contrast, and damaged QR
+ * codes under variable gallery lighting.
  */
+
+// ---------------------------------------------------------------------------
+// WASM pre-warm: configure self-hosted path and trigger download immediately
+// so the first scan attempt doesn't stall on a cold WASM instantiation.
+// ---------------------------------------------------------------------------
+if (typeof window !== "undefined") {
+  prepareZXingModule({
+    overrides: {
+      locateFile: (path: string, prefix: string) => {
+        if (path.endsWith(".wasm")) {
+          return `/wasm/${path}`;
+        }
+        return prefix + path;
+      },
+    },
+    fireImmediately: true,
+  });
+}
+
+// Singleton detector — one instance is reused across hook mounts.
+const detector = new BarcodeDetector({ formats: ["qr_code"] });
 
 export interface UseQrScannerOptions {
   /** Minimum interval between successful decode handoffs in ms. Default: 1500. */
@@ -69,15 +94,16 @@ export function useQrScanner({
     let cancelled = false;
     let lastSampleAt = 0;
     let cooldownUntil = 0;
+    let decoding = false;
     let rafId: number | null = null;
 
     const tick = (now: number) => {
       if (cancelled) {
         return;
       }
-      // Skip frames until the throttle interval has elapsed and we are
-      // not in the cooldown window after a recent successful decode.
-      if (now - lastSampleAt < intervalMs || now < cooldownUntil) {
+      // Skip frames while a decode is in-flight, the throttle interval
+      // hasn't elapsed, or we are in the post-decode cooldown window.
+      if (decoding || now - lastSampleAt < intervalMs || now < cooldownUntil) {
         rafId = requestAnimationFrame(tick);
         return;
       }
@@ -89,7 +115,7 @@ export function useQrScanner({
         video.videoHeight > 0
       ) {
         // Center-crop the video frame into the square sample canvas so
-        // jsQR sees the same area the scan-frame UI shows.
+        // the detector sees the same area the scan-frame UI shows.
         const vw = video.videoWidth;
         const vh = video.videoHeight;
         const side = Math.min(vw, vh);
@@ -108,16 +134,25 @@ export function useQrScanner({
             sampleSize
           );
           const imageData = ctx.getImageData(0, 0, sampleSize, sampleSize);
-          const decoded = jsQR(imageData.data, sampleSize, sampleSize, {
-            inversionAttempts: "dontInvert",
-          });
-          if (decoded?.data) {
-            cooldownUntil = now + cooldownMs;
-            onDecodeRef.current(decoded.data);
-          }
+          decoding = true;
+          detector
+            .detect(imageData)
+            .then((results) => {
+              decoding = false;
+              if (cancelled) {
+                return;
+              }
+              if (results.length > 0) {
+                cooldownUntil = performance.now() + cooldownMs;
+                onDecodeRef.current(results[0].rawValue);
+              }
+            })
+            .catch(() => {
+              decoding = false;
+            });
         } catch {
-          // A transient draw/decode error (e.g. video not yet committed
-          // a frame after a track change) is safe to ignore — the next
+          // A transient draw error (e.g. video not yet committed a
+          // frame after a track change) is safe to ignore — the next
           // tick will retry.
         }
       }
