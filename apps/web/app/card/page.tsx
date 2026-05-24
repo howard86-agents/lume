@@ -123,7 +123,7 @@ export default function CardPage() {
           {t.card_title}
         </h1>
         <button
-          className="h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
+          className="lu-press h-9 cursor-pointer appearance-none rounded-full border border-rule-hair bg-glass-1 px-[14px] text-[13px] text-ink-2"
           onClick={() => navigate("/collection", { mode: "back" })}
           type="button"
         >
@@ -169,7 +169,7 @@ export default function CardPage() {
         <div className="flex w-[min(360px,100%)] justify-center gap-3">
           <button
             aria-busy={isSaving}
-            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("share")}
             type="button"
@@ -178,7 +178,7 @@ export default function CardPage() {
           </button>
           <button
             aria-busy={isSaving}
-            className="min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
+            className="lu-press min-w-0 flex-1 cursor-pointer appearance-none rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-6 py-4 font-semibold text-base text-ink tracking-[0.4px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] disabled:cursor-wait disabled:opacity-[0.65]"
             disabled={isSaving}
             onClick={() => handleCardAction("download")}
             type="button"

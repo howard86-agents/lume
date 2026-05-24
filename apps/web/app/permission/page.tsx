@@ -82,14 +82,14 @@ export default function PermissionPage() {
 
       <footer className="mt-auto flex flex-col gap-3">
         <button
-          className="w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
+          className="lu-press w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={() => navigate("/scan", { mode: "sheet" })}
           type="button"
         >
           {t.permission_allow}
         </button>
         <button
-          className="cursor-pointer appearance-none self-center border-none bg-transparent px-6 py-3 text-ink-2 text-sm"
+          className="lu-press cursor-pointer appearance-none self-center border-none bg-transparent px-6 py-3 text-ink-2 text-sm"
           onClick={() => navigate("/collection")}
           type="button"
         >

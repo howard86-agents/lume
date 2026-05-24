@@ -277,7 +277,7 @@ function ScanPageInner(): ReactElement {
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-6 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
       <header className="flex items-center justify-between">
         <button
-          className="text-ink-2 text-sm"
+          className="lu-press text-ink-2 text-sm"
           onClick={() => navigate("/collection", { mode: "sheet-close" })}
           type="button"
         >
@@ -326,7 +326,7 @@ function ScanPageInner(): ReactElement {
                 <div className="flex flex-wrap justify-center gap-3">
                   {status === "denied" || status === "error" ? (
                     <button
-                      className="cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-3 font-semibold text-ink text-sm"
+                      className="lu-press cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-3 font-semibold text-ink text-sm"
                       onClick={onRetry}
                       type="button"
                     >
@@ -334,7 +334,7 @@ function ScanPageInner(): ReactElement {
                     </button>
                   ) : null}
                   <button
-                    className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm"
+                    className="lu-press cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm"
                     onClick={() =>
                       navigate("/collection", { mode: "sheet-close" })
                     }
@@ -356,7 +356,7 @@ function ScanPageInner(): ReactElement {
       )}
 
       <button
-        className="cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
+        className="lu-press cursor-pointer appearance-none self-center rounded-full border border-rule-strong bg-transparent px-5 py-3 font-medium text-ink text-sm no-underline"
         onClick={() => setManualOpen(true)}
         type="button"
       >

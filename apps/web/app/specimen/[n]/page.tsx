@@ -123,7 +123,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-5 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
       <header className="flex items-center justify-between">
         <Link
-          className="inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
+          className="lu-press inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
           href="/collection"
         >
           <span aria-hidden="true">←</span>

@@ -44,8 +44,8 @@ export default function LanguagePage() {
             <label
               className={
                 selected
-                  ? "flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-amber bg-[rgba(255,183,85,0.10)] px-5 py-[18px] text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
-                  : "flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-rule-hair bg-glass-1 px-5 py-[18px] text-left text-base text-ink"
+                  ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-amber bg-[rgba(255,183,85,0.10)] px-5 py-[18px] text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
+                  : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[18px] border border-rule-hair bg-glass-1 px-5 py-[18px] text-left text-base text-ink"
               }
               key={code}
             >
@@ -69,15 +69,15 @@ export default function LanguagePage() {
                 aria-hidden="true"
                 className={
                   selected
-                    ? "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-amber shadow-[0_0_12px_rgba(255,183,85,0.65)]"
-                    : "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-rule-strong"
+                    ? "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-amber shadow-[0_0_12px_rgba(255,183,85,0.65)] transition-[border-color,box-shadow] duration-[var(--lu-dur-fast)]"
+                    : "flex h-[18px] w-[18px] items-center justify-center rounded-full border border-rule-strong transition-[border-color,box-shadow] duration-[var(--lu-dur-fast)]"
                 }
               >
                 <span
                   className={
                     selected
-                      ? "h-1.5 w-1.5 rounded-full bg-amber shadow-[0_0_8px_rgba(255,183,85,0.75)]"
-                      : "h-1.5 w-1.5 rounded-full bg-amber opacity-0"
+                      ? "h-1.5 w-1.5 rounded-full bg-amber shadow-[0_0_8px_rgba(255,183,85,0.75)] transition-[background-color,opacity,box-shadow] duration-[var(--lu-dur-fast)]"
+                      : "h-1.5 w-1.5 rounded-full bg-amber opacity-0 transition-[background-color,opacity,box-shadow] duration-[var(--lu-dur-fast)]"
                   }
                 />
               </span>
@@ -88,14 +88,14 @@ export default function LanguagePage() {
 
       <footer className="mt-auto flex flex-col gap-3">
         <button
-          className="w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
+          className="lu-press w-full cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={proceed}
           type="button"
         >
           {t.language_continue}
         </button>
         <button
-          className="cursor-pointer appearance-none self-center border-none bg-transparent p-2 text-ink-2 text-sm"
+          className="lu-press cursor-pointer appearance-none self-center border-none bg-transparent p-2 text-ink-2 text-sm"
           onClick={proceed}
           type="button"
         >

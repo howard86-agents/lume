@@ -138,7 +138,7 @@ export default function CompletePage() {
 
       <footer className="flex flex-col items-center gap-3">
         <button
-          className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
+          className="lu-press w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-6 py-4 font-semibold text-base text-ink tracking-[0.4px]"
           onClick={() => navigate("/card")}
           type="button"
         >

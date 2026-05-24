@@ -64,7 +64,7 @@ export default function CoverPage() {
 
       <footer className="flex flex-col items-center gap-4">
         <button
-          className="w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-8 py-4 font-semibold text-base text-ink tracking-[0.4px] backdrop-blur-[12px]"
+          className="lu-press w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-8 py-4 font-semibold text-base text-ink tracking-[0.4px] backdrop-blur-[12px]"
           onClick={() => navigate("/language")}
           type="button"
         >

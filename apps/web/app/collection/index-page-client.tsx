@@ -80,7 +80,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
     return (
       <Link
         aria-label={`${specimenName} (no. ${number})`}
-        className="relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
+        className="lu-press lu-lift relative flex aspect-square min-h-0 cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border border-rule-hair bg-glass-1 p-3 text-ink no-underline"
         href={`/specimen/${specimen.number}`}
       >
         {tileBody}
@@ -137,7 +137,7 @@ export function IndexPageClient() {
           </div>
           <button
             aria-label={t.settings_title}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-rule-hair bg-glass-1 text-ink-2"
+            className="lu-press inline-flex h-9 w-9 items-center justify-center rounded-full border border-rule-hair bg-glass-1 text-ink-2"
             onClick={() => navigate("/settings", { mode: "sheet" })}
             type="button"
           >
@@ -176,7 +176,7 @@ export function IndexPageClient() {
               background: completion
                 ? LU.accent.mint
                 : `linear-gradient(90deg, ${LU.accent.cyan} 0%, ${LU.accent.amber} 100%)`,
-              transition: "width 240ms ease-out",
+              transition: "width var(--lu-dur-base) var(--lu-ease-out)",
             }}
           />
         </div>
@@ -225,8 +225,8 @@ export function IndexPageClient() {
         <button
           className={
             completion
-              ? "grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
-              : "grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
+              ? "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
+              : "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
           }
           onClick={dockOnClick}
           type="button"

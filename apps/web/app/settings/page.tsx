@@ -47,7 +47,7 @@ export default function SettingsPage() {
         </h1>
         <button
           aria-label={t.settings_close}
-          className="text-ink-2 text-sm"
+          className="lu-press text-ink-2 text-sm"
           onClick={() => navigate("/collection", { mode: "sheet-close" })}
           type="button"
         >
@@ -68,8 +68,8 @@ export default function SettingsPage() {
               <label
                 className={
                   selected
-                    ? "flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] bg-[rgba(255,183,85,0.10)] px-[18px] py-4 text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
-                    : "flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-rule-hair bg-glass-1 px-[18px] py-4 text-left text-base text-ink"
+                    ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] bg-[rgba(255,183,85,0.10)] px-[18px] py-4 text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
+                    : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-rule-hair bg-glass-1 px-[18px] py-4 text-left text-base text-ink"
                 }
                 key={code}
                 style={
@@ -96,7 +96,7 @@ export default function SettingsPage() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className="h-[14px] w-[14px] rounded-[50%]"
+                  className="h-[14px] w-[14px] rounded-[50%] transition-[background-color,border-color] duration-[var(--lu-dur-fast)]"
                   style={{
                     border: `1px solid ${selected ? LU.accent.amber : LU.rule.strong}`,
                     background: selected ? LU.accent.amber : "transparent",
@@ -113,7 +113,7 @@ export default function SettingsPage() {
           {t.settings_reset}
         </h2>
         <button
-          className="flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-[rgba(255,141,161,0.45)] bg-[rgba(255,141,161,0.08)] px-[18px] py-4 text-left font-semibold text-base text-rose"
+          className="lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-[rgba(255,141,161,0.45)] bg-[rgba(255,141,161,0.08)] px-[18px] py-4 text-left font-semibold text-base text-rose"
           onClick={() => setConfirmOpen(true)}
           type="button"
         >
@@ -141,14 +141,14 @@ export default function SettingsPage() {
             </p>
             <div className="flex justify-end gap-3">
               <button
-                className="cursor-pointer appearance-none border-none bg-transparent px-5 py-3 text-ink-2 text-sm"
+                className="lu-press cursor-pointer appearance-none border-none bg-transparent px-5 py-3 text-ink-2 text-sm"
                 onClick={() => setConfirmOpen(false)}
                 type="button"
               >
                 {t.settings_reset_confirm_cancel}
               </button>
               <button
-                className="cursor-pointer appearance-none rounded-full border border-rose bg-[rgba(255,141,161,0.16)] px-5 py-3 font-semibold text-ink text-sm"
+                className="lu-press cursor-pointer appearance-none rounded-full border border-rose bg-[rgba(255,141,161,0.16)] px-5 py-3 font-semibold text-ink text-sm"
                 onClick={onResetConfirmed}
                 type="button"
               >
