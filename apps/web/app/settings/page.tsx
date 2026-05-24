@@ -5,7 +5,7 @@ import {
   LUME_LOCALES,
   type LumeLocale,
 } from "@lume/data/locales";
-import { LU } from "@lume/data/tokens";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
@@ -66,17 +66,13 @@ export default function SettingsPage() {
             const selected = lang === code;
             return (
               <label
-                className={
+                className={clsx(
+                  "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border px-[18px] py-4 text-left text-base text-ink",
                   selected
-                    ? "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] bg-[rgba(255,183,85,0.10)] px-[18px] py-4 text-left text-base text-ink shadow-[0_0_0_1px_rgba(255,183,85,0.35)]"
-                    : "lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-rule-hair bg-glass-1 px-[18px] py-4 text-left text-base text-ink"
-                }
+                    ? "border-amber bg-amber/10 ring-1 ring-amber/35"
+                    : "border-rule-hair bg-glass-1"
+                )}
                 key={code}
-                style={
-                  selected
-                    ? { border: `1px solid ${LU.accent.amber}` }
-                    : undefined
-                }
               >
                 <input
                   checked={selected}
@@ -96,11 +92,12 @@ export default function SettingsPage() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className="h-[14px] w-[14px] rounded-[50%] transition-[background-color,border-color] duration-[var(--lu-dur-fast)]"
-                  style={{
-                    border: `1px solid ${selected ? LU.accent.amber : LU.rule.strong}`,
-                    background: selected ? LU.accent.amber : "transparent",
-                  }}
+                  className={clsx(
+                    "h-[14px] w-[14px] rounded-[50%] border transition-[background-color,border-color] duration-[var(--lu-dur-fast)]",
+                    selected
+                      ? "border-amber bg-amber"
+                      : "border-rule-strong bg-transparent"
+                  )}
                 />
               </label>
             );
@@ -113,7 +110,7 @@ export default function SettingsPage() {
           {t.settings_reset}
         </h2>
         <button
-          className="lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-[rgba(255,141,161,0.45)] bg-[rgba(255,141,161,0.08)] px-[18px] py-4 text-left font-semibold text-base text-rose"
+          className="lu-press flex w-full cursor-pointer appearance-none items-center justify-between rounded-[16px] border border-rose/45 bg-rose/8 px-[18px] py-4 text-left font-semibold text-base text-rose"
           onClick={() => setConfirmOpen(true)}
           type="button"
         >
@@ -128,9 +125,8 @@ export default function SettingsPage() {
       {confirmOpen ? (
         <div
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[8px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/65 p-4 backdrop-blur-[8px]"
           role="dialog"
-          style={{ background: "rgba(8, 8, 13, 0.65)" }}
         >
           <div className="flex w-full max-w-[420px] flex-col gap-4 rounded-3xl border border-rule-strong bg-glass-3 px-6 pt-6 pb-5">
             <h2 className="m-0 font-semibold text-xl">
@@ -148,7 +144,7 @@ export default function SettingsPage() {
                 {t.settings_reset_confirm_cancel}
               </button>
               <button
-                className="lu-press cursor-pointer appearance-none rounded-full border border-rose bg-[rgba(255,141,161,0.16)] px-5 py-3 font-semibold text-ink text-sm"
+                className="lu-press cursor-pointer appearance-none rounded-full border border-rose bg-rose/16 px-5 py-3 font-semibold text-ink text-sm"
                 onClick={onResetConfirmed}
                 type="button"
               >

@@ -302,7 +302,7 @@ function ScanPageInner(): ReactElement {
         <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
           {t.scan_scanning}
         </span>
-        <span className="min-w-16 rounded-full border border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.10)] px-2.5 py-[7px] text-center font-mono-lu text-[11px] text-amber tracking-[1.3px] shadow-[0_0_22px_rgba(255,183,85,0.22)]">
+        <span className="min-w-16 rounded-full border border-amber/45 bg-amber/10 px-2.5 py-[7px] text-center font-mono-lu text-[11px] text-amber tracking-[1.3px] shadow-[0_0_22px_rgba(255,183,85,0.22)]">
           {format("index_progress", {
             found: collectedCount,
             total: LUME_TOTAL_SPECIMENS,

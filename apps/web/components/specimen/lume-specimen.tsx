@@ -1,5 +1,6 @@
 import type { LumeFormName } from "@lume/data/glyphs";
 import { LU, type LumeAccent } from "@lume/data/tokens";
+import clsx from "clsx";
 import Image from "next/image";
 import type { CSSProperties, ReactElement } from "react";
 import { GlyphSvg } from "./glyph-svg";
@@ -115,7 +116,10 @@ export function LumeSpecimen({
   return (
     <div
       aria-hidden={showImage ? undefined : "true"}
-      className={`relative inline-flex items-center justify-center ${className ?? ""}`}
+      className={clsx(
+        "relative inline-flex items-center justify-center",
+        className
+      )}
       data-form={form}
       data-found={found ? "true" : "false"}
       data-hue={hue}
@@ -124,11 +128,11 @@ export function LumeSpecimen({
     >
       {/* Glow halo — sits behind the glyph and matches the specimen hue. */}
       <span
-        className={
-          breathing
-            ? "pointer-events-none absolute animate-halo-breathe [animation-delay:calc(var(--i)*180ms)]"
-            : "pointer-events-none absolute"
-        }
+        className={clsx(
+          "pointer-events-none absolute",
+          breathing &&
+            "animate-halo-breathe [animation-delay:calc(var(--i)*180ms)]"
+        )}
         style={
           {
             inset: -size * 0.08,
@@ -140,11 +144,10 @@ export function LumeSpecimen({
         }
       />
       <span
-        className={
-          hero && !showImage
-            ? "relative inline-flex animate-glyph-breathe items-center justify-center"
-            : "relative inline-flex items-center justify-center"
-        }
+        className={clsx(
+          "relative inline-flex items-center justify-center",
+          hero && !showImage && "animate-glyph-breathe"
+        )}
         style={{ width: size * 0.78, height: size * 0.78 }}
       >
         {showImage && image ? (

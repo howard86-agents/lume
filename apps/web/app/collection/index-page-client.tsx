@@ -8,6 +8,7 @@ import {
   type LumeSpecimen,
 } from "@lume/data/specimens";
 import { LU } from "@lume/data/tokens";
+import clsx from "clsx";
 import Link from "next/link";
 import { useRef } from "react";
 import { useLocale, useLume } from "../../components/lume-provider";
@@ -153,11 +154,12 @@ export function IndexPageClient() {
         <div className="flex items-center justify-between gap-3">
           <div>
             <div
-              className={
+              className={clsx(
+                "whitespace-nowrap font-bold text-[11px] text-amber leading-[1.2]",
                 lang === "en"
-                  ? "whitespace-nowrap font-bold text-[11px] text-amber uppercase leading-[1.2] tracking-[0.12em]"
-                  : "whitespace-nowrap font-bold text-[11px] text-amber leading-[1.2] tracking-[0.04em]"
-              }
+                  ? "uppercase tracking-[0.12em]"
+                  : "tracking-[0.04em]"
+              )}
             >
               {t.index_your_sky}
             </div>
@@ -257,11 +259,12 @@ export function IndexPageClient() {
         }}
       >
         <button
-          className={
+          className={clsx(
+            "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border px-3 py-2.5 font-bold font-mono-lu text-[13px] uppercase tracking-[1.6px] ring-1 backdrop-blur-[12px]",
             completion
-              ? "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border border-mint bg-[rgba(126,240,196,0.16)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-mint uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(126,240,196,0.35)] backdrop-blur-[12px]"
-              : "lu-press lu-lift grid w-[min(420px,100%)] cursor-pointer appearance-none grid-cols-[44px_1fr_44px] items-center gap-2.5 rounded-full border-[1px] border-[rgba(255,183,85,0.45)] bg-[rgba(255,183,85,0.14)] px-3 py-2.5 font-bold font-mono-lu text-[13px] text-amber uppercase tracking-[1.6px] shadow-[0_0_0_1px_rgba(255,183,85,0.18)] backdrop-blur-[12px]"
-          }
+              ? "border-mint bg-mint/16 text-mint ring-mint/35"
+              : "border-amber/45 bg-amber/14 text-amber ring-amber/18"
+          )}
           onClick={dockOnClick}
           type="button"
         >

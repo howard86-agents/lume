@@ -1,6 +1,7 @@
 "use client";
 
 import { LU } from "@lume/data/tokens";
+import clsx from "clsx";
 import { useState } from "react";
 import { useLocale } from "../../components/lume-provider";
 import { LumeSpecimen } from "../../components/specimen/lume-specimen";
@@ -148,14 +149,8 @@ function StepTwoPreview() {
       {tiles.map((tile) =>
         tile.locked ? (
           <span
+            className="h-[68px] w-[68px] rounded-full border-[1.5px] border-ink-3 border-dashed opacity-45"
             key={`${tile.form}-${tile.hue}-locked`}
-            style={{
-              width: 68,
-              height: 68,
-              borderRadius: "50%",
-              border: `1.5px dashed ${LU.base.ink3}`,
-              opacity: 0.45,
-            }}
           />
         ) : (
           <LumeSpecimen
@@ -295,11 +290,12 @@ export default function OnboardingPage() {
       >
         {STEP_DOT_KEYS.map((dotKey, i) => (
           <span
-            className={
+            className={clsx(
+              "h-1.5 rounded-full",
               i === step
-                ? "h-1.5 w-[22px] rounded-full bg-amber shadow-[0_0_12px_var(--lu-accent-amber)]"
-                : "h-1.5 w-1.5 rounded-full bg-ink-3"
-            }
+                ? "w-[22px] bg-amber shadow-[0_0_12px_var(--lu-accent-amber)]"
+                : "w-1.5 bg-ink-3"
+            )}
             key={dotKey}
           />
         ))}
