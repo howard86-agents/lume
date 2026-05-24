@@ -35,6 +35,11 @@ export interface LumeSpecimenProps {
    * `0.55`, matching the gallery preview.
    */
   glow?: number;
+  /**
+   * Single-instance hero contexts (specimen detail, collect sheet). Opts
+   * into the looping halo-breathe plus a richer glyph breathe.
+   */
+  hero?: boolean;
   /** Accent hue used for the glow halo and (when `found`) the glyph fill. */
   hue: LumeAccent;
   /**
@@ -44,6 +49,11 @@ export interface LumeSpecimenProps {
    * the specimen.
    */
   image?: { alt: string; src: string };
+  /**
+   * Per-tile stagger seed for the gallery halo-breathe loop. Presence
+   * opts the specimen into the looping animation.
+   */
+  index?: number;
   /**
    * Size of the square render area in CSS pixels. Defaults to `120` which
    * matches the gallery tile inner box. Pass a smaller number for chrome
@@ -70,12 +80,15 @@ export function LumeSpecimen({
   size = 120,
   glow = 0.55,
   className,
+  hero = false,
   image,
+  index,
   style,
 }: LumeSpecimenProps): ReactElement {
   const rgb = ACCENT_TO_RGB[hue];
   const accentColor = LU.accent[hue];
   const haloOpacity = Math.max(0, Math.min(1, glow));
+  const breathing = found && (hero || index !== undefined);
   // Locked specimens render as a dimmed white silhouette over a faint halo
   // so the gallery still reads the form (as a hint of what's to find) but
   // does not reveal the full colour identity until the visitor scans it.
@@ -97,15 +110,26 @@ export function LumeSpecimen({
     >
       {/* Glow halo — sits behind the glyph and matches the specimen hue. */}
       <span
-        className="pointer-events-none absolute"
-        style={{
-          inset: -size * 0.08,
-          background: haloFill,
-          filter: found ? "blur(6px)" : "blur(8px)",
-        }}
+        className={
+          breathing
+            ? "pointer-events-none absolute animate-halo-breathe [animation-delay:calc(var(--i)*180ms)]"
+            : "pointer-events-none absolute"
+        }
+        style={
+          {
+            inset: -size * 0.08,
+            background: haloFill,
+            filter: found ? "blur(6px)" : "blur(8px)",
+            "--i": index ?? 0,
+          } as CSSProperties
+        }
       />
       <span
-        className="relative inline-flex items-center justify-center"
+        className={
+          hero && !showImage
+            ? "relative inline-flex animate-glyph-breathe items-center justify-center"
+            : "relative inline-flex items-center justify-center"
+        }
         style={{ width: size * 0.78, height: size * 0.78 }}
       >
         {showImage && image ? (

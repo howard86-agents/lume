@@ -41,6 +41,7 @@
   --animate-collect-pop: collect-pop var(--lu-dur-slow) var(--lu-ease-spring)
     both;
   --animate-toast-in: toast-in var(--lu-dur-base) var(--lu-ease-spring) both;
+  --animate-glyph-breathe: glyph-breathe 5s ease-in-out infinite;
 }
 
 /*
@@ -211,6 +212,17 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+@keyframes glyph-breathe {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
   }
 }
 

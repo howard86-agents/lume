@@ -52,6 +52,7 @@ function SpecimenTile({ specimen, found, lockedLabel }: SpecimenTileProps) {
           glow={0.55}
           hue={specimen.hue}
           image={visual.kind === "image" ? visual : undefined}
+          index={specimen.number}
           size={68}
         />
       ) : (

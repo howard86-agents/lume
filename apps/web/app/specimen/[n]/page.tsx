@@ -152,6 +152,7 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
           <LumeSpecimenView
             form={specimen.form}
             glow={0.7}
+            hero
             hue={specimen.hue}
             image={visual.kind === "image" ? visual : undefined}
             size={224}
