@@ -285,8 +285,8 @@ export default function OnboardingPage() {
           <span
             className={
               i === step
-                ? "h-1.5 w-[22px] rounded-[50%] bg-amber shadow-[0_0_12px_rgba(255,183,85,0.65)]"
-                : "h-1.5 w-1.5 rounded-full bg-glass-3"
+                ? "h-1.5 w-[22px] rounded-full bg-amber shadow-[0_0_12px_var(--lu-accent-amber)]"
+                : "h-1.5 w-1.5 rounded-full bg-ink-3"
             }
             key={dotKey}
           />
