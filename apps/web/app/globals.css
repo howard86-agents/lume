@@ -482,3 +482,11 @@ samp {
     transform: translateY(-2px);
   }
 }
+
+/* Content entrance: forward pushes cascade top-level sections in as the page
+   settles. Back/sheet transitions and first load do not stagger. The Phase-1
+   reduced-motion guard collapses this to an instant appearance. */
+[data-vt="forward"] [data-stagger] {
+  animation: rise-in var(--lu-dur-base) var(--lu-ease-spring) both;
+  animation-delay: calc(var(--lu-dur-base) + var(--i, 0) * 60ms);
+}

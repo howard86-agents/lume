@@ -9,6 +9,7 @@ import {
 import { LU } from "@lume/data/tokens";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
+import type { CSSProperties } from "react";
 import { use, useEffect } from "react";
 import { useLocale, useLume } from "../../../components/lume-provider";
 import { LumeSpecimen as LumeSpecimenView } from "../../../components/specimen/lume-specimen";
@@ -121,7 +122,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
 
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-5 bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex items-center justify-between">
+      <header
+        className="flex items-center justify-between"
+        data-stagger
+        style={{ "--i": 0 } as CSSProperties}
+      >
         <Link
           className="lu-press inline-flex cursor-pointer items-center gap-2 text-ink-2 text-sm no-underline"
           href="/collection"
@@ -134,7 +139,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </span>
       </header>
 
-      <section className="relative flex aspect-[5/6] w-[min(360px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1">
+      <section
+        className="relative flex aspect-[5/6] w-[min(360px,90%)] items-center justify-center self-center overflow-hidden rounded-[28px] border border-rule-hair bg-glass-1"
+        data-stagger
+        style={{ "--i": 1 } as CSSProperties}
+      >
         <PlateBackdrop specimen={specimen} />
         <span className="absolute top-[18px] left-5 z-[2] font-mono-lu text-[10px] text-ink-3 uppercase leading-[1.2] tracking-[1.6px] [text-shadow:0_0_12px_rgba(246,246,251,0.18)]">
           {t.specimen_plate_label} · {specimen.plate}
@@ -160,7 +169,11 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </div>
       </section>
 
-      <section className="flex w-[min(460px,100%)] flex-col items-start gap-1 self-center text-left">
+      <section
+        className="flex w-[min(460px,100%)] flex-col items-start gap-1 self-center text-left"
+        data-stagger
+        style={{ "--i": 2 } as CSSProperties}
+      >
         <h1 className="m-0 font-semibold text-[clamp(32px,8vw,36px)] leading-[1.03] tracking-[-0.8px]">
           {localizedName}
         </h1>
@@ -169,15 +182,27 @@ export default function SpecimenDetailPage({ params }: SpecimenDetailProps) {
         </span>
       </section>
 
-      <span className="mt-2 w-[min(460px,100%)] self-center font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2.4px]">
+      <span
+        className="mt-2 w-[min(460px,100%)] self-center font-mono-lu text-[11px] text-ink-3 uppercase tracking-[2.4px]"
+        data-stagger
+        style={{ "--i": 3 } as CSSProperties}
+      >
         {t.specimen_field_notes}
       </span>
-      <p className="m-0 max-w-[460px] self-center text-left text-[15px] text-ink-2 leading-[1.55]">
+      <p
+        className="m-0 max-w-[460px] self-center text-left text-[15px] text-ink-2 leading-[1.55]"
+        data-stagger
+        style={{ "--i": 4 } as CSSProperties}
+      >
         {localizedNotes}
       </p>
 
       {collectedAtText ? (
-        <p className="m-0 w-[min(460px,100%)] self-center text-left font-mono-lu text-[11px] text-ink-3 uppercase tracking-[1.5px]">
+        <p
+          className="m-0 w-[min(460px,100%)] self-center text-left font-mono-lu text-[11px] text-ink-3 uppercase tracking-[1.5px]"
+          data-stagger
+          style={{ "--i": 5 } as CSSProperties}
+        >
           {collectedAtText}
         </p>
       ) : null}

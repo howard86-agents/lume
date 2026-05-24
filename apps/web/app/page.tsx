@@ -21,7 +21,11 @@ export default function CoverPage() {
   const { t } = useLocale();
   return (
     <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between overflow-hidden bg-aurora-cover px-6 pt-[max(48px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex flex-col items-center gap-3 text-center">
+      <header
+        className="flex flex-col items-center gap-3 text-center"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <span className="font-mono-lu text-[11px] text-amber uppercase tracking-[3px] [text-shadow:0_0_18px_var(--lu-accent-amber)]">
           {t.cover_special_exhibition}
         </span>
@@ -38,7 +42,11 @@ export default function CoverPage() {
         </div>
       </header>
 
-      <section className="flex flex-col items-center gap-8">
+      <section
+        className="flex flex-col items-center gap-8"
+        data-stagger
+        style={{ "--i": 1 } as React.CSSProperties}
+      >
         <div className="relative flex h-80 w-80 items-center justify-center">
           <span
             aria-hidden="true"
@@ -62,7 +70,11 @@ export default function CoverPage() {
         </p>
       </section>
 
-      <footer className="flex flex-col items-center gap-4">
+      <footer
+        className="flex flex-col items-center gap-4"
+        data-stagger
+        style={{ "--i": 2 } as React.CSSProperties}
+      >
         <button
           className="lu-press w-[min(320px,100%)] cursor-pointer appearance-none rounded-full border border-rule-strong bg-glass-3 px-8 py-4 font-semibold text-base text-ink tracking-[0.4px] backdrop-blur-[12px]"
           onClick={() => navigate("/language")}

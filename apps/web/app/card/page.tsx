@@ -118,7 +118,11 @@ export default function CardPage() {
 
   return (
     <main className="relative flex min-h-[var(--lu-screen-h)] flex-col justify-between gap-6 bg-aurora-page px-5 pt-[max(40px,env(safe-area-inset-top))] pb-[max(40px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex items-center justify-between">
+      <header
+        className="flex items-center justify-between"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <h1 className="m-0 font-semibold text-[22px] tracking-[-0.3px]">
           {t.card_title}
         </h1>
@@ -131,7 +135,11 @@ export default function CardPage() {
         </button>
       </header>
 
-      <section className="flex flex-1 items-center justify-center">
+      <section
+        className="flex flex-1 items-center justify-center"
+        data-stagger
+        style={{ "--i": 1 } as React.CSSProperties}
+      >
         <CardStage>
           <AchievementCard
             cardTitle={t.card_title}
@@ -143,7 +151,11 @@ export default function CardPage() {
         </CardStage>
       </section>
 
-      <div className="mx-auto flex w-[min(360px,100%)] flex-col items-center gap-[6px]">
+      <div
+        className="mx-auto flex w-[min(360px,100%)] flex-col items-center gap-[6px]"
+        data-stagger
+        style={{ "--i": 2 } as React.CSSProperties}
+      >
         <label
           className="font-mono-lu text-[10px] text-ink-2 uppercase tracking-[3px]"
           htmlFor="lume-card-nickname"
@@ -165,7 +177,11 @@ export default function CardPage() {
         />
       </div>
 
-      <footer className="flex flex-col items-center gap-3">
+      <footer
+        className="flex flex-col items-center gap-3"
+        data-stagger
+        style={{ "--i": 3 } as React.CSSProperties}
+      >
         <div className="flex w-[min(360px,100%)] justify-center gap-3">
           <button
             aria-busy={isSaving}

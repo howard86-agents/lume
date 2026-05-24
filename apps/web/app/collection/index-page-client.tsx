@@ -120,7 +120,11 @@ export function IndexPageClient() {
 
   return (
     <main className="flex min-h-[var(--lu-screen-h)] flex-col gap-[28px] bg-aurora-page p-[max(40px,env(safe-area-inset-top))_20px_max(112px,env(safe-area-inset-bottom))] text-ink">
-      <header className="flex flex-col gap-2">
+      <header
+        className="flex flex-col gap-2"
+        data-stagger
+        style={{ "--i": 0 } as React.CSSProperties}
+      >
         <div className="flex items-center justify-between gap-3">
           <div>
             <div
@@ -183,13 +187,17 @@ export function IndexPageClient() {
         </div>
       </header>
 
-      {FLOORS.map((floor) => {
+      {FLOORS.map((floor, floorIndex) => {
         const specimens = LUME_SPECIMENS_BY_FLOOR[floor];
         const foundOnFloor = specimens.filter((s) =>
           collectedNumbers.has(s.number)
         ).length;
         return (
-          <section key={floor}>
+          <section
+            data-stagger
+            key={floor}
+            style={{ "--i": floorIndex + 1 } as React.CSSProperties}
+          >
             <header className="mb-3 flex items-baseline justify-between">
               <span className="font-mono-lu text-[11px] text-ink-2 uppercase tracking-[3px]">
                 {format("index_floor_label", { floor })}
