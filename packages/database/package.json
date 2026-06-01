@@ -25,7 +25,7 @@
     "@lume/typescript-config": "*",
     "@types/pg": "^8.16.0",
     "prisma": "latest",
-    "tsx": "4.22.3",
+    "tsx": "4.22.4",
     "typescript": "5.5.4"
   }
 }
