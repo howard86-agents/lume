@@ -30,16 +30,16 @@
     "@prisma/client": "latest"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.15",
-    "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^21.0.1",
-    "@playwright/test": "1.57.0",
+    "@biomejs/biome": "2.5.0",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@playwright/test": "1.61.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.4",
+    "lint-staged": "^17.0.8",
     "prisma": "latest",
     "qrcode": "^1.5.4",
-    "tsx": "4.22.3",
-    "turbo": "^2.9.12",
-    "ultracite": "7.7.0"
+    "tsx": "4.22.4",
+    "turbo": "^2.9.18",
+    "ultracite": "7.8.3"
   }
 }
