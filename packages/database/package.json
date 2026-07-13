@@ -19,7 +19,7 @@
     "@prisma/client": "latest",
     "@prisma/client-runtime-utils": "latest",
     "dotenv": "^17.2.3",
-    "pg": "^8.16.3"
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@lume/typescript-config": "*",
