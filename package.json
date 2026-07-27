@@ -26,7 +26,7 @@
     "*.{js,jsx,ts,tsx,json,jsonc,css,md,yml,yaml}": "ultracite fix"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "latest"
   },
   "devDependencies": {
